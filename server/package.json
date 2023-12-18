@@ -1,0 +1,17 @@
+{
+  "name": "christmas-list-maker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "nickhaus",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^3.0.2",
+    "sqlite3": "^5.1.6",
+    "uuid": "^9.0.1"
+  }
+}
