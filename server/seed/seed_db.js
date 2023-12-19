@@ -3,20 +3,21 @@ const { v4: uuidv4 } = require("uuid");
 
 // Database
 const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database("christmas_lists.db");
+const db = new sqlite3.Database("../christmas_lists.db");
 
 db.serialize(() => {
   db.run(`CREATE TABLE lists (
       id TEXT PRIMARY KEY,
-      title TEXT NOT NULL,
+      title TEXT NOT NULL UNIQUE,
       access_code TEXT NOT NULL
   )`);
 
   db.run(`CREATE TABLE users (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
+      emoji NUMBER DEFAULT 0x1F600,
       recipients TEXT DEFAULT 'Anybody' NOT NULL,
-      access_code TEXT NOT NULL,
+      access_code TEXT,
       _list_id TEXT NOT NULL,
       FOREIGN KEY (_list_id) REFERENCES lists(id)
   )`);

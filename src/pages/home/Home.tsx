@@ -31,9 +31,21 @@ const Home = () => {
           Accusantium, labore.
         </Typography>
         {isCreating && (
-          <HomeForm handleCancel={handleCancel} title={"Create"} />
+          <HomeForm
+            handleCancel={handleCancel}
+            title="Create"
+            method="post"
+            action="home/new"
+          />
         )}
-        {isOpening && <HomeForm handleCancel={handleCancel} title={"Open"} />}
+        {isOpening && (
+          <HomeForm
+            handleCancel={handleCancel}
+            title="Open"
+            method="get"
+            action="home/open"
+          />
+        )}
         {!isCreating && !isOpening && (
           <>
             <Tooltip title="Make a new list" placement="right" arrow>

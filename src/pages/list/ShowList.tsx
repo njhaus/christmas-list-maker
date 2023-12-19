@@ -15,7 +15,8 @@ import Paper from "@mui/material/Paper";
 
 import AddCode from '../user/AddCode';
 import UserAccess from './UserAccess';
-import { iListData } from "../../data/listData";
+import { iListData, iListUser } from "../../data/listData";
+import { apiPost } from '../../services/api_service';
 
 interface iShowList {
     list: iListData;
@@ -34,17 +35,19 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
+// ------------------------COMPONENT----------------------------------------------------------------
+
 const ShowList = ({ list }: iShowList) => {
     
-const [currentUser, setCurrentUser] = useState({name: '', id: 0})
-
+  const [currentUser, setCurrentUser] = useState({ name: '', id: 0 });
+  
   return (
     <Container>
-      {currentUser.id === 0 ? (
+      {(currentUser.id === 0 && list.users.length > 1) ? (
         <UserAccess />
       ) : (
         <Typography variant="h4">
-          Hello,{" "}
+            {list.users.length > 1 && `Hello ${currentUser?.name}`}
           {list.users.find((user) => user.name === currentUser.name)?.name}
         </Typography>
       )}
@@ -85,18 +88,6 @@ const [currentUser, setCurrentUser] = useState({name: '', id: 0})
           </Table>
         </TableContainer>
       )}
-      <div>
-        <HtmlTooltip
-          title={
-            <Fragment>
-              <Typography color="inherit">Caution!</Typography>
-              {"Editing your list will cause your list to be re-created."}
-            </Fragment>
-          }
-        >
-          <Button>Edit list</Button>
-        </HtmlTooltip>
-      </div>
     </Container>
   );
 }
