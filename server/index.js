@@ -1,5 +1,5 @@
 const express = require("express");
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config({ silent: process.env.NODE_ENV === "production" });
 
 const app = express();
@@ -16,7 +16,6 @@ const saltRounds = 10;
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("christmas_lists.db");
 
-
 // cors middleware for allowing react to fetch() from server
 var cors = require("cors");
 app.use(
@@ -30,8 +29,7 @@ app.use(
 
 // parse application/x-www-form-urlencoded
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: true }))
-
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Session setup
 const session = require("express-session");
@@ -48,94 +46,140 @@ const sessionConfig = {
     httpOnly: true,
     secure: true,
     maxAge: 1000 * 60 * 60 * 24 * 7,
-    sameSite: 'None',
+    sameSite: "None",
   },
 };
 app.use(session(sessionConfig));
 
-
-
 // Body parser -- parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 // ++++++++++++++ROUTES+++++++++++++++++++++
-
 
 // CREATE list
 app.post("/home/new", async (req, res) => {
   const newListId = uuidv4();
   const { title, code } = req.body;
   try {
-    const hashedCode = await new Promise((resolve, reject) => bcrypt.hash(code, saltRounds, function (err, hash) {
-      if (err) {
-        reject(err)
-      }
-      // Store hash in your password DB.
-      else {
-        resolve(hash);
-      } 
-    }));
+    // Check that no lists with this name already exist
+    const checkList = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, title FROM lists WHERE title = ?",
+        [title],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    if (checkList[0]) {
+      return res.send({ error: "A list with this name already exists." });
+    }
+    // Hash code
+    const hashedCode = await new Promise((resolve, reject) =>
+      bcrypt.hash(code, saltRounds, function (err, hash) {
+        if (err) {
+          reject(err);
+        }
+        // Store hash in your password DB.
+        else {
+          resolve(hash);
+        }
+      })
+    );
+
+    const listToken = uuidv4();
     const newList = await db.run(
-      "INSERT INTO lists (id, title, access_code) VALUES (?, ?, ?)",
-      [newListId, title, hashedCode],
+      "INSERT INTO lists (id, title, access_code, list_token) VALUES (?, ?, ?, ?)",
+      [newListId, title, hashedCode, listToken],
       (err, rows) => {
         if (err) {
-          throw new Error;
+          throw new Error();
         } else {
-          res.cookie("list", title, {
+          res.cookie("list", listToken, {
             httpOnly: true,
             secure: true,
             sameSite: "None",
             maxAge: 12 * 60 * 60 * 1000,
           });
-           res.send({ message: "success" });
+          res.send({
+            message: "success",
+            listId: newListId,
+          });
         }
       }
-    )
+    );
   } catch (err) {
-    console.log(err)
-    res.send({error: "There was an error creating your list."})
+    console.log(err);
+    res.send({ error: "There was an error creating your list." });
   }
-})
+});
 
 // OPEN list
 
 app.post("/home/open", async (req, res) => {
+  console.log("/home/open");
   const { title, code } = req.body;
-  console.log(title, code)
-  const sql =
-    "SELECT title, access_code FROM lists WHERE title = ?";
+  console.log(title, code);
   try {
-    const getList = await db.all(
-      sql,
-      [title],
-      (err, rows) => {
+    // Update token
+    const listToken = uuidv4();
+    const insertToken = await new Promise((resolve, reject) => {
+      db.run(
+        "UPDATE lists SET list_token = ? WHERE title = ?",
+        [listToken, title],
+        (err, rows) => {
+          if (err) {
+            console.log("HELLO?");
+            reject(err);
+          } else {
+            console.log("HELLO????");
+            resolve(true);
+          }
+        }
+      );
+    });
+
+    // Open list
+    const sql =
+      "SELECT id, title, access_code, list_token FROM lists WHERE title = ?";
+    const getList = await new Promise((resolve, reject) =>
+      db.all(sql, [title], (err, rows) => {
         if (err) {
-          throw err;
-        } else if (rows.length < 1) {
-          console.log("no list found");
-          res.send({ error: "incorrect username or password." });
+          reject(err);
         } else {
-          const row = rows[0];
-          console.log(row);
-          console.log(code)
-          bcrypt.compare(code, row.access_code).then(function (result) {
-            if (result == true) {
-              res.cookie("list", title, {
-              httpOnly: true,
-              secure: true,
-              sameSite: "None",
-              maxAge: 12 * 60 * 60 * 1000,
-            });
-              res.send({ message: "success" });
-            } else {
-              console.log("password no match");
-              res.send({ error: "incorrect username or password." });
-            }
-          });
-        };
-      }
+          resolve(rows);
+        }
+      })
     );
+
+    if (getList.length < 1) {
+      console.log("no list found");
+      return res.send({ error: "incorrect username or password." });
+    }
+
+    const list = getList[0];
+
+    bcrypt.compare(code, list.access_code).then(function (result) {
+      if (result == true) {
+        res.cookie("list", listToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "None",
+          maxAge: 12 * 60 * 60 * 1000,
+        });
+        res.send({
+          message: "success",
+          listId: list.id,
+        });
+      } else {
+        console.log("password no match");
+        res.send({ error: "incorrect username or password." });
+      }
+    });
   } catch (err) {
     console.log(err);
     res.send({ error: "There was an error accessing your list." });
@@ -145,46 +189,20 @@ app.post("/home/open", async (req, res) => {
 // FIND list
 
 app.post("/list/find", async (req, res) => {
-  const { title, code } = req.body;
-  const listSql = "SELECT id, title, access_code FROM lists WHERE title = ?";
-  if (req.cookies?.list === title) {
-    try {
-      //  GET LIST TITLE/ID
-      const getList = await new Promise((resolve, reject) => db.all(
-        listSql,
-        // 'SELECT * FROM lists',
-        [title],
-        (err, rows) => {
-          if (err) {
-            reject(err);
-          }
-          else {
-            resolve(rows);
-          }
-        }))
-    
-      if (getList.length < 1) {
-        console.log("no list found");
-        res.send({ error: "Unable to verify credentials." });
-      }
-    
-      const list = getList[0];
-      //  COMPARE CODE
-      const checkPassword = await new Promise((resolve, reject) => bcrypt.compare(code, list.access_code).then(function (result) {
-        if (result == true) {
-          resolve(true);
-        } else {
-          console.log("password no match");
-          reject(false);
-        }
-      }));
-     
-      // GET USERS ASSOCIATED WITH LIST
-      const usersSql =
-        "SELECT name, recipients, access_code FROM users WHERE _list_id = ?";
-      const getUsers = await new Promise((resolve, reject) => db.all(
-        usersSql,
-        [list.id],
+  console.log("list/find");
+  const { id } = req.body;
+  const token = req.cookies?.list;
+
+  if (!token) {
+    return res.send({ error: "You are not logged in" });
+  }
+
+  try {
+    //  GET LIST TITLE/ID
+    const getList = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, title FROM lists WHERE id = ? AND list_token = ?",
+        [id, token],
         (err, rows) => {
           if (err) {
             reject(err);
@@ -192,85 +210,124 @@ app.post("/list/find", async (req, res) => {
             resolve(rows);
           }
         }
-      ));
-      console.log(getUsers);
-    
-      res.send({
-        message: "success",
-        data: {
-          _id: list.id,
-          title: list.title,
-          users: getUsers
+      )
+    );
+
+    if (getList.length < 1) {
+      console.log("no list found");
+      res.send({ error: "Unable to verify credentials." });
+    }
+
+    const list = getList[0];
+
+    // GET USERS ASSOCIATED WITH LIST
+    const usersSql =
+      "SELECT name, recipients, access_code FROM users WHERE _list_id = ?";
+    const getUsers = await new Promise((resolve, reject) =>
+      db.all(usersSql, [list.id], (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
         }
       })
-    } catch (err) {
-      console.log(err);
-      res.send({ error: "There was an error accessing your list." });
-    }
-  }
-  else {
-    res.send({error: "You are not logged in."})
-  }
-})
+    );
+    console.log(getUsers);
 
+    res.send({
+      message: "success",
+      data: {
+        _id: list.id,
+        title: list.title,
+        users: getUsers,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    res.send({ error: "There was an error accessing your list." });
+  }
+});
 
 // CREATE (or edit) LIST
-app.post('/list/create', async (req, res) => {
-  console.log(req.body);
+app.post("/list/create", async (req, res) => {
+  console.log("list/create");
   const { _id, title, users } = req.body;
-  if (req.cookies?.list === title) {
-    for (let user of users) {
-      const usersSql =
-        "INSERT INTO users (id, name, _list_id) VALUES (?, ?, ?)";
-      const userId = uuidv4();
-      const getUsers = await new Promise((resolve, reject) =>
-        db.all(usersSql, [userId, user.name, _id], (err, rows) => {
+  console.log(users);
+  const token = req.cookies?.list;
+  try {
+    // Check token
+    const getList = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, title FROM lists WHERE title = ? AND list_token = ?",
+        [title, token],
+        (err, rows) => {
           if (err) {
             reject(err);
           } else {
-            resolve(rows);
+            resolve(rows[0]);
           }
-        })
+        }
+      )
+    );
+    // Insert users and give them the _list_id
+    for (let user of users) {
+      const userId = uuidv4();
+      const username = user.name.toLowerCase();
+      const listId = getList.id;
+      console.log([userId, username, listId]);
+      const getUsers = await new Promise((resolve, reject) =>
+        db.all(
+          "INSERT INTO users (id, name, _list_id) VALUES (?, ?, ?)",
+          [userId, username, listId],
+          (err, rows) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(rows);
+            }
+          }
+        )
       );
-    } 
-    res.send({message: 'success'})
-  } else {
-    res.send({ error: "You are not logged in." });
+    }
+    res.send({ message: "success" });
+  } catch (err) {
+    res.send({ error: "There was an error updating users" });
   }
-})
+});
 
-
-//CREATE USER ACCESS CODE 
-app.post('/user/create', async (req, res) => {
+//CREATE USER ACCESS CODE
+app.post("/user/create", async (req, res) => {
   const { listId, name, code } = req.body;
-  console.log(listId, name, code)
+  const token = uuidv4();
+  console.log(listId, name, code);
   try {
     const hashedCode = await new Promise((resolve, reject) =>
       bcrypt.hash(code, saltRounds, function (err, hash) {
         if (err) {
           reject(err);
-        }
-        else {
+        } else {
           resolve(hash);
         }
       })
     );
     // Create code
-    const createCode = await new Promise((resolve, reject) =>  db.run(
-      "UPDATE users SET access_code = ? WHERE _list_id = ? AND name = ?",
-      [hashedCode, listId, name],
-      (err, rows) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(true)
+    const createCode = await new Promise((resolve, reject) =>
+      db.run(
+        "UPDATE users SET access_code = ?, user_token = ? WHERE _list_id = ? AND name = ?",
+        [hashedCode, token, listId, name],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(true);
+          }
         }
-      }
-    ));
+      )
+    );
     // Return user and log in session
     const usersSql =
-      "SELECT name, id FROM users WHERE _list_id = ? AND name = ?";
-    
+      "SELECT name, id, user_token FROM users WHERE _list_id = ? AND name = ?";
+
     const getUser = await new Promise((resolve, reject) =>
       db.all(usersSql, [listId, name], (err, rows) => {
         if (err) {
@@ -281,7 +338,7 @@ app.post('/user/create', async (req, res) => {
       })
     );
 
-    res.cookie("user", getUser.id, {
+    res.cookie("user", token, {
       httpOnly: true,
       secure: true,
       sameSite: "None",
@@ -299,83 +356,268 @@ app.post('/user/create', async (req, res) => {
     console.log(err);
     res.send({ error: "There was an error creating your access code." });
   }
-})
+});
 
-
-//ACCESS EXISTING USER ACCESS CODE 
-app.post('/user/access', async (req, res) => {
-  console.log('Hello?')
+//ACCESS EXISTING USER ACCESS CODE
+app.post("/user/access", async (req, res) => {
   const { listId, name, code } = req.body;
   console.log(listId, name, code);
-    try {
-      //  GET USER
-      const getUser = await new Promise((resolve, reject) =>
-        db.all(
-          'SELECT name, id, access_code FROM users WHERE name = ? AND _list_id = ?',
-          [name, listId],
-          (err, rows) => {
-            if (err) {
-              console.log('NO WAY')
-              reject(err);
-            } else {
-              console.log("YES");
-              resolve(rows);
-            }
-          }
-        )
-      );
-
-      console.log("Hello2");
-
-      if (getUser.length < 1) {
-        console.log("no user found");
-        res.send({ error: "Unable to verify credentials." });
-      }
-
-
-      const currUser = getUser[0];
-      console.log("Hello3");
-      console.log(currUser);
-      //  COMPARE CODE
-      const checkPassword = await new Promise((resolve, reject) =>
-        bcrypt.compare(code, currUser.access_code).then(function (result) {
-          if (result == true) {
-            resolve(true);
+  const token = uuidv4();
+  try {
+    // Update token
+    const listToken = uuidv4();
+    const insertToken = await new Promise((resolve, reject) => {
+      db.run(
+        "UPDATE users SET user_token = ? WHERE name = ? AND _list_id = ?",
+        [token, name, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
           } else {
-            console.log("password no match");
-            reject(false);
+            resolve(true);
           }
-        })
+        }
       );
+    });
+    //  GET USER
+    const getUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT name, id, access_code FROM users WHERE name = ? AND _list_id = ?",
+        [name, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
 
-      console.log("Hello4");
+    if (getUser.length < 1) {
+      console.log("no user found");
+      return res.send({ error: "Unable to verify credentials." });
+    } else if (
+      getUser[0].access_code == "null" ||
+      getUser[0].access_code == null ||
+      !getUser[0].access_code
+    ) {
+      console.log("no access code");
+      return res.send({ error: "You haven't created an access code yet." });
+    }
 
-      res.cookie("user", currUser.id, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        maxAge: 12 * 60 * 60 * 1000,
-      });
-        
-        console.log("Hello5");
+    const currUser = getUser[0];
+    //  COMPARE ACCESS CODE
+    const checkPassword = await new Promise((resolve, reject) =>
+      bcrypt.compare(code, currUser.access_code).then(function (result) {
+        if (result == true) {
+          resolve(true);
+        } else {
+          console.log("password no match");
+          reject(false);
+        }
+      })
+    );
 
-      res.send({
+    res.cookie("user", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 12 * 60 * 60 * 1000,
+    });
+
+    res.send({
+      message: "success",
+      data: {
+        name: currUser.name,
+        id: currUser.id,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    res.send({ error: "There was an error logging in." });
+  }
+});
+
+// FIND/CHECK LOGGED IN USER
+app.post("/user/find", async (req, res) => {
+  console.log("user/find");
+  const token = req.cookies?.user;
+  console.log(token);
+  if (!token) {
+    return res.send({ message: "No token." });
+  }
+  try {
+    console.log("hi1");
+    //  GET USER
+    const getUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, name FROM users WHERE user_token = ?",
+        [token],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+
+    console.log("hi2");
+
+    if (getUser.length < 1) {
+      console.log("no list found");
+      res.send({ error: "Unable to verify credentials." });
+    }
+
+    console.log("hi3");
+    console.log(getUser);
+
+    const user = getUser[0];
+    return res.send({
+      message: "success",
+      data: {
+        name: user.name,
+        id: user.id,
+      },
+    });
+  } catch (err) {
+    return res.send({ error: "There was an error processing your request" });
+  }
+});
+
+// Get user's list -- return edit user OR view user (From UserRouter component)
+app.post("/user/data", async (req, res) => {
+  console.log("user/data");
+  // Tokens find current User
+  const listToken = req.cookies?.list;
+  const userToken = req.cookies?.user;
+  // Body finds user being viewed
+  const { listId, username } = req.body;
+  console.log(listToken, userToken, listId, username);
+
+  if (!listToken || !userToken) {
+    return res.send({ error: "Please log in to view this page." });
+  }
+  // Body finds user whose gifts are bing viewed. If they match, return editUser data (list of gifts, not returning if bought), otherwise, return viewUser data (list of gifts and notes)
+  try {
+    //  GET current USER
+    const currentUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, name FROM users WHERE user_token = ? AND _list_id = ?",
+        [userToken, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    if (currentUser.length < 1)
+      return res.send({ error: "Error finding Current User." });
+    currentUserId = currentUser[0].id;
+    currentUserName = currentUser[0].name;
+    console.log("currentUserId");
+    console.log(currentUserId);
+
+    // Get user being viewed
+    const viewUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, name FROM users WHERE name = ? AND _list_id = ?",
+        [username, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    if (viewUser.length < 1)
+      return res.send({ error: "Error finding Viewed User." });
+    viewUserId = viewUser[0].id;
+    viewUserName = viewUser[0].name;
+    console.log("viewUserId");
+    console.log(viewUserId);
+
+    // Get user gifts
+    const userGifts = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, description, link, bought, buyer_name FROM gifts WHERE _user_id = ?",
+        [viewUserId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+
+    console.log("userGifts");
+    console.log(userGifts);
+
+    // Get user notes
+    const userNotes = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, description, written_by FROM notes WHERE _user_id = ?",
+        [viewUserId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+
+    console.log("userNotes");
+    console.log(userNotes);
+
+    // Users Match? send current user data (only name and link from gifts list)
+    if (viewUserId === currentUserId) {
+      const editGifts = userGifts.map((gift) => ({
+        id: gift.id,
+        description: gift.description,
+        link: gift.link,
+      }));
+      return res.send({
         message: "success",
         data: {
-          name: currUser.name,
-          id: currUser.id,
+          editUser: {
+            name: currentUserName,
+            gifts: editGifts,
+          },
         },
       });
-    } catch (err) {
-      console.log(err);
-      res.send({ error: "There was an error logging in." });
     }
-})
 
-
+    // Users don't match? Send all gift and notes data
+    else {
+      return res.send({
+        message: "success",
+        data: {
+          viewUser: {
+            name: viewUserName,
+            gifts: userGifts,
+            notes: userNotes,
+          },
+        },
+      });
+    }
+  } catch (err) {
+    return res.send({ error: "There was an error processing your request" });
+  }
+});
 
 // LOGOUT
-app.post('/logout', async (req, res) => {
+app.post("/logout", async (req, res) => {
   res.clearCookie("list", {
     httpOnly: true,
     secure: true,
@@ -388,23 +630,22 @@ app.post('/logout', async (req, res) => {
     sameSite: "None",
     // maxAge: 12 * 60 * 60 * 1000,
   });
-  res.send({message: "success"})
-})
+  res.send({ message: "success" });
+});
 
 // TEST ROUTE
 app.get("/", (req, res) => {
-  console.log(req.cookies)
+  console.log(req.cookies);
   db.all("SELECT * FROM lists", (err, rows) => {
     if (err) {
       console.error(err.message);
       res.status(500).send("Internal Server Error");
       return;
     }
-    console.log(rows); 
-    res.json(rows); 
+    console.log(rows);
+    res.json(rows);
   });
 });
-
 
 process.on("SIGINT", () => {
   db.close((err) => {
@@ -412,10 +653,9 @@ process.on("SIGINT", () => {
       console.error(err.message);
     }
     console.log("Closed the database connection.");
-    process.exit(0); 
+    process.exit(0);
   });
 });
-
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

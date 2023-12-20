@@ -9,7 +9,7 @@ import ShowList from './ShowList';
 
 import { initialListData } from '../../data/listData';
 
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useParams } from 'react-router-dom';
 import { apiPost } from '../../services/api_service';
 import { iListUser } from '../../data/listData';
 import useAuth from '../../hooks/useAuth';
@@ -36,14 +36,15 @@ const List = () => {
   // const [list, setList] = useState(initialListData);
   const [err, setErr] = useState('');
   const { list, setList } = useAuth();
- 
-  const location = useLocation();
+
+  const listId = useParams();
 
   useEffect(() => {
     console.log(list);
     const getList = async () => {
       console.log('Running API call to get list')
-      const body = location.state;
+      const body = listId;
+      console.log(body)
       const slug = "list/find";
       apiPost(slug, body).then((res) => {
         if (res?.message === "success") {
@@ -65,11 +66,12 @@ const List = () => {
         setErr('')
         setIsLoading(true);
       };
-    } else if (!location.state) {
+    } else if (!listId) {
       setErr("Please enter your list name and access code to view this page.");
     }
     setIsLoading(false);
   }, []);
+
 
     const handleCreate = () => {
       setIsCreating(!isCreating);

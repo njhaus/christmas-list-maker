@@ -17,46 +17,40 @@ import { Link } from "react-router-dom";
 
 import { testGifts, testNotes, testUser } from "../../data/userData";
 import AddCode from "./unused/AddCode";
+import { iGift, iEditUser } from "../../data/userData";
 
-const CurrentUser = () => {
-  const [loading, isLoading] = useState(false);
+interface iEditUserComponent {
+  data: iEditUser;
+}
 
+const EditUser = ({data}: iEditUserComponent) => {
+  
   const [isEditing, setIsEditing] = useState("");
 
-  // sent by react-router through params -- OR get in session
-  const list = "12345";
-
   // Set by API call
-  const [user, setUser] = useState(testUser);
-  const [gifts, setGifts] = useState(testGifts);
-  const [notes, setNotes] = useState(testNotes);
+  const [user, setUser] = useState(data.name);
+  const [gifts, setGifts] = useState(data.gifts);
 
 
   const [newGift, setNewGift] = useState("");
 
-  if (loading) {
-    return (
-      <Container>
-        <Typography>...Loading</Typography>
-      </Container>
-    );
-  } 
-
   return (
     <Container>
       <Stack>
-        <Typography>{user.name}'s Christmas List</Typography>
+        <Typography>{user}'s Christmas List</Typography>
       </Stack>
       <List>
-        {gifts.map((gift) => (
-          <ListItem key={gift._id}>
-            {isEditing !== gift._id && (
+        {gifts.length < 1
+          ? <Typography>You have no gifts on your list yet.</Typography>
+        : gifts.map((gift) => (
+          <ListItem key={gift.id}>
+            {isEditing !== gift.id && (
               <>
                 <ListItemText>{gift.description}</ListItemText>
                 <ListItemButton>Edit</ListItemButton>
               </>
             )}
-            {isEditing === gift._id && (
+            {isEditing === gift.id && (
               <>
                 <Input id="edit-gift" value={gift.description}></Input>
                 <ListItemButton>Save</ListItemButton>
@@ -81,4 +75,4 @@ const CurrentUser = () => {
   );
 };
 
-export default CurrentUser;
+export default EditUser;

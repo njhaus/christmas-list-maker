@@ -12,6 +12,30 @@ export const testCurrentUser = {
   id: '0'
 }
 
+export interface iGift {
+  id: string;
+  description: string;
+  link: string;
+}
+
+export interface iNote {
+  id: string;
+  written_by: string;
+  text: string;
+}
+
+export interface iEditUser {
+  name: string;
+  gifts: iGift[];
+}
+
+export interface iViewUser {
+  name: string;
+  gifts: iGift[];
+  notes: iNote[];
+}
+
+
 export const testGifts = [
   {
     _id: "9999",
@@ -33,17 +57,39 @@ export const testGifts = [
 
 export const testNotes = [
   {
-    _id: "5555",
-    // _user_id: "12345",
-        // _writer_id: "11111",
-      writer: 'billy',
+    _id: "0",
+      written_by: 'billy',
     text: 'I bought "skydiving for dummies" for this fool.',
   },
   {
-    _id: "4444",
-    // _user_id: "12345",
-      // _writer_id: "22222",
-      writer: 'caroline',
+    _id: "1",
+      written_by: 'caroline',
     text: "Santa is bringing him coal.",
   },
 ];
+
+
+export const testEditUser = {
+  name: "placeholder",
+  gifts: [
+    {
+      id: "0",
+      description: "placeholder",
+      link: "https://www.cnn.com/interactive/2019/06/us/dad-joke-generator-trnd/",
+    },
+  ],
+};
+
+export const testViewUser = {
+  name: "placeholder",
+  gifts: [
+    {
+      id: "0",
+      description: "placeholder",
+      link: "https://www.cnn.com/interactive/2019/06/us/dad-joke-generator-trnd/",
+      bought: true,
+      buyer_name: "",
+    },
+  ],
+  notes: [testNotes],
+};

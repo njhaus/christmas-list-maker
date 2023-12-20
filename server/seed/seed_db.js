@@ -7,9 +7,10 @@ const db = new sqlite3.Database("../christmas_lists.db");
 
 db.serialize(() => {
   db.run(`CREATE TABLE lists (
-      id TEXT PRIMARY KEY,
+      id TEXT PRIMARY KEY UNIQUE,
       title TEXT NOT NULL UNIQUE,
-      access_code TEXT NOT NULL
+      access_code TEXT NOT NULL,
+      list_token TEXT
   )`);
 
   db.run(`CREATE TABLE users (
@@ -18,6 +19,7 @@ db.serialize(() => {
       emoji NUMBER DEFAULT 0x1F600,
       recipients TEXT DEFAULT 'Anybody' NOT NULL,
       access_code TEXT,
+      user_token TEXT,
       _list_id TEXT NOT NULL,
       FOREIGN KEY (_list_id) REFERENCES lists(id)
   )`);

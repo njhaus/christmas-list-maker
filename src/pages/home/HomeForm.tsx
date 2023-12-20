@@ -48,12 +48,7 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
           console.log("Success...should be redirecting");
           setListTitle("");
           setListCode("");
-          navigate("/list", {
-            state: {
-              title: listTitle,
-              code: listCode,
-            },
-          });
+          navigate(`/list/${res.data.id}`);
         }
         else if (res?.error ) {
           console.log(res);

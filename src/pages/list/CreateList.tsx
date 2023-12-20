@@ -24,7 +24,8 @@ interface iCreateList {
 const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
 
   const [users, setUsers] = useState(list.users);
-  const [newUser, setNewUser] = useState('')
+  const [newUser, setNewUser] = useState('');
+  const [err, setErr] = useState('')
 
   const ref = useRef<HTMLInputElement | null>(null);
 
@@ -56,6 +57,21 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
     setUsers(updatedUsers);
   }
 
+  useEffect(() => {
+    if (
+      users
+        .map((user, i) =>
+          users.find((chkuser, idx) => chkuser.name === user.name && idx !== i)
+        )
+        .some((val) => val)
+    ) {
+      setErr("You cannot have two users with the same name.");
+    } else {
+      setErr('')
+    }
+  }, [newUser, users])
+  
+
   return (
     <div>
       <Typography variant="h3">Enter names:</Typography>
@@ -66,17 +82,19 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
               if (user.name) {
                 return (
                   <ListItem key={i}>
-                 <Input
-                   id={user.name}
-                   aria-describedby="edit user"
-                   value={user.name}
-                   onChange={(e) => updateUser(e.target.value, i)}
-                 />
-               </ListItem>)
+                    <Input
+                      id={user.name}
+                      aria-describedby="edit user"
+                      value={user.name}
+                      onChange={(e) => updateUser(e.target.value, i)}
+                    />
+                  </ListItem>
+                );
               }
             })}
             <ListItem>
               <Input
+                disabled={err ? true : false}
                 ref={ref}
                 id="new-user"
                 aria-describedby="new-user"
@@ -88,18 +106,24 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
             {newUser && (
               <ListItem>
                 <Input
-                  id="new-user-2"
-                  aria-describedby="my-helper-text"
-                  value={''}
+                  id="new-user-temp"
+                  aria-describedby="temporary"
+                  value={""}
                 />
               </ListItem>
             )}
           </List>
+          {err && <Typography>{err}</Typography>}
         </Stack>
-        <Button onClick={() => {
-          handleSubmitList(users);
-          handleCreate()
-        }}>Save List</Button>
+        <Button
+          disabled={err ? true : false}
+          onClick={() => {
+            handleSubmitList(users);
+            handleCreate();
+          }}
+        >
+          Save List
+        </Button>
         <Button onClick={() => handleCreate()}>Cancel</Button>
       </form>
     </div>

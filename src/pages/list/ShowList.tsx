@@ -16,9 +16,11 @@ import Paper from "@mui/material/Paper";
 import AddCode from "../user/unused/AddCode";
 import UserAccess from "./UserAccess";
 import { iListData, iListUser } from "../../data/listData";
+import { testCurrentUser } from "../../data/userData";
 import { apiPost } from "../../services/api_service";
 import Err from "../../layouts/Err";
 import useAuth from "../../hooks/useAuth";
+import { testUser } from "../../data/userData";
 
 interface iShowList {
   list: iListData;
@@ -41,6 +43,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 const ShowList = ({ list }: iShowList) => {
   const { currentUser, setCurrentUser } = useAuth();
   const [err, setErr] = useState("");
+  const [isLoading, setIsLoading] = useState(true)
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -70,11 +73,41 @@ const ShowList = ({ list }: iShowList) => {
 
   const handleVisitUserPage = (user: string) => {
     navigate(`/user/${list._id}/${user}`, {
-      state: { ...location.state,
-        currentUser: currentUser.id,
-        user: user
-    }})
+      state: { ...location.state, listId: list._id, username: user },
+    });
   }
+
+  // Get user if already logged in (Uses token)
+  useEffect(() => {
+    const getUser = async () => {
+      console.log("Running API call to get user");
+      const body = {};
+      const slug = "user/find";
+      apiPost(slug, body).then((res) => {
+        if (res?.message === "success") {
+          setCurrentUser(res.data);
+        } else if (res?.error) {
+          console.log(res.error)
+          setErr(res.error);
+        } else {
+          console.log("no currently logged in user");
+          setErr("");
+        }
+        setIsLoading(false);
+      });
+    };
+    // Checks if user has been uploaded -- 0 is placeholder, which means it has not.
+    if (currentUser.id === "0" && list.users.length > 0) {
+      getUser();
+
+      return () => {
+        setCurrentUser(testCurrentUser);
+        setErr("");
+        setIsLoading(true);
+      };
+    } 
+    setIsLoading(false);
+  }, [])
 
   return (
     <Container>
