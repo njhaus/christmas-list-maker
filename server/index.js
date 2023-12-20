@@ -240,6 +240,139 @@ app.post('/list/create', async (req, res) => {
 })
 
 
+//CREATE USER ACCESS CODE 
+app.post('/user/create', async (req, res) => {
+  const { listId, name, code } = req.body;
+  console.log(listId, name, code)
+  try {
+    const hashedCode = await new Promise((resolve, reject) =>
+      bcrypt.hash(code, saltRounds, function (err, hash) {
+        if (err) {
+          reject(err);
+        }
+        else {
+          resolve(hash);
+        }
+      })
+    );
+    // Create code
+    const createCode = await new Promise((resolve, reject) =>  db.run(
+      "UPDATE users SET access_code = ? WHERE _list_id = ? AND name = ?",
+      [hashedCode, listId, name],
+      (err, rows) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(true)
+        }
+      }
+    ));
+    // Return user and log in session
+    const usersSql =
+      "SELECT name, id FROM users WHERE _list_id = ? AND name = ?";
+    
+    const getUser = await new Promise((resolve, reject) =>
+      db.all(usersSql, [listId, name], (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows[0]);
+        }
+      })
+    );
+
+    res.cookie("user", getUser.id, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 12 * 60 * 60 * 1000,
+    });
+
+    res.send({
+      message: "success",
+      data: {
+        name: getUser.name,
+        id: getUser.id,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    res.send({ error: "There was an error creating your access code." });
+  }
+})
+
+
+//ACCESS EXISTING USER ACCESS CODE 
+app.post('/user/access', async (req, res) => {
+  console.log('Hello?')
+  const { listId, name, code } = req.body;
+  console.log(listId, name, code);
+    try {
+      //  GET USER
+      const getUser = await new Promise((resolve, reject) =>
+        db.all(
+          'SELECT name, id, access_code FROM users WHERE name = ? AND _list_id = ?',
+          [name, listId],
+          (err, rows) => {
+            if (err) {
+              console.log('NO WAY')
+              reject(err);
+            } else {
+              console.log("YES");
+              resolve(rows);
+            }
+          }
+        )
+      );
+
+      console.log("Hello2");
+
+      if (getUser.length < 1) {
+        console.log("no user found");
+        res.send({ error: "Unable to verify credentials." });
+      }
+
+
+      const currUser = getUser[0];
+      console.log("Hello3");
+      console.log(currUser);
+      //  COMPARE CODE
+      const checkPassword = await new Promise((resolve, reject) =>
+        bcrypt.compare(code, currUser.access_code).then(function (result) {
+          if (result == true) {
+            resolve(true);
+          } else {
+            console.log("password no match");
+            reject(false);
+          }
+        })
+      );
+
+      console.log("Hello4");
+
+      res.cookie("user", currUser.id, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 12 * 60 * 60 * 1000,
+      });
+        
+        console.log("Hello5");
+
+      res.send({
+        message: "success",
+        data: {
+          name: currUser.name,
+          id: currUser.id,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      res.send({ error: "There was an error logging in." });
+    }
+})
+
+
 
 // LOGOUT
 app.post('/logout', async (req, res) => {
@@ -247,7 +380,13 @@ app.post('/logout', async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "None",
-    maxAge: 12 * 60 * 60 * 1000,
+    // maxAge: 12 * 60 * 60 * 1000,
+  });
+  res.clearCookie("user", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    // maxAge: 12 * 60 * 60 * 1000,
   });
   res.send({message: "success"})
 })

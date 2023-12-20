@@ -14,7 +14,6 @@ import { apiPost } from '../../services/api_service';
 import { iListUser } from '../../data/listData';
 
 
-
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
@@ -26,6 +25,8 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     border: "1px solid #dadde9",
   },
 }));
+
+// ------------------------COMPONENT----------------------------------------------------------------
 
 const List = () => {
 

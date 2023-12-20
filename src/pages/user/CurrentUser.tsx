@@ -1,44 +1,46 @@
 import { useState } from "react";
 
-import { Container, Stack, Typography, List, ListItem, ListItemText, FormControl, InputLabel, Input, Button, ListItemButton } from "@mui/material";
+import {
+  Container,
+  Stack,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  FormControl,
+  InputLabel,
+  Input,
+  Button,
+  ListItemButton,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 
 import { testGifts, testNotes, testUser } from "../../data/userData";
-import AddCode from "./AddCode";
+import AddCode from "./unused/AddCode";
 
 const CurrentUser = () => {
+  const [loading, isLoading] = useState(false);
 
-    const [loading, isLoading] = useState(false);
-
-    const [isEditing, setIsEditing] = useState('');
+  const [isEditing, setIsEditing] = useState("");
 
   // sent by react-router through params
-  const list = '12345';
-  
-  // Set by API call
-    const [user, setUser] = useState(testUser);
-    const [gifts, setGifts] = useState(testGifts);
-    const [notes, setNotes] = useState(testNotes);
-  const [hasCode, setHasCode] = useState(false);
-  
-  const [newGift, setNewGift] = useState('');
+  const list = "12345";
 
-     if (loading) {
-       return (
-         <Container>
-           <Typography>...Loading</Typography>
-         </Container>
-       );
-     } else if (!hasCode) {
-         return (
-           <Container>
-             <Typography variant='h3'>
-               Are you {user.name}? Create an access code to start adding gifts!
-             </Typography>
-             <AddCode/>
-           </Container>
-         );
-     }
+  // Set by API call
+  const [user, setUser] = useState(testUser);
+  const [gifts, setGifts] = useState(testGifts);
+  const [notes, setNotes] = useState(testNotes);
+
+
+  const [newGift, setNewGift] = useState("");
+
+  if (loading) {
+    return (
+      <Container>
+        <Typography>...Loading</Typography>
+      </Container>
+    );
+  } 
 
   return (
     <Container>
@@ -77,6 +79,6 @@ const CurrentUser = () => {
       </Link>
     </Container>
   );
-}
+};
 
-export default CurrentUser
+export default CurrentUser;

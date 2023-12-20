@@ -1,10 +1,10 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState } from "react";
 
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import { Container, Typography, Button } from '@mui/material';
+import { Container, Typography, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,14 +13,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-import AddCode from '../user/AddCode';
-import UserAccess from './UserAccess';
+import AddCode from "../user/unused/AddCode";
+import UserAccess from "./UserAccess";
 import { iListData, iListUser } from "../../data/listData";
-import { apiPost } from '../../services/api_service';
+import { apiPost } from "../../services/api_service";
+import Err from "../../layouts/Err";
 
 interface iShowList {
-    list: iListData;
-
+  list: iListData;
 }
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -38,20 +38,43 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 // ------------------------COMPONENT----------------------------------------------------------------
 
 const ShowList = ({ list }: iShowList) => {
-    
-  const [currentUser, setCurrentUser] = useState({ name: '', id: 0 });
-  
+  const [currentUser, setCurrentUser] = useState({ name: "", id: 0 });
+  const [err, setErr] = useState("");
+
+  const handleCurrentUser = (user: string, code: string, hasCode: boolean) => {
+    setErr("");
+    const slug = hasCode ? "user/access" : "user/create";
+    const body = {
+      listId: list._id,
+      name: user,
+      code: code,
+    };
+    apiPost(slug, body).then((res) => {
+      console.log(res);
+      if (res?.message === "success") {
+        console.log(res);
+        setCurrentUser(res.data);
+      } else if (res?.error) {
+        console.log(res);
+        setErr(res.error);
+      } else {
+        setErr("There was an error processing your request");
+      }
+    });
+    console.log("currentUser");
+  };
+
   return (
     <Container>
-      {(currentUser.id === 0 && list.users.length > 1) ? (
-        <UserAccess />
+      {currentUser.id === 0 && list.users.length > 1 ? (
+        <UserAccess handleCurrentUser={handleCurrentUser} />
       ) : (
         <Typography variant="h4">
-            {list.users.length > 1 && `Hello ${currentUser?.name}`}
-          {list.users.find((user) => user.name === currentUser.name)?.name}
+          {list.users.length > 1 && `Hello ${currentUser?.name}`}
+          {/* {list.users.find((user) => user.name === currentUser.name)?.name} */}
         </Typography>
       )}
-
+      {err && <Err err={err}></Err>}
       {list.users.length < 1 ? (
         <Typography>
           Nobody is on your list yet! Click "Edit List" to add people.
@@ -72,16 +95,12 @@ const ShowList = ({ list }: iShowList) => {
                   // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell align="left">
-                    <Link to={`/user`}>
-                      <Button>
-                        {user.emoji}
-                        {user.name}
-                      </Button>
-                    </Link>
+                    <Button disabled={currentUser.id === 0}>
+                      {user.emoji}
+                      {user.name}
+                    </Button>
                   </TableCell>
-                  <TableCell align="center">
-                    {user.recipients.join(", ")}
-                  </TableCell>
+                  <TableCell align="center">{user.recipients}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -90,6 +109,6 @@ const ShowList = ({ list }: iShowList) => {
       )}
     </Container>
   );
-}
+};
 
-export default ShowList
+export default ShowList;
