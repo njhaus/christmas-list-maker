@@ -49,6 +49,7 @@ const List = () => {
       apiPost(slug, body).then((res) => {
         if (res?.message === "success") {
           setList(res.data);
+          setIsLoading(false);
         } else if (res?.error) {
           setErr(res.error);
         } else {
@@ -69,7 +70,6 @@ const List = () => {
     } else if (!listId) {
       setErr("Please enter your list name and access code to view this page.");
     }
-    setIsLoading(false);
   }, []);
 
 

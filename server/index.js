@@ -133,10 +133,8 @@ app.post("/home/open", async (req, res) => {
         [listToken, title],
         (err, rows) => {
           if (err) {
-            console.log("HELLO?");
             reject(err);
           } else {
-            console.log("HELLO????");
             resolve(true);
           }
         }
@@ -171,26 +169,25 @@ app.post("/home/open", async (req, res) => {
           sameSite: "None",
           maxAge: 12 * 60 * 60 * 1000,
         });
-        res.send({
+        return res.send({
           message: "success",
           listId: list.id,
         });
       } else {
         console.log("password no match");
-        res.send({ error: "incorrect username or password." });
+        return res.send({ error: "incorrect username or password." });
       }
     });
   } catch (err) {
     console.log(err);
-    res.send({ error: "There was an error accessing your list." });
+    return res.send({ error: "There was an error accessing your list." });
   }
 });
 
 // FIND list
-
 app.post("/list/find", async (req, res) => {
   console.log("list/find");
-  const { id } = req.body;
+  const { listId } = req.body;
   const token = req.cookies?.list;
 
   if (!token) {
@@ -202,7 +199,7 @@ app.post("/list/find", async (req, res) => {
     const getList = await new Promise((resolve, reject) =>
       db.all(
         "SELECT id, title FROM lists WHERE id = ? AND list_token = ?",
-        [id, token],
+        [listId, token],
         (err, rows) => {
           if (err) {
             reject(err);
@@ -215,7 +212,7 @@ app.post("/list/find", async (req, res) => {
 
     if (getList.length < 1) {
       console.log("no list found");
-      res.send({ error: "Unable to verify credentials." });
+      return res.send({ error: "Unable to verify credentials." });
     }
 
     const list = getList[0];
@@ -234,7 +231,7 @@ app.post("/list/find", async (req, res) => {
     );
     console.log(getUsers);
 
-    res.send({
+    return res.send({
       message: "success",
       data: {
         _id: list.id,
@@ -244,9 +241,10 @@ app.post("/list/find", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.send({ error: "There was an error accessing your list." });
+    return res.send({ error: "There was an error accessing your list." });
   }
 });
+
 
 // CREATE (or edit) LIST
 app.post("/list/create", async (req, res) => {
