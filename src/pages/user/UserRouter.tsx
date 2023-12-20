@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Container } from "@mui/material";
+import ViewUser from "./ViewUser";
+import CurrentUser from "./CurrentUser";
 
 const UserRouter = () => {
 
@@ -10,12 +12,20 @@ const UserRouter = () => {
   // DO NOT SEND SENSITIVE DATA. Only ever show the current user's id. Just get a response and send the data based on the response. Make another request on the proper route.
 
   // Set this with effect only. Return it from the backend as a separate property
-  
+  const [loading, setLoading] = useState(true);
     const [isThisUser, setIsThisUser] = useState(false);
 
+  if (loading) {
+    return <Container>Loading...</Container>;
+  }
+  
   return (
       <Container>
-          Loading...
+      {isThisUser
+        ? <ViewUser />
+        : <CurrentUser/>
+      }
+      
     </Container>
   )
 }

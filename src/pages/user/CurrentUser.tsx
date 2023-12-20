@@ -23,7 +23,7 @@ const CurrentUser = () => {
 
   const [isEditing, setIsEditing] = useState("");
 
-  // sent by react-router through params
+  // sent by react-router through params -- OR get in session
   const list = "12345";
 
   // Set by API call

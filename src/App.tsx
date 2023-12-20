@@ -17,9 +17,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route element={<ListOutlet />}>
           <Route path="/list/*" element={<List />} />
-          <Route path="/user" element={<UserRouter />} />
-          <Route path="/user/current" element={<CurrentUser />} />
-          <Route path="/user/view" element={<ViewUser />} />
+          <Route path="/user/*" element={<UserRouter />} />
         </Route>
       </Routes>
     </>

@@ -1,6 +1,6 @@
-import { Fragment, useState } from "react";
+import {  useState } from "react";
 
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { Container, Typography, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -41,6 +41,9 @@ const ShowList = ({ list }: iShowList) => {
   const [currentUser, setCurrentUser] = useState({ name: "", id: 0 });
   const [err, setErr] = useState("");
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleCurrentUser = (user: string, code: string, hasCode: boolean) => {
     setErr("");
     const slug = hasCode ? "user/access" : "user/create";
@@ -63,6 +66,14 @@ const ShowList = ({ list }: iShowList) => {
     });
     console.log("currentUser");
   };
+
+  const handleVisitUserPage = (user: string) => {
+    navigate(`/user/${list._id}/${user}`, {
+      state: {
+        currentUser: currentUser.id,
+        user: user
+    }})
+  }
 
   return (
     <Container>
@@ -95,7 +106,10 @@ const ShowList = ({ list }: iShowList) => {
                   // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell align="left">
-                    <Button disabled={currentUser.id === 0}>
+                    <Button
+                      disabled={currentUser.id === 0}
+                      onClick={() => handleVisitUserPage(user.name)}
+                    >
                       {user.emoji}
                       {user.name}
                     </Button>

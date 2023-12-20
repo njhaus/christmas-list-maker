@@ -52,7 +52,6 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                 Save
               </Button>
             ) : (
-              <>
                 <Button
                   onClick={() => {
                     handleCurrentUser(name, code, true);
@@ -60,11 +59,10 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                 >
                   Go!
                 </Button>
-                <Button onClick={() => setIsCreating(true)}>
-                  Create Access Code
-                </Button>
-              </>
             )}
+            <Button onClick={() => setIsCreating(!isCreating)}>
+              {isCreating ? "Cancel" : "Create Access Code"}
+            </Button>
           </Stack>
         </form>
       </Container>
