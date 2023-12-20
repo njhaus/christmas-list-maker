@@ -13,7 +13,7 @@ export interface iListUser {
 
 export const initialListData: iListData = {
     _id: "1234",
-    title: "Our Christmas List",
+    title: "initial list",
     users: [
         { name: "bob", emoji: String.fromCodePoint(0x1F600), recipients: ['goose', 'mouse', 'duck'], hasCode: false },
         { name: "henry", emoji: String.fromCodePoint(0x1F600), recipients: ['goose', 'mouse', 'duck'], hasCode: false },

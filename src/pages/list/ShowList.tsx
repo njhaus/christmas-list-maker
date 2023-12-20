@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import {  useState, useEffect } from "react";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -18,6 +18,7 @@ import UserAccess from "./UserAccess";
 import { iListData, iListUser } from "../../data/listData";
 import { apiPost } from "../../services/api_service";
 import Err from "../../layouts/Err";
+import useAuth from "../../hooks/useAuth";
 
 interface iShowList {
   list: iListData;
@@ -38,11 +39,12 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 // ------------------------COMPONENT----------------------------------------------------------------
 
 const ShowList = ({ list }: iShowList) => {
-  const [currentUser, setCurrentUser] = useState({ name: "", id: 0 });
+  const { currentUser, setCurrentUser } = useAuth();
   const [err, setErr] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
+
 
   const handleCurrentUser = (user: string, code: string, hasCode: boolean) => {
     setErr("");
@@ -64,12 +66,11 @@ const ShowList = ({ list }: iShowList) => {
         setErr("There was an error processing your request");
       }
     });
-    console.log("currentUser");
   };
 
   const handleVisitUserPage = (user: string) => {
     navigate(`/user/${list._id}/${user}`, {
-      state: {
+      state: { ...location.state,
         currentUser: currentUser.id,
         user: user
     }})
@@ -77,7 +78,7 @@ const ShowList = ({ list }: iShowList) => {
 
   return (
     <Container>
-      {currentUser.id === 0 && list.users.length > 1 ? (
+      {currentUser.id === '0' && list.users.length > 1 ? (
         <UserAccess handleCurrentUser={handleCurrentUser} />
       ) : (
         <Typography variant="h4">
@@ -107,7 +108,7 @@ const ShowList = ({ list }: iShowList) => {
                 >
                   <TableCell align="left">
                     <Button
-                      disabled={currentUser.id === 0}
+                      disabled={currentUser.id === '0'}
                       onClick={() => handleVisitUserPage(user.name)}
                     >
                       {user.emoji}

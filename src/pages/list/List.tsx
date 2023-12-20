@@ -12,6 +12,7 @@ import { initialListData } from '../../data/listData';
 import { useLocation, Link } from 'react-router-dom';
 import { apiPost } from '../../services/api_service';
 import { iListUser } from '../../data/listData';
+import useAuth from '../../hooks/useAuth';
 
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -32,23 +33,22 @@ const List = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(initialListData.users.length < 1);
-  const [list, setList] = useState(initialListData);
+  // const [list, setList] = useState(initialListData);
   const [err, setErr] = useState('');
+  const { list, setList } = useAuth();
  
   const location = useLocation();
 
   useEffect(() => {
-    console.log("effect running");
+    console.log(list);
     const getList = async () => {
+      console.log('Running API call to get list')
       const body = location.state;
       const slug = "list/find";
       apiPost(slug, body).then((res) => {
-        console.log(res);
         if (res?.message === "success") {
-          console.log(res);
           setList(res.data);
         } else if (res?.error) {
-          console.log(res);
           setErr(res.error);
         } else {
           setErr("There was an error processing your request");
@@ -56,12 +56,19 @@ const List = () => {
         setIsLoading(false);
       });
     };
-    getList();
+    // Checks if list has been uploaded -- 1234 is placeholder, which means it has not.
+    if (list._id === "1234") {
+      getList();
 
-    return () => {
-      setList(initialListData);
-      setIsLoading(true);
-    };
+      return () => {
+        setList(initialListData);
+        setErr('')
+        setIsLoading(true);
+      };
+    } else if (!location.state) {
+      setErr("Please enter your list name and access code to view this page.");
+    }
+    setIsLoading(false);
   }, []);
 
     const handleCreate = () => {

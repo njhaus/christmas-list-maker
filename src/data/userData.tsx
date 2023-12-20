@@ -1,7 +1,15 @@
 export const testUser = {
-    _id: '12345',
-    _list_id: '1234',
-    name: 'Bob',
+    name: "bob", emoji: String.fromCodePoint(0x1F600), recipients: ['goose', 'mouse', 'duck'], hasCode: false 
+}
+
+export interface iCurrentUser {
+  name: string;
+  id: string
+}
+
+export const testCurrentUser = {
+  name: 'placeholder',
+  id: '0'
 }
 
 export const testGifts = [
