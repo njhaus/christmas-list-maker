@@ -536,8 +536,6 @@ app.post("/user/data", async (req, res) => {
       return res.send({ error: "Error finding Current User." });
     const currentUserId = currentUser[0].id;
     const currentUserName = currentUser[0].name;
-    console.log("currentUserId");
-    console.log(currentUserId);
 
     // Get user being viewed
     const viewUser = await new Promise((resolve, reject) =>
@@ -610,6 +608,7 @@ app.post("/user/data", async (req, res) => {
             name: currentUserName,
             gifts: editGifts,
           },
+          currentUser: currentUserName,
         },
       });
     }
@@ -624,6 +623,7 @@ app.post("/user/data", async (req, res) => {
             gifts: userGifts,
             notes: userNotes,
           },
+          currentUser: currentUserName,
         },
       });
     }
@@ -802,6 +802,217 @@ app.post('/user/gift/delete', async (req, res) => {
   }
 
 })
+
+
+// __________________________________________________________________________________________________________________________________________
+
+// Buy a user gift
+
+app.post('/user/gift/buy', async (req, res) => {
+  
+  const userToken = req.cookies?.user;
+  const { giftId, bought, listId } = req.body;
+  // Get user id with token and list id
+  try {
+    const viewUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, name FROM users WHERE user_token = ? AND _list_id = ?",
+        [userToken, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    if (viewUser.length < 1)
+      return res.send({ error: "Error finding Viewed User." });
+    const viewUserName = viewUser[0].name;
+
+    // Edit gift
+    const editedGift = await new Promise((resolve, reject) =>
+      db.all(
+        "UPDATE gifts SET bought = ?, buyer_name = ? WHERE id = ?",
+        [bought, viewUserName, giftId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    return res.send({
+      message: "success",
+      boughtGift: {
+        id: giftId,
+        bought: bought,
+        name: viewUserName
+      }
+    });
+
+  } catch (err) {
+    return res.send({error: "There was an error saving your gift"})
+  }
+})
+
+
+
+
+// __________________________________________________________________________________________________________________________________________
+
+// Make new note
+
+app.post('/user/note/create', async (req, res) => {
+  
+  const userToken = req.cookies?.user;
+  const { description, listId, username } = req.body;
+  // Get the person who note is being wriiten for with user id with name and list id
+  try {
+    const viewUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, name FROM users WHERE name = ? AND _list_id = ?",
+        [username, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    if (viewUser.length < 1)
+      return res.send({ error: "Error finding Viewed User." });
+    const viewUserId = viewUser[0].id;
+
+    // Get the user who is WRITING the note with usertoken and listId
+    const writingUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, name FROM users WHERE user_token = ? AND _list_id = ?",
+        [userToken, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    if (writingUser.length < 1)
+      return res.send({ error: "Error finding writing User." });
+    const writingUserName = writingUser[0].name;
+
+    // Save note
+    const newNoteId = uuidv4();
+    const newNoteSaved = await new Promise((resolve, reject) =>
+      db.all(
+        "INSERT INTO notes (id, description, written_by, _user_id) VALUES (?, ?, ?, ?)",
+        [newNoteId, description, writingUserName, viewUserId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+
+    return res.send({
+      message: "success",
+      newNote: {
+        id: newNoteId,
+        description: description,
+        written_by: writingUserName
+      }
+    });
+
+  } catch (err) {
+    return res.send({error: "There was an error saving your note"})
+  }
+
+})
+
+
+
+// __________________________________________________________________________________________________________________________________________
+
+// Delete note
+
+app.post('/user/note/delete', async (req, res) => {
+  
+  const userToken = req.cookies?.user;
+  const { listId, username, noteId, currentUser } = req.body;
+  // Get the person who note is being wriiten for with name and list id
+  try {
+    const viewUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, name FROM users WHERE name = ? AND _list_id = ?",
+        [username, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    if (viewUser.length < 1)
+      return res.send({ error: "Error finding Viewed User." });
+    const viewUserId = viewUser[0].id;
+
+    // Get the user who WROTE the note (and is deleting) with usertoken and listId
+    const writingUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, name FROM users WHERE user_token = ? AND _list_id = ?",
+        [userToken, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    if (writingUser.length < 1)
+      return res.send({ error: "Error finding writing User." });
+    const writingUserName = writingUser[0].name;
+
+    // Delete note
+    const newNoteDeleted = await new Promise((resolve, reject) =>
+      db.all(
+        "DELETE FROM notes WHERE id = ? AND written_by = ? AND _user_id = ?",
+        [noteId, writingUserName, viewUserId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+
+    return res.send({
+      message: "success",
+      deletedNote: {
+        id: noteId
+      }
+    });
+
+  } catch (err) {
+    return res.send({error: "There was an error saving your note"})
+  }
+
+})
+
 
 
 // __________________________________________________________________________________________________________________________________________

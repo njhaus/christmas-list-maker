@@ -23,7 +23,7 @@ export interface iGift {
 export interface iNote {
   id: string;
   written_by: string;
-  text: string;
+  description: string;
 }
 
 export interface iEditUser {
@@ -61,12 +61,12 @@ export const testNotes = [
   {
     id: "0",
     written_by: 'billy',
-    text: 'I bought "skydiving for dummies" for this fool.',
+    description: 'I bought "skydiving for dummies" for this fool.',
   },
   {
     id: "1",
       written_by: 'caroline',
-    text: "Santa is bringing him coal.",
+    description: "Santa is bringing him coal.",
   },
 ];
 

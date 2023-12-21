@@ -20,7 +20,7 @@ const UserRouter = () => {
   // const location = useLocation();
   // Set this with effect only. Return it from the backend as a separate property
   const [isLoading, setIsLoading] = useState(true);
-  const { currentUser, setCurrentUser } = useAuth();
+  const [currentUser, setCurrentUser] = useState('')
   // const { list, setList } = useAuth();
   const { listId, username } = useParams();
   
@@ -29,6 +29,7 @@ const UserRouter = () => {
   const [err, setErr] = useState("");
 
   // Get data for VIEW USER or AM USER (Matches currentuser) (Uses user token) or OTHER user (if token does not match)
+  // Get currentUser NAME ONLY
   useEffect(() => {
     const getUser = async () => {
       console.log("Running API call to get user");
@@ -39,14 +40,15 @@ const UserRouter = () => {
       const slug = "user/data";
       apiPost(slug, body).then((res) => {
         if (res?.message === "success" && res?.data) {
-          if (res.data?.editUser) {
-            console.log(res.data.editUser)
+          if (res.data?.editUser && res.data?.currentUser) {
+            console.log(res.data)
             setEditUser(res.data.editUser)
-
+            setCurrentUser(res.data.currentUser)
           }
           else if (res.data?.viewUser) {
             console.log(res.data.viewUser);
             setViewUser(res.data.viewUser)
+            setCurrentUser(res.data.currentUser);
           }
           else {
             console.log('no data returned');
@@ -66,7 +68,6 @@ const UserRouter = () => {
       getUser();
 
       return () => {
-        setCurrentUser(testCurrentUser);
         setErr("");
         setIsLoading(true);
       };
@@ -82,7 +83,7 @@ const UserRouter = () => {
     <Container>
       {err && <Err err={err}></Err>}
       {viewUser.gifts[0]?.id !== "0" && (
-        <ViewUser data={viewUser} listId={listId ? listId : ""} />
+        <ViewUser data={viewUser} listId={listId ? listId : ""} currentUser={currentUser} />
       )}
       {editUser.gifts[0]?.id !== "0" && (
         <EditUser data={editUser} listId={listId ? listId : ""} />

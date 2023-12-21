@@ -10,10 +10,11 @@ import Err from "../../layouts/Err";
 
 interface iViewUserComponent {
   data: iViewUser,
-  listId: string
+  listId: string,
+  currentUser: string,
 } 
 
-const ViewUser = ({ data, listId }: iViewUserComponent) => {
+const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
   const [loading, isLoading] = useState(false);
 
   const [user, setUser] = useState(data.name);
@@ -26,11 +27,16 @@ const ViewUser = ({ data, listId }: iViewUserComponent) => {
 
   const handleBuyGift = (id: string) => {
     // Handles buying or 'un-buying' gift
+    setErr('');
     const previousGifts = gifts;
     const thisGift = gifts.find(gift => gift.id === id);
-    if (thisGift && thisGift?.bought) {
+    if (thisGift) {
       thisGift.bought = !thisGift.bought
-      setGifts([...gifts, thisGift])
+      setGifts(
+        [...gifts.filter((gift) => gift.id !== id), thisGift].sort((a, b) =>
+          a.description > b.description ? 1 : -1
+        )
+      );
 
       const slug = "user/gift/buy";
       const body = {
@@ -40,9 +46,35 @@ const ViewUser = ({ data, listId }: iViewUserComponent) => {
       };
       apiPost(slug, body).then((res) => {
         console.log(res);
-        if (res?.message === "success" && res?.editedGift) {
+        if (res?.message === "success" && res?.boughtGift) {
           console.log(res);
-          setGifts([...gifts.filter((gift) => gift.id !== id), res.editedGift]);
+          thisGift.buyer_name = res.boughtGift.name;
+          setGifts([...gifts.filter((gift) => gift.id !== id), thisGift].sort((a, b) => (a.description > b.description) ? 1 : -1));
+        } else if (res?.error) {
+          console.log(res);
+          setGifts(previousGifts);
+          setErr(res.error);
+        } else {
+          setGifts(previousGifts);
+          setErr("There was an error processing your request");
+        }
+      });
+    }
+  }
+
+  const handleNewNote = () => {
+    setErr('')
+      const slug = "user/note/create";
+      const body = {
+        description: newNote,
+        listId: listId,
+        username: user
+      };
+      apiPost(slug, body).then((res) => {
+        console.log(res);
+        if (res?.message === "success" && res?.newNote) {
+          console.log(res);
+          setNotes([...notes, res.newNote])
         } else if (res?.error) {
           console.log(res);
           setErr(res.error);
@@ -50,9 +82,32 @@ const ViewUser = ({ data, listId }: iViewUserComponent) => {
           setErr("There was an error processing your request");
         }
       });
-    }
+    setNewNote("");
   }
 
+  const handleDeleteNote = (id: string, writer: string) => {
+    setErr("");
+    const slug = "user/note/delete";
+    const body = {
+      listId: listId,
+      username: user,
+      noteId: id,
+      currentUser: currentUser
+    };
+    apiPost(slug, body).then((res) => {
+      console.log(res);
+      if (res?.message === "success" && res?.deletedNote) {
+        console.log(res);
+        setNotes([...notes.filter(note => note.id !== id)]);
+      } else if (res?.error) {
+        console.log(res);
+        setErr(res.error);
+      } else {
+        setErr("There was an error processing your request");
+      }
+    });
+
+  }
 
   if (loading) {
     return (
@@ -100,17 +155,29 @@ const ViewUser = ({ data, listId }: iViewUserComponent) => {
           <List>
             {notes.map((note) => (
               <ListItem key={note.id}>
-                <ListItemText>{note.text}</ListItemText>
-                <ListItemText>By: {note.written_by}</ListItemText>
-                <ListItemButton>Delete</ListItemButton>
+                <ListItemText>{note.description}</ListItemText>
+                <ListItemText>
+                  By: {note.written_by}
+                </ListItemText>
+                {note.written_by === currentUser && (
+                  <ListItemButton
+                    onClick={() => handleDeleteNote(note.id, note.written_by)}
+                  >
+                    Delete
+                  </ListItemButton>
+                )}
               </ListItem>
             ))}
           </List>
           <Stack>
             <FormControl>
               <InputLabel htmlFor="note">Add Note:</InputLabel>
-              <Input id="note" value={newNote}></Input>
-              <Button>Save Note</Button>
+              <Input
+                id="note"
+                value={newNote}
+                onChange={(e) => setNewNote(e.target.value)}
+              ></Input>
+              <Button onClick={() => handleNewNote()}>Save Note</Button>
             </FormControl>
           </Stack>
         </Stack>
