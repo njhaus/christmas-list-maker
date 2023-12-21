@@ -5,10 +5,10 @@ export interface iListData {
 }
 
 export interface iListUser {
-    name: string;
-    emoji: string;
-    recipients: string[];
-    hasCode: boolean;
+  name: string;
+  recipients: string[];
+  emoji?: string;
+  hasCode?: boolean;
 }   
 
 export const initialListData: iListData = {

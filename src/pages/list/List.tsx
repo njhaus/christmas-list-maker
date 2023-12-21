@@ -13,6 +13,7 @@ import { useLocation, Link, useParams } from 'react-router-dom';
 import { apiPost } from '../../services/api_service';
 import { iListUser } from '../../data/listData';
 import useAuth from '../../hooks/useAuth';
+import { makeList } from "../../utils/create_list";
 
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -36,7 +37,7 @@ const List = () => {
   // const [list, setList] = useState(initialListData);
   const [err, setErr] = useState('');
   const { list, setList } = useAuth();
-
+  console.log(list);
   const listId = useParams();
 
   useEffect(() => {
@@ -101,6 +102,29 @@ const List = () => {
     }
   };
 
+  const handleSetRecipients = (names: string[], num: number) => {
+    if (num > names.length - 1) {
+      setErr("Too many recipients. Please choose a smaller number of recipients.")
+      return
+    }
+    const recipientList = makeList(names, num);
+    const slug = "list/recipients";
+    const body = { ...list, users: recipientList };
+    console.log(body);
+    apiPost(slug, body).then((res) => {
+      console.log(res);
+      if (res?.message === "success") {
+        console.log("Success saving list");
+        setList(body)
+      } else if (res?.error) {
+        console.log(res);
+        setErr(res.error);
+      } else {
+        setErr("There was an error processing your request");
+      }
+    });
+  }
+
 
   if (isLoading) {
       return (
@@ -123,13 +147,13 @@ const List = () => {
       {isCreating && <CreateList list={list} handleCreate={handleCreate} handleSubmitList={handleSubmitList} />}
       {!isCreating && (
         <>
-          <ShowList list={list} />
+          <ShowList list={list} handleSetRecipients={handleSetRecipients}/>
           {list.users.length > 0 ? (
             <HtmlTooltip
               title={
                 <Fragment>
                   <Typography color="inherit">Caution!</Typography>
-                  {"Editing your list will cause your list to be re-created."}
+                  {"Editing your list will cause your list to be re-created and your recipient list will be reset."}
                 </Fragment>
               }
             >

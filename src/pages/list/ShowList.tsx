@@ -1,4 +1,4 @@
-import {  useState, useEffect } from "react";
+import {  useState, useEffect, Fragment } from "react";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -21,26 +21,16 @@ import { apiPost } from "../../services/api_service";
 import Err from "../../layouts/Err";
 import useAuth from "../../hooks/useAuth";
 import { testUser } from "../../data/userData";
+import RecipientsDialog from "./RecipientsDialog";
 
 interface iShowList {
   list: iListData;
+  handleSetRecipients: (names: string[], num: number) => void;
 }
-
-const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#f5f5f9",
-    color: "rgba(0, 0, 0, 0.87)",
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    border: "1px solid #dadde9",
-  },
-}));
 
 // ------------------------COMPONENT----------------------------------------------------------------
 
-const ShowList = ({ list }: iShowList) => {
+const ShowList = ({ list, handleSetRecipients }: iShowList) => {
   const { currentUser, setCurrentUser } = useAuth();
   const [err, setErr] = useState("");
   const [isLoading, setIsLoading] = useState(true)
@@ -111,7 +101,7 @@ const ShowList = ({ list }: iShowList) => {
 
   return (
     <Container>
-      {currentUser.id === '0' && list.users.length > 1 ? (
+      {currentUser.id === "0" && list.users.length > 1 ? (
         <UserAccess handleCurrentUser={handleCurrentUser} />
       ) : (
         <Typography variant="h4">
@@ -130,7 +120,28 @@ const ShowList = ({ list }: iShowList) => {
             <TableHead>
               <TableRow>
                 <TableCell align="left">Name</TableCell>
-                <TableCell align="center">Buys For</TableCell>
+                <TableCell align="center">
+                  Buys For
+                  {list.users.some((user) =>
+                    user.recipients.includes("Anybody")
+                  ) ? (
+                    <RecipientsDialog
+                      text="Create Recipients List"
+                      handleSetRecipients={handleSetRecipients}
+                      maxPeople={list.users.length - 1}
+                      tooltip={false}
+                      names={list.users.map((user) => user.name)}
+                    />
+                  ) : (
+                    <RecipientsDialog
+                      text="Recreate Recipients List"
+                      handleSetRecipients={handleSetRecipients}
+                      maxPeople={list.users.length - 1}
+                      tooltip={true}
+                      names={list.users.map((user) => user.name)}
+                    />
+                  )}
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -141,14 +152,14 @@ const ShowList = ({ list }: iShowList) => {
                 >
                   <TableCell align="left">
                     <Button
-                      disabled={currentUser.id === '0'}
+                      disabled={currentUser.id === "0"}
                       onClick={() => handleVisitUserPage(user.name)}
                     >
                       {user.emoji}
                       {user.name}
                     </Button>
                   </TableCell>
-                  <TableCell align="center">{user.recipients}</TableCell>
+                  <TableCell align="center">{(typeof user.recipients === 'string')? user.recipients : user.recipients.join(', ')}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

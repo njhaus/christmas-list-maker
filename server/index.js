@@ -226,7 +226,7 @@ app.post("/list/find", async (req, res) => {
 
     // GET USERS ASSOCIATED WITH LIST
     const usersSql =
-      "SELECT name, recipients, access_code FROM users WHERE _list_id = ?";
+      "SELECT name, recipients FROM users WHERE _list_id = ?";
     const getUsers = await new Promise((resolve, reject) =>
       db.all(usersSql, [list.id], (err, rows) => {
         if (err) {
@@ -301,6 +301,73 @@ app.post("/list/create", async (req, res) => {
     res.send({ error: "There was an error updating users" });
   }
 });
+
+
+
+// __________________________________________________________________________________________________________________________________________
+
+// CREATE recipients for list
+app.post("/list/recipients", async (req, res) => {
+  console.log("list/recipients");
+  const { _id: listId, title, users  } = req.body;
+  const token = req.cookies?.list;
+
+  if (!token) {
+    return res.send({ error: "You are not logged in" });
+  }
+
+  console.log(listId, token)
+
+  try {
+    //  GET LIST TITLE/ID
+    const getList = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, title FROM lists WHERE id = ? AND list_token = ?",
+        [listId, token],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+
+    if (getList.length < 1) {
+      console.log("no list found");
+      return res.send({ error: "Unable to verify credentials." });
+    }
+
+    const list = getList[0];
+
+    // UPDATE USERS ASSOCIATED WITH LIST
+    for (let user of users) {
+      const recipientString = user.recipients.join(', ');
+      const username = user.name;
+      const usersSql =
+        "UPDATE users SET recipients = ? WHERE name = ? AND _list_id = ?";
+      const updateUser = await new Promise((resolve, reject) =>
+        db.all(usersSql, [recipientString, username, listId], (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        })
+      );
+      console.log(updateUser);
+    }
+
+    return res.send({
+      message: "success"
+    });
+  } catch (err) {
+    console.log(err);
+    return res.send({ error: "There was an error accessing your list." });
+  }
+});
+
 
 // __________________________________________________________________________________________________________________________________________
 
