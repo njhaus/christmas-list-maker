@@ -31,7 +31,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
     const previousGifts = gifts;
     const thisGift = gifts.find(gift => gift.id === id);
     if (thisGift) {
-      thisGift.bought = !thisGift.bought
+      thisGift.bought = !thisGift.bought;
       setGifts(
         [...gifts.filter((gift) => gift.id !== id), thisGift].sort((a, b) =>
           a.description > b.description ? 1 : -1
@@ -132,6 +132,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
                 <FormControlLabel
                   control={
                     <Checkbox
+                      disabled={(gift.bought && gift.buyer_name !== currentUser) && true}
                       checked={!gift.bought ? false : true}
                       onChange={() => handleBuyGift(gift.id)}
                     />

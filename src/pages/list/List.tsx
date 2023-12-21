@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment } from 'react';
 
-import { Container, Typography, Button } from '@mui/material'
+import { Container, Typography, Button, Box } from '@mui/material'
 import { styled } from "@mui/material/styles";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 
@@ -66,7 +66,7 @@ const List = () => {
       return () => {
         setList(initialListData);
         setErr('')
-        setIsLoading(true);
+        // setIsLoading(true);
       };
     } else if (!listId) {
       setErr("Please enter your list name and access code to view this page.");
@@ -142,24 +142,43 @@ const List = () => {
   }
   
   return (
-    <Container>
-      <Typography variant="h2">{list.title}</Typography>
-      {isCreating && <CreateList list={list} handleCreate={handleCreate} handleSubmitList={handleSubmitList} />}
+    <Box
+      sx={{
+        backgroundColor: "info.main",
+        width: "100%",
+        paddingBottom: "3rem",
+      }}
+    >
+      {isCreating && (
+        <CreateList
+          list={list}
+          handleCreate={handleCreate}
+          handleSubmitList={handleSubmitList}
+        />
+      )}
       {!isCreating && (
         <>
-          <ShowList list={list} handleSetRecipients={handleSetRecipients}/>
+          <ShowList list={list} handleSetRecipients={handleSetRecipients} />
           {list.users.length > 0 ? (
             <HtmlTooltip
               title={
                 <Fragment>
                   <Typography color="inherit">Caution!</Typography>
-                  {"Editing your list will cause your list to be re-created and your recipient list will be reset."}
+                  {
+                    "Editing your list will cause your list to be re-created and your recipient list will be reset."
+                  }
                 </Fragment>
               }
             >
               <Button
                 onClick={() => {
                   handleCreate();
+                }}
+                variant="outlined"
+                sx={{
+                  marginTop: "2rem",
+                  width: "10rem",
+                  fontSize: "1.2rem",
                 }}
               >
                 Edit list
@@ -170,13 +189,19 @@ const List = () => {
               onClick={() => {
                 handleCreate();
               }}
+              variant="contained"
+              sx={{
+                marginTop: "2rem",
+                width: "10rem",
+                fontSize: "1.2rem",
+              }}
             >
               Edit list
             </Button>
           )}
         </>
       )}
-    </Container>
+    </Box>
   );
 }
 

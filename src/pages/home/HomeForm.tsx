@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 
 import { apiPost } from "../../services/api_service";
+import Err from "../../layouts/Err";
 
 
 export interface iHomeForm {
@@ -66,31 +67,95 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
 
   return (
     <div>
-      <Typography variant="h3">{title} a List</Typography>
+      <Typography
+        variant="h4"
+        sx={{
+          color: "primary.main",
+        }}
+      >
+        {title} a List
+      </Typography>
       <form method={method} action={action} onSubmit={(e) => handleForm(e)}>
-        <Stack>
-          <FormControl>
-            <InputLabel htmlFor="title">List Name</InputLabel>
+        <Stack sx={{ alignItems: "center", justifyContent: "start" }}>
+          <FormControl
+            sx={{
+              marginTop: "1rem",
+            }}
+          >
+            <InputLabel
+              htmlFor="title"
+              sx={{
+                color: "info.dark",
+              }}
+            >
+              List Name
+            </InputLabel>
             <Input
               id="title"
               aria-describedby="my-helper-text"
               value={listTitle}
               onChange={(e) => setListTitle(e.target.value)}
+              sx={{
+                width: "12rem",
+                fontSize: "1.2rem",
+                color: "info.dark",
+              }}
             />
           </FormControl>
-          <FormControl>
-            <InputLabel htmlFor="code">Access Code</InputLabel>
+          <FormControl
+            sx={{
+              marginTop: "1rem",
+            }}
+          >
+            <InputLabel
+              htmlFor="code"
+              sx={{
+                color: "info.dark",
+              }}
+            >
+              Access Code
+            </InputLabel>
             <Input
               type="password"
               id="code"
               aria-describedby="my-helper-text"
               value={listCode}
               onChange={(e) => setListCode(e.target.value)}
+              sx={{
+                marginTop: "2rem",
+                width: "12rem",
+                fontSize: "1.2rem",
+                color: "info.dark",
+              }}
             />
           </FormControl>
-          <Button type="submit">{title}</Button>
-          <Button type="button" onClick={() => handleCancel()}>Cancel</Button>
-          {err && <Typography>{err}</Typography>}
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              marginTop: "2rem",
+              width: "10rem",
+              fontSize: "1.2rem",
+              backgroundColor: "primary.main",
+            }}
+          >
+            {title}
+          </Button>
+          <Button
+            type="button"
+            onClick={() => handleCancel()}
+            variant="outlined"
+            sx={{
+              marginTop: "1rem",
+              width: "10rem",
+              fontSize: "1.2rem",
+              borderColor: "info.dark",
+              color: "info.dark",
+            }}
+          >
+            Cancel
+          </Button>
+          {err && <Err err={err} setErr={setErr}></Err>}
         </Stack>
       </form>
     </div>

@@ -5,8 +5,9 @@ import { Outlet } from "react-router-dom";
 const ListOutlet = () => {
   return (
     <>
-      <Layout />
-      <Outlet/>
+      <Layout>
+        <Outlet />
+      </Layout>
     </>
   );
 };

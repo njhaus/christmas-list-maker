@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
-import { Button } from "@mui/material";
+import { Button, Stack, Typography, Box } from "@mui/material";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { apiPost } from "../services/api_service";
 import useAuth from "../hooks/useAuth";
@@ -10,7 +10,11 @@ import Err from "./Err";
 import { initialListData } from "../data/listData";
 import { testCurrentUser } from "../data/userData";
 
-const Layout = () => {
+interface iLayout {
+  children: JSX.Element
+}
+
+const Layout = ({children}: iLayout) => {
 
     const navigate = useNavigate();
   const [err, setErr] = useState('')
@@ -39,13 +43,40 @@ const Layout = () => {
     }
 
     if (err) {
-        return <Err err={err}></Err>
+      return (
+        <>
+          <Err err={err} setErr={setErr}></Err>
+          <Link to={"/"}>
+            <Button>Return Home</Button>
+          </Link>
+        </>
+      );
     }
 
   return (
-    <div>
+    <Box
+      sx={{
+        margin: "0",
+        width: "100vw",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        backgroundColor: "white",
+      }}
+    >
+      <Stack direction="row"
+        sx={{
+          justifyContent: 'space-between',
+          width: '100%'
+      }}
+      >
+        <Typography>Christmas List Maker</Typography>
         <Button onClick={() => handleLogout()}>Logout</Button>
-    </div>
+      </Stack>
+      {children}
+    </Box>
   );
 }
 

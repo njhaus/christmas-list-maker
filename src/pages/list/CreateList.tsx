@@ -8,11 +8,13 @@ import {
   Button,
   Stack,
   List,
-  ListItem
+  ListItem,
+   Box
 } from "@mui/material";
 
 import { iListData, iListUser } from "../../data/listData";
 import { apiPost } from "../../services/api_service";
+import { Form } from "react-router-dom";
 
 
 interface iCreateList {
@@ -61,7 +63,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
     if (
       users
         .map((user, i) =>
-          users.find((chkuser, idx) => chkuser.name === user.name && idx !== i)
+          users.find((chkuser, idx) => chkuser.name === user.name && idx !== i && chkuser.name !== '')
         )
         .some((val) => val)
     ) {
@@ -73,10 +75,33 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
   
 
   return (
-    <div>
-      <Typography variant="h3">Enter names:</Typography>
+    <Box
+      sx={{
+        backgroundColor: "info.main",
+        minHeight: "100vh",
+      }}
+    >
+      <Typography
+        variant="h4"
+        sx={{
+          color: "primary.dark",
+          backgroundColor: "white",
+          paddingBottom: "3rem",
+          borderRadius: "0 0 20% 20%",
+          marginTop: "-1px",
+          paddingTop: "2rem",
+        }}
+      >
+        Enter names:
+      </Typography>
       <form method="post" action="list/edit">
-        <Stack>
+        <Stack
+          sx={{
+            alignItems: "center",
+            marginTop: "2rem",
+            minHeight: "100%",
+          }}
+        >
           <List>
             {users.map((user, i) => {
               if (user.name) {
@@ -87,46 +112,96 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
                       aria-describedby="edit user"
                       value={user.name}
                       onChange={(e) => updateUser(e.target.value, i)}
+                      sx={{
+                        width: "12rem",
+                        fontSize: "1.2rem",
+                        color: "white",
+                      }}
                     />
                   </ListItem>
                 );
               }
             })}
             <ListItem>
-              <Input
-                disabled={err ? true : false}
-                ref={ref}
-                id="new-user"
-                aria-describedby="new-user"
-                value={newUser}
-                onChange={(e) => setNewUser(e.target.value)}
-                onBlur={(e) => handleUsers(e.target.value)}
-              />
+              <FormControl>
+                <InputLabel
+                  htmlFor="new-user"
+                  sx={{
+                    color: "secondary.light",
+                  }}
+                >
+                  Name
+                </InputLabel>
+                <Input
+                  disabled={err ? true : false}
+                  ref={ref}
+                  id="new-user"
+                  aria-describedby="new-user"
+                  value={newUser}
+                  onChange={(e) => setNewUser(e.target.value)}
+                  onBlur={(e) => handleUsers(e.target.value)}
+                  sx={{
+                    marginTop: "2rem",
+                    width: "12rem",
+                    fontSize: "1.2rem",
+                  }}
+                />
+              </FormControl>
             </ListItem>
             {newUser && (
               <ListItem>
-                <Input
-                  id="new-user-temp"
-                  aria-describedby="temporary"
-                  value={""}
-                />
+                <FormControl>
+                  <InputLabel htmlFor="new-user-temp">List Name</InputLabel>
+                  <Input
+                    id="new-user-temp"
+                    aria-describedby="temporary"
+                    value={""}
+                    sx={{
+                      marginTop: "2rem",
+                      width: "12rem",
+                      fontSize: "1.2rem",
+                    }}
+                  />
+                </FormControl>
               </ListItem>
             )}
           </List>
           {err && <Typography>{err}</Typography>}
         </Stack>
-        <Button
-          disabled={err ? true : false}
-          onClick={() => {
-            handleSubmitList(users);
-            handleCreate();
+        <Stack
+          sx={{
+            alignItems: "center",
           }}
         >
-          Save List
-        </Button>
-        <Button onClick={() => handleCreate()}>Cancel</Button>
+          <Button
+            disabled={err ? true : false}
+            onClick={() => {
+              handleSubmitList(users.filter((user) => user.name !== ""));
+              handleCreate();
+            }}
+            variant="contained"
+            sx={{
+              marginTop: "2rem",
+              width: "10rem",
+              fontSize: "1.2rem",
+            }}
+          >
+            Save List
+          </Button>
+          <Button
+            onClick={() => handleCreate()}
+            variant="outlined"
+            sx={{
+              marginTop: "2rem",
+              width: "10rem",
+              fontSize: "1.2rem",
+            }}
+          >
+            Cancel
+          </Button>
+        </Stack>
       </form>
-    </div>
+    </Box>
   );
 };
 

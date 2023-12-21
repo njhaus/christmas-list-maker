@@ -100,73 +100,174 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
   }, [])
 
   return (
-    <Container>
+    <>
       {currentUser.id === "0" && list.users.length > 1 ? (
         <UserAccess handleCurrentUser={handleCurrentUser} />
       ) : (
-        <Typography variant="h4">
-          {list.users.length > 1 && `Hello ${currentUser?.name}`}
-          {/* {list.users.find((user) => user.name === currentUser.name)?.name} */}
-        </Typography>
+        <Container
+          sx={{
+            backgroundColor: "white",
+            paddingBottom: "2.5rem",
+            borderRadius: "0 0 20% 20%",
+            marginTop: "-1px",
+            paddingTop: "1rem",
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              color: "primary.main",
+            }}
+          >
+            {list.users.length > 1 && `Hello, ${currentUser?.name}!`}
+            {/* {list.users.find((user) => user.name === currentUser.name)?.name} */}
+          </Typography>
+        </Container>
       )}
-      {err && <Err err={err}></Err>}
-      {list.users.length < 1 ? (
-        <Typography>
-          Nobody is on your list yet! Click "Edit List" to add people.
+      <Container
+        sx={{
+          marginTop: "2rem",
+        }}
+      >
+        <Typography
+          variant="h3"
+          sx={{
+            marginTop: "2rem",
+            color: "secondary.light",
+          }}
+        >
+          {list.title}
         </Typography>
-      ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="left">Name</TableCell>
-                <TableCell align="center">
-                  Buys For
-                  {list.users.some((user) =>
-                    user.recipients.includes("Anybody")
-                  ) ? (
-                    <RecipientsDialog
-                      text="Create Recipients List"
-                      handleSetRecipients={handleSetRecipients}
-                      maxPeople={list.users.length - 1}
-                      tooltip={false}
-                      names={list.users.map((user) => user.name)}
-                    />
-                  ) : (
-                    <RecipientsDialog
-                      text="Recreate Recipients List"
-                      handleSetRecipients={handleSetRecipients}
-                      maxPeople={list.users.length - 1}
-                      tooltip={true}
-                      names={list.users.map((user) => user.name)}
-                    />
-                  )}
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {list.users.map((user) => (
-                <TableRow
-                  key={user.name}
-                  // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell align="left">
-                    <Button
-                      disabled={currentUser.id === "0"}
-                      onClick={() => handleVisitUserPage(user.name)}
-                    >
-                      {user.emoji}
-                      {user.name}
-                    </Button>
+        {err && <Err err={err} setErr={setErr}></Err>}
+        {list.users.length < 1 ? (
+          <Typography
+            sx={{
+              fontSize: "1.2rem",
+              color: "primary.dark",
+            }}
+          >
+            Nobody is on your list yet! Click "Edit List" to add people.
+          </Typography>
+        ) : (
+          <TableContainer
+            className="red-box"
+            component={Paper}
+            sx={{
+              width: "100%",
+              marginTop: "2rem",
+            }}
+          >
+            <Table
+              sx={{
+                // minWidth: 650,
+                backgroundColor: "info.main",
+              }}
+              aria-label="simple table"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    align="left"
+                    sx={{
+                      fontSize: "1.7rem",
+                      color: "white",
+                      fontWeight: "200",
+                    }}
+                  >
+                    Name
                   </TableCell>
-                  <TableCell align="center">{(typeof user.recipients === 'string')? user.recipients : user.recipients.join(', ')}</TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      fontSize: "1.7rem",
+                      color: "white",
+                      fontWeight: "200",
+                    }}
+                  >
+                    Buys For
+                  </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-    </Container>
+              </TableHead>
+              <TableBody>
+                <TableRow
+                  sx={{
+                    position: "relative",
+                    height: "2.5rem",
+                  }}
+                >
+                  <TableCell
+                    sx={{
+                      height: "2.5rem",
+                      padding: "0",
+                    }}
+                  >
+                    {list.users.some((user) =>
+                      user.recipients.includes("Anybody")
+                    ) ? (
+                      <RecipientsDialog
+                        text="Create Recipients Lists"
+                        handleSetRecipients={handleSetRecipients}
+                        maxPeople={list.users.length - 1}
+                        tooltip={false}
+                        names={list.users.map((user) => user.name)}
+                      />
+                    ) : (
+                      <RecipientsDialog
+                        text="Recreate Recipients Lists"
+                        handleSetRecipients={handleSetRecipients}
+                        maxPeople={list.users.length - 1}
+                        tooltip={true}
+                        names={list.users.map((user) => user.name)}
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      height: "2.5rem",
+                    }}
+                  ></TableCell>
+                </TableRow>
+                {list.users.map((user) => (
+                  <TableRow
+                    key={user.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="left">
+                      <Button
+                        disabled={currentUser.id === "0"}
+                        onClick={() => handleVisitUserPage(user.name)}
+                        sx={{
+                          color: "white",
+                          fontSize: "1.2rem",
+                          "&.Mui-disabled": {
+                            color: "white",
+                          },
+                        }}
+                      >
+                        {/* {user.emoji} */}
+                        {user.name}
+                      </Button>
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "secondary.light",
+                        fontSize: "1.2rem",
+                        fontVariantCaps: "all-small-caps",
+                      }}
+                    >
+                      {typeof user.recipients === "string"
+                        ? user.recipients
+                        : user.recipients.join(", ")}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Container>
+    </>
   );
 };
 

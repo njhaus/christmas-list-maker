@@ -276,7 +276,22 @@ app.post("/list/create", async (req, res) => {
         }
       )
     );
-    // Insert users and give them the _list_id
+    // Delete any old users in list (bombs the whole list)
+    const deleteOldList = await new Promise((resolve, reject) =>
+      db.all(
+        "DELETE FROM users WHERE _list_id = ?",
+        [getList.id],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows[0]);
+          }
+        }
+      )
+    );
+
+    // Insert users and give them the _list_id 
     for (let user of users) {
       const userId = uuidv4();
       const username = user.name.toLowerCase();
@@ -548,7 +563,7 @@ app.post("/user/find", async (req, res) => {
 
     if (getUser.length < 1) {
       console.log("no list found");
-      res.send({ error: "Unable to verify credentials." });
+      return res.send({ error: "Unable to verify credentials." });
     }
 
     console.log("hi3");
@@ -876,10 +891,11 @@ app.post('/user/gift/delete', async (req, res) => {
 // Buy a user gift
 
 app.post('/user/gift/buy', async (req, res) => {
-  
+  console.log("/user/gift/buy");
   const userToken = req.cookies?.user;
   const { giftId, bought, listId } = req.body;
   // Get user id with token and list id
+  console.log(bought)
   try {
     const viewUser = await new Promise((resolve, reject) =>
       db.all(
@@ -896,7 +912,7 @@ app.post('/user/gift/buy', async (req, res) => {
     );
     if (viewUser.length < 1)
       return res.send({ error: "Error finding Viewed User." });
-    const viewUserName = viewUser[0].name;
+    const viewUserName = bought === true ? viewUser[0].name : '';
 
     // Edit gift
     const editedGift = await new Promise((resolve, reject) =>

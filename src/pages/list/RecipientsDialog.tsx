@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import Button from "@mui/material/Button";
-import { FormControl, InputLabel, MenuItem } from "@mui/material";
+import { Box, Container, FormControl, InputLabel, MenuItem } from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 // import PersonIcon from "@mui/icons-material/Person";
@@ -57,25 +57,65 @@ function SimpleDialog({ open, selectedValue, onClose, handleSetRecipients, maxPe
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>Create Recipients List</DialogTitle>
-      <Typography>How many recipients should each person buy for?</Typography>
-      <FormControl fullWidth>
-        <InputLabel id="recipients-select">Number of people</InputLabel>
-        <Select
+      <DialogTitle
+        sx={{
+          fontSize: "1.5rem",
+          color: "primary.dark",
+        }}
+      >
+        Create Recipients List
+      </DialogTitle>
+      <Container>
+        <Typography
+          sx={{
+            fontSize: "1.2rem",
+            color: "primary.dark",
+          }}
+        >
+          How many recipients should each person buy for?
+        </Typography>
+        <FormControl
+          fullWidth
+          sx={{
+            fontSize: "1.2rem",
+            color: "primary.dark",
+            margin: '1rem 0'
+          }}
+        >
+          <InputLabel id="recipients-select">Number of people</InputLabel>
+          <Select
             labelId="recipients-select"
             id="demo-simple-select"
             value={num}
             label="People"
             onChange={(e) => {
-                if (typeof e.target.value === 'number') setNum(e.target.value)
+              if (typeof e.target.value === "number") setNum(e.target.value);
             }}
+          >
+            {numsArray.map((num) => (
+              <MenuItem
+                key={num}
+                value={num}
+                sx={{
+                  fontSize: "1.2rem",
+                  color: "primary.dark",
+                }}
+              >
+                {num}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Button
+          onClick={() => handleClick("close")}
+          variant="contained"
+          sx={{
+            margin: "0.5rem 0",
+          }}
         >
-          {numsArray.map((num) => (
-              <MenuItem key={num} value={num}>{num}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <Button onClick={() => handleClick("close")}>Create Recipients List</Button>
+          Create Recipients List
+        </Button>
+      </Container>
     </Dialog>
   );
 }
@@ -104,7 +144,15 @@ export default function RecipientsDialog({text, handleSetRecipients, maxPeople, 
   };
     if (tooltip) {
         return (
-          <div>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-45%, -50%)",
+              minWidth: "16rem",
+            }}
+          >
             <HtmlTooltip
               title={
                 <Fragment>
@@ -113,25 +161,48 @@ export default function RecipientsDialog({text, handleSetRecipients, maxPeople, 
                 </Fragment>
               }
             >
-              <Button variant="outlined" onClick={handleClickOpen}>
+              <Button
+                variant="contained"
+                onClick={handleClickOpen}
+                sx={{
+                  backgroundColor: "info.dark",
+                  color: "secondary.light",
+
+                }}
+              >
                 {text}
               </Button>
             </HtmlTooltip>
             <SimpleDialog
               selectedValue={selectedValue}
               open={open}
-                    onClose={handleClose}
-                    handleSetRecipients={handleSetRecipients}
-                    maxPeople={maxPeople}
-                    names={names}
+              onClose={handleClose}
+              handleSetRecipients={handleSetRecipients}
+              maxPeople={maxPeople}
+              names={names}
             />
-          </div>
+          </Box>
         );
     }
     else {
         return (
-          <div>
-            <Button variant="outlined" onClick={handleClickOpen}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-45%, -50%)",
+              minWidth: "16rem",
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "primary.main",
+                color: "secondary.light",
+              }}
+              onClick={handleClickOpen}
+            >
               {text}
             </Button>
             <SimpleDialog
@@ -142,7 +213,7 @@ export default function RecipientsDialog({text, handleSetRecipients, maxPeople, 
               maxPeople={maxPeople}
               names={names}
             />
-          </div>
+          </Box>
         );
     }
 }
