@@ -55,6 +55,7 @@ app.use(session(sessionConfig));
 app.use(bodyParser.json());
 
 // ++++++++++++++ROUTES+++++++++++++++++++++
+// __________________________________________________________________________________________________________________________________________
 
 // CREATE list
 app.post("/home/new", async (req, res) => {
@@ -117,6 +118,10 @@ app.post("/home/new", async (req, res) => {
     res.send({ error: "There was an error creating your list." });
   }
 });
+
+
+// __________________________________________________________________________________________________________________________________________
+
 
 // OPEN list
 
@@ -184,6 +189,8 @@ app.post("/home/open", async (req, res) => {
   }
 });
 
+// __________________________________________________________________________________________________________________________________________
+
 // FIND list
 app.post("/list/find", async (req, res) => {
   console.log("list/find");
@@ -245,6 +252,8 @@ app.post("/list/find", async (req, res) => {
   }
 });
 
+// __________________________________________________________________________________________________________________________________________
+
 
 // CREATE (or edit) LIST
 app.post("/list/create", async (req, res) => {
@@ -292,6 +301,8 @@ app.post("/list/create", async (req, res) => {
     res.send({ error: "There was an error updating users" });
   }
 });
+
+// __________________________________________________________________________________________________________________________________________
 
 //CREATE USER ACCESS CODE
 app.post("/user/create", async (req, res) => {
@@ -355,6 +366,8 @@ app.post("/user/create", async (req, res) => {
     res.send({ error: "There was an error creating your access code." });
   }
 });
+
+// __________________________________________________________________________________________________________________________________________
 
 //ACCESS EXISTING USER ACCESS CODE
 app.post("/user/access", async (req, res) => {
@@ -437,6 +450,8 @@ app.post("/user/access", async (req, res) => {
   }
 });
 
+// __________________________________________________________________________________________________________________________________________
+
 // FIND/CHECK LOGGED IN USER
 app.post("/user/find", async (req, res) => {
   console.log("user/find");
@@ -485,6 +500,9 @@ app.post("/user/find", async (req, res) => {
   }
 });
 
+// __________________________________________________________________________________________________________________________________________
+
+
 // Get user's list -- return edit user OR view user (From UserRouter component)
 app.post("/user/data", async (req, res) => {
   console.log("user/data");
@@ -516,8 +534,8 @@ app.post("/user/data", async (req, res) => {
     );
     if (currentUser.length < 1)
       return res.send({ error: "Error finding Current User." });
-    currentUserId = currentUser[0].id;
-    currentUserName = currentUser[0].name;
+    const currentUserId = currentUser[0].id;
+    const currentUserName = currentUser[0].name;
     console.log("currentUserId");
     console.log(currentUserId);
 
@@ -537,8 +555,8 @@ app.post("/user/data", async (req, res) => {
     );
     if (viewUser.length < 1)
       return res.send({ error: "Error finding Viewed User." });
-    viewUserId = viewUser[0].id;
-    viewUserName = viewUser[0].name;
+    const viewUserId = viewUser[0].id;
+    const viewUserName = viewUser[0].name;
     console.log("viewUserId");
     console.log(viewUserId);
 
@@ -613,6 +631,181 @@ app.post("/user/data", async (req, res) => {
     return res.send({ error: "There was an error processing your request" });
   }
 });
+
+
+
+// __________________________________________________________________________________________________________________________________________
+
+// Make new user gift
+
+app.post('/user/gift/new', async (req, res) => {
+  
+  const userToken = req.cookies?.user;
+  const { newGift, newLink, listId } = req.body;
+  // Get user id with token and list id
+  try {
+    const viewUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, name FROM users WHERE user_token = ? AND _list_id = ?",
+        [userToken, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    if (viewUser.length < 1)
+      return res.send({ error: "Error finding Viewed User." });
+    const viewUserId = viewUser[0].id;
+
+    // Save gift
+    const newGiftId = uuidv4();
+    const newGiftSaved = await new Promise((resolve, reject) =>
+      db.all(
+        "INSERT INTO gifts (id, description, link, _user_id) VALUES (?, ?, ?, ?)",
+        [newGiftId, newGift, newLink, viewUserId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    return res.send({
+      message: "success",
+      newGift: {
+        id: newGiftId,
+        description: newGift,
+        link: newLink,
+      }
+    });
+
+  } catch (err) {
+    return res.send({error: "There was an error saving your gift"})
+  }
+
+})
+
+
+
+// __________________________________________________________________________________________________________________________________________
+
+// Edit a user gift
+
+app.post('/user/gift/edit', async (req, res) => {
+  
+  const userToken = req.cookies?.user;
+  const { giftId, description, link, listId } = req.body;
+  // Get user id with token and list id
+  try {
+    const viewUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, name FROM users WHERE user_token = ? AND _list_id = ?",
+        [userToken, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    if (viewUser.length < 1)
+      return res.send({ error: "Error finding Viewed User." });
+    const viewUserId = viewUser[0].id;
+
+    // Edit gift
+    const editedGift = await new Promise((resolve, reject) =>
+      db.all(
+        "UPDATE gifts SET description = ?, link = ? WHERE id = ? AND _user_id = ?",
+        [description, link, giftId, viewUserId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    return res.send({
+      message: "success",
+      editedGift: {
+        id: giftId,
+        description: description,
+        link: link,
+      }
+    });
+
+  } catch (err) {
+    return res.send({error: "There was an error saving your gift"})
+  }
+})
+
+
+// __________________________________________________________________________________________________________________________________________
+
+// Delete a user gift
+
+app.post('/user/gift/delete', async (req, res) => {
+  
+  const userToken = req.cookies?.user;
+  const { giftId, listId } = req.body;
+  // Get user id with token and list id
+  try {
+    const viewUser = await new Promise((resolve, reject) =>
+      db.all(
+        "SELECT id, name FROM users WHERE user_token = ? AND _list_id = ?",
+        [userToken, listId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    if (viewUser.length < 1)
+      return res.send({ error: "Error finding Viewed User." });
+    const viewUserId = viewUser[0].id;
+
+    // Delete gift
+    const deletedGift = await new Promise((resolve, reject) =>
+      db.all(
+        "DELETE FROM gifts WHERE id = ? AND _user_id = ?",
+        [giftId, viewUserId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      )
+    );
+    return res.send({
+      message: "success",
+      deletedGift: {
+        id: giftId
+      }
+    });
+
+  } catch (err) {
+    return res.send({error: "There was an error saving your gift"})
+  }
+
+})
+
+
+// __________________________________________________________________________________________________________________________________________
+
 
 // LOGOUT
 app.post("/logout", async (req, res) => {

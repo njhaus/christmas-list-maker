@@ -78,14 +78,15 @@ const UserRouter = () => {
     return <Container>Loading...</Container>;
   }
 
-  console.log(viewUser)
-  console.log(editUser);
-
   return (
     <Container>
       {err && <Err err={err}></Err>}
-      {viewUser.gifts[0]?.id !== "0" && <ViewUser />}
-      {editUser.gifts[0]?.id !== "0" && <EditUser data={editUser} />}
+      {viewUser.gifts[0]?.id !== "0" && (
+        <ViewUser data={viewUser} listId={listId ? listId : ""} />
+      )}
+      {editUser.gifts[0]?.id !== "0" && (
+        <EditUser data={editUser} listId={listId ? listId : ""} />
+      )}
     </Container>
   );
 }
