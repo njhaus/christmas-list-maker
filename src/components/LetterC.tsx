@@ -10,8 +10,6 @@ const LetterC = ({ height, margin }: iLetterC) => {
     const mb = margin ? margin[0] : '';
     const mr = margin ? margin[1] : "";
 
-    console.log(margin)
-
     return <Box
         className="letter-c-img"
         sx={{

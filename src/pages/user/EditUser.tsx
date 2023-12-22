@@ -12,11 +12,11 @@ import {
   Input,
   Button,
   ListItemButton,
-  Link
+  Link,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 
-import Err from "../../layouts/Err";
+import Err from "../error/Err";
 import { iGift, iEditUser } from "../../data/userData";
 import { apiPost } from "../../services/api_service";
 
@@ -25,39 +25,36 @@ interface iEditUserComponent {
   listId: string;
 }
 
-const EditUser = ({data, listId}: iEditUserComponent) => {
-  
-  
-
+const EditUser = ({ data, listId }: iEditUserComponent) => {
   // Set by API call
   const [user, setUser] = useState(data.name);
   const [gifts, setGifts] = useState(data.gifts);
 
-  const [err, setErr] = useState('')
+  const [err, setErr] = useState("");
 
   const [newGift, setNewGift] = useState("");
   const [newLink, setNewLink] = useState("");
-// Is editing takes the id of the gift being edited. The values of the edited gift/link are sotred in the edit states
+  // Is editing takes the id of the gift being edited. The values of the edited gift/link are sotred in the edit states
   const [isEditing, setIsEditing] = useState("");
-  const [editGift, setEditGift] = useState('');
+  const [editGift, setEditGift] = useState("");
   const [editLink, setEditLink] = useState("");
 
   // Edit a gift
   const handleEdit = (id: string) => {
     setErr("");
-    const thisGift = gifts.find(gift => gift.id === id)
+    const thisGift = gifts.find((gift) => gift.id === id);
     const slug = "user/gift/edit";
     const body = {
       giftId: id,
       description: editGift ? editGift : thisGift?.description,
       link: editLink ? editLink : thisGift?.link,
-      listId: listId
+      listId: listId,
     };
     apiPost(slug, body).then((res) => {
       console.log(res);
       if (res?.message === "success" && res?.editedGift) {
         console.log(res);
-        setGifts([...gifts.filter(gift => gift.id !== id), res.editedGift])
+        setGifts([...gifts.filter((gift) => gift.id !== id), res.editedGift]);
       } else if (res?.error) {
         console.log(res);
         setErr(res.error);
@@ -65,25 +62,25 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
         setErr("There was an error processing your request");
       }
     });
-    setIsEditing('');
-    setEditGift('');
-    setEditLink('');
-  }
+    setIsEditing("");
+    setEditGift("");
+    setEditLink("");
+  };
 
   // Make a new gift
   const handleSaveNew = () => {
     setErr("");
-    const slug = 'user/gift/new'
+    const slug = "user/gift/new";
     const body = {
       newGift: newGift,
       newLink: newLink,
-      listId: listId
-    }
+      listId: listId,
+    };
     apiPost(slug, body).then((res) => {
       console.log(res);
       if (res?.message === "success" && res?.newGift) {
         console.log(res);
-        setGifts([...gifts, res.newGift])
+        setGifts([...gifts, res.newGift]);
       } else if (res?.error) {
         console.log(res);
         setErr(res.error);
@@ -91,13 +88,13 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
         setErr("There was an error processing your request");
       }
     });
-    setNewGift('');
-    setNewLink('');
-  }
+    setNewGift("");
+    setNewLink("");
+  };
 
   // Delete a gift
   const handleDelete = (id: string) => {
-    setErr("")
+    setErr("");
     const slug = "user/gift/delete";
     const body = {
       giftId: id,
@@ -107,7 +104,7 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
       console.log(res);
       if (res?.message === "success") {
         console.log(res);
-        setGifts([...gifts.filter(gift => gift.id !== id)])
+        setGifts([...gifts.filter((gift) => gift.id !== id)]);
       } else if (res?.error) {
         console.log(res);
         setErr(res.error);
@@ -115,20 +112,20 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
         setErr("There was an error processing your request");
       }
     });
-  }
+  };
 
   return (
     <Container
       sx={{
-        backgroundColor: "white",
-        minHeight: "100vh",
+        backgroundColor: "info.main",
+        minHeight: "calc(100vh - 4.5rem)",
         padding: "0",
       }}
     >
       {err && <Err err={err} setErr={setErr}></Err>}
       <Stack
         sx={{
-          backgroundColor: "info.main",
+          backgroundColor: "white",
           paddingBottom: "2.5rem",
           borderRadius: "0 0 20% 20%",
           marginTop: "-1px",
@@ -138,7 +135,7 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
         <Typography
           variant="h4"
           sx={{
-            color: "white",
+            color: "info.main",
           }}
         >
           {user}'s Christmas List
@@ -154,7 +151,7 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
             <Typography
               variant="h5"
               sx={{
-                color: "info.main",
+                color: "white",
               }}
             >
               You have no gifts on your list yet.
@@ -164,7 +161,7 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
               <Typography
                 variant="h5"
                 sx={{
-                  color: "info.main",
+                  color: "white",
                 }}
               >
                 My Gifts
@@ -239,7 +236,7 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
                       width: "5rem",
                       borderColor: "secondary.dark",
                       color: "secondary.dark",
-                      marginLeft: '0.3rem'
+                      marginLeft: "0.3rem",
                     }}
                   >
                     Delete
@@ -251,14 +248,20 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
         </List>
         <Stack
           sx={{
-            marginTop: "2rem",
-            padding: "2rem",
+            margin: "2rem auto",
+            padding: "1rem",
+            backgroundColor: "white",
+            width: "80%",
+            maxWidth: "600px",
+            borderRadius: "10px",
+            boxShadow: "0px 0px 15px #930001",
           }}
         >
           <Typography
             variant="h5"
             sx={{
-              color: "info.main",
+              color: "primary.dark",
+              textAlign: "center",
             }}
           >
             Add a gift
@@ -272,6 +275,7 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
               htmlFor="gift"
               sx={{
                 fontSize: "1.2rem",
+                color: "primary.dark",
               }}
             >
               Add gift
@@ -282,7 +286,7 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
               onChange={(e) => setNewGift(e.target.value)}
               sx={{
                 fontSize: "1.2rem",
-                color: "primary.dark",
+                color: "info.main",
               }}
             ></Input>
           </FormControl>
@@ -295,6 +299,7 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
               htmlFor="link"
               sx={{
                 fontSize: "1.2rem",
+                color: "primary.dark",
               }}
             >
               Link to gift
@@ -305,7 +310,7 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
               onChange={(e) => setNewLink(e.target.value)}
               sx={{
                 fontSize: "1.2rem",
-                color: "primary.dark",
+                color: "info.main",
               }}
             ></Input>
           </FormControl>

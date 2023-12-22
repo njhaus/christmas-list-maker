@@ -65,7 +65,11 @@ function SimpleDialog({ open, selectedValue, onClose, handleSetRecipients, maxPe
       >
         Create Recipients List
       </DialogTitle>
-      <Container>
+      <Box
+        sx={{
+          padding: "1rem",
+        }}
+      >
         <Typography
           sx={{
             fontSize: "1.2rem",
@@ -79,10 +83,17 @@ function SimpleDialog({ open, selectedValue, onClose, handleSetRecipients, maxPe
           sx={{
             fontSize: "1.2rem",
             color: "primary.dark",
-            margin: '1rem 0'
+            margin: "1rem 0",
           }}
         >
-          <InputLabel id="recipients-select">Number of people</InputLabel>
+          <InputLabel
+            id="recipients-select"
+            sx={{
+              color: "primary.dark",
+            }}
+          >
+            Number
+          </InputLabel>
           <Select
             labelId="recipients-select"
             id="demo-simple-select"
@@ -90,6 +101,9 @@ function SimpleDialog({ open, selectedValue, onClose, handleSetRecipients, maxPe
             label="People"
             onChange={(e) => {
               if (typeof e.target.value === "number") setNum(e.target.value);
+            }}
+            sx={{
+              color: "primary.dark",
             }}
           >
             {numsArray.map((num) => (
@@ -110,12 +124,19 @@ function SimpleDialog({ open, selectedValue, onClose, handleSetRecipients, maxPe
           onClick={() => handleClick("close")}
           variant="contained"
           sx={{
-            margin: "0.5rem 0",
+            margin: "0.5rem",
           }}
         >
-          Create Recipients List
+          Create
         </Button>
-      </Container>
+        <Button
+          variant='outlined'
+          sx={{
+            borderColor: 'info.main',
+            color: 'info.main'
+          }}
+        >Cancel</Button>
+      </Box>
     </Dialog>
   );
 }
@@ -146,10 +167,6 @@ export default function RecipientsDialog({text, handleSetRecipients, maxPeople, 
         return (
           <Box
             sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-45%, -50%)",
               minWidth: "16rem",
             }}
           >
@@ -188,10 +205,6 @@ export default function RecipientsDialog({text, handleSetRecipients, maxPeople, 
         return (
           <Box
             sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-45%, -50%)",
               minWidth: "16rem",
             }}
           >

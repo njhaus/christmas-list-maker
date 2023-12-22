@@ -14,6 +14,7 @@ import { apiPost } from '../../services/api_service';
 import { iListUser } from '../../data/listData';
 import useAuth from '../../hooks/useAuth';
 import { makeList } from "../../utils/create_list";
+import Loading from '../../components/Loading';
 
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -40,6 +41,8 @@ const List = () => {
   console.log(list);
   const listId = useParams();
 
+
+  // Get list upon page load
   useEffect(() => {
     console.log(list);
     const getList = async () => {
@@ -51,11 +54,12 @@ const List = () => {
           setList(res.data);
           setIsLoading(false);
         } else if (res?.error) {
-          setErr(res.error);
+          console.log(res.error)
+          setErr('res.error')
         } else {
           setErr("There was an error processing your request");
         }
-        setIsLoading(false);
+        // setIsLoading(false);
       });
     };
     // Checks if list has been uploaded -- 1234 is placeholder, which means it has not.
@@ -79,9 +83,12 @@ const List = () => {
   
   
   const handleSubmitList = (users: iListUser[]) => {
-    const prevList = list;
-    setList({ ...list, users: users });
-    if (users.length > 0) {
+    const filteredUsers = users.filter(
+      (user) => !users.some((chkuser) => user.name === chkuser.name)
+    ); 
+    if (filteredUsers.length > 0) {
+      const prevList = list;
+      setList({ ...list, users: filteredUsers });
       const slug = "list/create";
       const body = { ...list, users: users };
       console.log(body);
@@ -127,9 +134,7 @@ const List = () => {
 
   if (isLoading) {
       return (
-          <Container>
-              Loading list...
-      </Container>
+          <Loading/>
     )
   }
 
@@ -145,7 +150,7 @@ const List = () => {
       sx={{
         backgroundColor: "info.main",
         width: "100%",
-        paddingBottom: "3rem",
+        paddingBottom: "8rem",
       }}
     >
       {isCreating && (

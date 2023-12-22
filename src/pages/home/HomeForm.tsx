@@ -1,8 +1,7 @@
 import { useState, FormEvent } from "react";
 
 // import { redirect } from "react-router-dom";
-import { useNavigate, useLocation} from "react-router-dom";
-
+import { useNavigate, useLocation } from "react-router-dom";
 
 import {
   FormControl,
@@ -15,11 +14,10 @@ import {
 } from "@mui/material";
 
 import { apiPost } from "../../services/api_service";
-import Err from "../../layouts/Err";
-
+import Err from "../error/Err";
 
 export interface iHomeForm {
-    handleCancel: () => void;
+  handleCancel: () => void;
   title: string;
   method: string;
   action: string;
@@ -28,21 +26,20 @@ export interface iHomeForm {
 const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
   const [listTitle, setListTitle] = useState("");
   const [listCode, setListCode] = useState("");
-  const [err, setErr] = useState('');
+  const [err, setErr] = useState("");
 
   const navigate = useNavigate();
 
-
   const handleForm = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const slug = title === "Create" ? 'home/new' : 'home/open';
-    setErr('');
+    const slug = title === "Create" ? "home/new" : "home/open";
+    setErr("");
     if (listTitle && listCode) {
-      console.log(listTitle + listCode)
+      console.log(listTitle + listCode);
       const body = {
         title: listTitle,
-        code: listCode
-      }
+        code: listCode,
+      };
       apiPost(slug, body).then((res) => {
         console.log(res);
         if (res?.message === "success") {
@@ -50,18 +47,15 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
           setListTitle("");
           setListCode("");
           navigate(`/list/${res.listId}`);
-        }
-        else if (res?.error ) {
+        } else if (res?.error) {
           console.log(res);
           setErr(res.error);
-        }
-        else {
+        } else {
           setErr("There was an error processing your request");
         }
       });
-    }
-    else {
-      setErr('Please enter a name and code.')
+    } else {
+      setErr("Please enter a name and code.");
     }
   };
 

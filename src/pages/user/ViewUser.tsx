@@ -1,18 +1,33 @@
-import { Container, Stack, Typography, List, ListItem, Checkbox, Box, FormControlLabel, Button, ListItemText, FormControl, Input, InputLabel, ListItemButton, Link } from "@mui/material";
-import { useState } from "react"
+import {
+  Container,
+  Stack,
+  Typography,
+  List,
+  ListItem,
+  Checkbox,
+  Box,
+  FormControlLabel,
+  Button,
+  ListItemText,
+  FormControl,
+  Input,
+  InputLabel,
+  ListItemButton,
+  Link,
+} from "@mui/material";
+import { useState } from "react";
 
 import { Link as RouterLink } from "react-router-dom";
 
-
 import { testNotes, testUser, testGifts, iViewUser } from "../../data/userData";
 import { apiPost } from "../../services/api_service";
-import Err from "../../layouts/Err";
+import Err from "../error/Err";
 
 interface iViewUserComponent {
-  data: iViewUser,
-  listId: string,
-  currentUser: string,
-} 
+  data: iViewUser;
+  listId: string;
+  currentUser: string;
+}
 
 const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
   const [loading, isLoading] = useState(false);
@@ -23,13 +38,13 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
 
   const [newNote, setNewNote] = useState("");
 
-  const [err, setErr] = useState('')
+  const [err, setErr] = useState("");
 
   const handleBuyGift = (id: string) => {
     // Handles buying or 'un-buying' gift
-    setErr('');
+    setErr("");
     const previousGifts = gifts;
-    const thisGift = gifts.find(gift => gift.id === id);
+    const thisGift = gifts.find((gift) => gift.id === id);
     if (thisGift) {
       thisGift.bought = !thisGift.bought;
       setGifts(
@@ -49,7 +64,11 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
         if (res?.message === "success" && res?.boughtGift) {
           console.log(res);
           thisGift.buyer_name = res.boughtGift.name;
-          setGifts([...gifts.filter((gift) => gift.id !== id), thisGift].sort((a, b) => (a.description > b.description) ? 1 : -1));
+          setGifts(
+            [...gifts.filter((gift) => gift.id !== id), thisGift].sort((a, b) =>
+              a.description > b.description ? 1 : -1
+            )
+          );
         } else if (res?.error) {
           console.log(res);
           setGifts(previousGifts);
@@ -60,30 +79,30 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
         }
       });
     }
-  }
+  };
 
   const handleNewNote = () => {
-    setErr('')
-      const slug = "user/note/create";
-      const body = {
-        description: newNote,
-        listId: listId,
-        username: user
-      };
-      apiPost(slug, body).then((res) => {
+    setErr("");
+    const slug = "user/note/create";
+    const body = {
+      description: newNote,
+      listId: listId,
+      username: user,
+    };
+    apiPost(slug, body).then((res) => {
+      console.log(res);
+      if (res?.message === "success" && res?.newNote) {
         console.log(res);
-        if (res?.message === "success" && res?.newNote) {
-          console.log(res);
-          setNotes([...notes, res.newNote])
-        } else if (res?.error) {
-          console.log(res);
-          setErr(res.error);
-        } else {
-          setErr("There was an error processing your request");
-        }
-      });
+        setNotes([...notes, res.newNote]);
+      } else if (res?.error) {
+        console.log(res);
+        setErr(res.error);
+      } else {
+        setErr("There was an error processing your request");
+      }
+    });
     setNewNote("");
-  }
+  };
 
   const handleDeleteNote = (id: string, writer: string) => {
     setErr("");
@@ -92,13 +111,13 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
       listId: listId,
       username: user,
       noteId: id,
-      currentUser: currentUser
+      currentUser: currentUser,
     };
     apiPost(slug, body).then((res) => {
       console.log(res);
       if (res?.message === "success" && res?.deletedNote) {
         console.log(res);
-        setNotes([...notes.filter(note => note.id !== id)]);
+        setNotes([...notes.filter((note) => note.id !== id)]);
       } else if (res?.error) {
         console.log(res);
         setErr(res.error);
@@ -106,8 +125,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
         setErr("There was an error processing your request");
       }
     });
-
-  }
+  };
 
   if (loading) {
     return (
@@ -357,4 +375,4 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
   );
 };
 
-export default ViewUser
+export default ViewUser;

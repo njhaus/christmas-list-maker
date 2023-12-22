@@ -9,12 +9,11 @@ import {
   Stack,
   List,
   ListItem,
-   Box
+   Box, Container
 } from "@mui/material";
 
 import { iListData, iListUser } from "../../data/listData";
-import { apiPost } from "../../services/api_service";
-import { Form } from "react-router-dom";
+import LetterC from "../../components/LetterC";
 
 
 interface iCreateList {
@@ -81,19 +80,27 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
         minHeight: "100vh",
       }}
     >
-      <Typography
-        variant="h4"
+      <Container
         sx={{
-          color: "primary.dark",
           backgroundColor: "white",
-          paddingBottom: "3rem",
+          paddingBottom: "1.5rem",
           borderRadius: "0 0 20% 20%",
           marginTop: "-1px",
-          paddingTop: "2rem",
+          paddingTop: "1rem",
+          width: "100%",
+          boxShadow: "0px 5px 15px #930001",
         }}
       >
-        Enter names:
-      </Typography>
+        <Typography
+          variant="h2"
+          sx={{
+            color: "info.main",
+          }}
+        >
+          <LetterC height={"6.5rem"} margin={["-1rem", "-0.75rem"]} />
+          hristmas List Maker
+        </Typography>
+      </Container>
       <form method="post" action="list/edit">
         <Stack
           sx={{
@@ -102,6 +109,14 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
             minHeight: "100%",
           }}
         >
+          <Typography
+            variant="h4"
+            sx={{
+              color: "secondary.light",
+            }}
+          >
+            Enter names:
+          </Typography>
           <List>
             {users.map((user, i) => {
               if (user.name) {
@@ -173,17 +188,18 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
             alignItems: "center",
           }}
         >
-          {list.users.length > 0 && 
+          {list.users.length > 0 && (
             <Typography
               sx={{
-                maxWidth: '80%',
-                color: 'secondary.dark',
-                fontSize: '1.2rem'
+                maxWidth: "80%",
+                color: "secondary.dark",
+                fontSize: "1.2rem",
               }}
             >
-              Warning! Making changes to this list will reset all users and erase any recipients lists you have created.
+              Warning! Making changes to this list will reset all users and
+              erase any recipient lists you have created.
             </Typography>
-          }
+          )}
           <Button
             disabled={err ? true : false}
             onClick={() => {
@@ -192,7 +208,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
             }}
             variant="contained"
             sx={{
-              marginTop: "2rem",
+              marginTop: "1rem",
               width: "10rem",
               fontSize: "1.2rem",
             }}
@@ -203,11 +219,11 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
             onClick={() => handleCreate()}
             variant="outlined"
             sx={{
-              marginTop: "2rem",
+              marginTop: "1rem",
               width: "10rem",
               fontSize: "1.2rem",
-              borderColor: "secondary.main",
-              color: "secondary.main",
+              borderColor: "secondary.light",
+              color: "secondary.light",
             }}
           >
             Cancel

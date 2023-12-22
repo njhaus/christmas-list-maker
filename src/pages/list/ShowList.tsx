@@ -1,27 +1,24 @@
-import {  useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment } from "react";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { Container, Typography, Button, Stack } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-
-import AddCode from "../user/unused/AddCode";
+import {
+  Container,
+  Typography,
+  Button,
+  Stack,
+  List,
+  ListItem,
+  Box,
+} from "@mui/material";
 import UserAccess from "./UserAccess";
-import { iListData, iListUser } from "../../data/listData";
+import { iListData } from "../../data/listData";
 import { testCurrentUser } from "../../data/userData";
 import { apiPost } from "../../services/api_service";
-import Err from "../../layouts/Err";
+import Err from "../error/Err";
 import useAuth from "../../hooks/useAuth";
-import { testUser } from "../../data/userData";
 import RecipientsDialog from "./RecipientsDialog";
+import LetterC from "../../components/LetterC";
 
 interface iShowList {
   list: iListData;
@@ -33,11 +30,10 @@ interface iShowList {
 const ShowList = ({ list, handleSetRecipients }: iShowList) => {
   const { currentUser, setCurrentUser } = useAuth();
   const [err, setErr] = useState("");
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation();
-
 
   const handleCurrentUser = (user: string, code: string, hasCode: boolean) => {
     setErr("");
@@ -65,7 +61,7 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
     navigate(`/user/${list._id}/${user}`, {
       state: { ...location.state, listId: list._id, username: user },
     });
-  }
+  };
 
   // Get user if already logged in (Uses token)
   useEffect(() => {
@@ -77,8 +73,8 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
         if (res?.message === "success") {
           setCurrentUser(res.data);
         } else if (res?.error) {
-          console.log(res.error)
-          setErr(res.error);
+          console.log(res.error);
+          // setErr(res.error);
         } else {
           console.log("no currently logged in user");
           setErr("");
@@ -95,9 +91,9 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
         setErr("");
         setIsLoading(true);
       };
-    } 
+    }
     setIsLoading(false);
-  }, [])
+  }, []);
 
   return (
     <>
@@ -113,12 +109,15 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
             paddingTop: "1.5rem",
             boxShadow: "0px 5px 15px #930001",
             position: "relative",
+            width: "100%",
+            textAlign: "center",
           }}
         >
           <Typography
-            variant="h4"
+            variant="body2"
             sx={{
               color: "primary.main",
+              fontSize: "1.75rem",
             }}
           >
             {list.users.length > 1 && `Hello, ${currentUser?.name}!`}
@@ -129,8 +128,11 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
       <Container
         sx={{
           marginTop: "2rem",
+          position: "relative",
+          width: "100%",
         }}
       >
+        {err && <Err err={err} setErr={setErr}></Err>}
         <Typography
           variant="h3"
           sx={{
@@ -140,7 +142,17 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
         >
           {list.title}
         </Typography>
-        {err && <Err err={err} setErr={setErr}></Err>}
+        <Typography
+          sx={{
+            marginTop: "0.75rem",
+            color: "white",
+            // fontWeight: "200",
+          }}
+        >
+          {currentUser.id === "0" && list.users.length
+            ? "Log in to view people's lists."
+            : "Click a name to view that person's list"}
+        </Typography>
         {list.users.length < 1 ? (
           <Typography
             sx={{
@@ -151,138 +163,108 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
             Nobody is on your list yet! Click "Edit List" to add people.
           </Typography>
         ) : (
-          <TableContainer
-            className="red-box"
-            component={Paper}
+          <List
             sx={{
               width: "100%",
-              marginTop: "2rem",
+              maxWidth: "900px",
+              padding: "1rem",
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "1rem",
+              justifyContent: "space-evenly",
+              margin: "0 auto",
             }}
           >
-            <Table
-              sx={{
-                // minWidth: 650,
-                backgroundColor: "info.main",
-              }}
-              aria-label="simple table"
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left">
-                    <Stack>
-                      <Typography
-                        sx={{
-                          fontSize: "1.7rem",
-                          color: "white",
-                          fontWeight: "200",
-                        }}
-                      >
-                        Name
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: "0.75rem",
-                          color: "white",
-                          fontWeight: "200",
-                        }}
-                      >
-                        {currentUser.id === "0" && list.users.length
-                          ? "Log in to view people's lists."
-                          : "Click a name to view that person's list"}
-                      </Typography>
-                    </Stack>
-                  </TableCell>
-                  <TableCell align="center">
+            {list.users.map((user, i) => (
+              <ListItem
+                key={i}
+                sx={{
+                  marginBottom: "1rem",
+                  width: "100%",
+                  maxWidth: "400px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "start",
+                  gap: "1.5rem",
+                  backgroundColor: "white",
+                  borderRadius: "10px",
+                  padding: "0.5 1rem",
+                }}
+              >
+                <Box>
+                  <LetterC height={"2.5rem"} />
+                </Box>
+                <Box>
+                  <Button
+                    disabled={currentUser.id === "0"}
+                    onClick={() => handleVisitUserPage(user.name)}
+                    variant="text"
+                    sx={{
+                      fontSize: "1.2rem",
+                      "&.Mui-disabled, &:hover": {
+                        color: "primary.main",
+                        backgroundColor: "white",
+                      },
+                    }}
+                  >
+                    {/* {user.emoji} */}
+                    {/* <Typography>❆</Typography> */}
                     <Typography
                       sx={{
-                        fontSize: "1.7rem",
-                        color: "white",
-                        fontWeight: "200",
-                        paddingBottom: "0.75rem",
+                        color: "primary.dark",
+                        fontWeight: "600",
                       }}
                     >
-                      Buys For
+                      {user.name}
                     </Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {list.users.map((user) => (
-                  <TableRow
-                    key={user.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  </Button>
+                  <Box
+                    sx={{
+                      color: "info.dark",
+                      fontSize: "1.2rem",
+                      fontVariantCaps: "all-small-caps",
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "1rem",
+                      marginLeft: "0.5rem",
+                    }}
                   >
-                    <TableCell align="left">
-                      <Button
-                        disabled={currentUser.id === "0"}
-                        onClick={() => handleVisitUserPage(user.name)}
-                        sx={{
-                          color: "white",
-                          fontSize: "1.2rem",
-                          "&.Mui-disabled": {
-                            color: "white",
-                          },
-                        }}
-                      >
-                        {/* {user.emoji} */}
-                        {user.name}
-                      </Button>
-                    </TableCell>
-                    <TableCell
-                      align="center"
+                    <Typography
                       sx={{
-                        color: "secondary.light",
-                        fontSize: "1.2rem",
-                        fontVariantCaps: "all-small-caps",
+                        fontWeight: "600",
+                        minWidth: "5rem",
                       }}
                     >
+                      Buys For:
+                    </Typography>
+                    <Typography>
                       {typeof user.recipients === "string"
                         ? user.recipients
                         : user.recipients.join(", ")}
-                    </TableCell>
-                  </TableRow>
-                ))}
-                <TableRow
-                  sx={{
-                    position: "relative",
-                    height: "2.5rem",
-                  }}
-                >
-                  <TableCell
-                    sx={{
-                      height: "2.5rem",
-                      padding: "0",
-                    }}
-                  >
-                    {list.users.some((user) =>
-                      user.recipients.includes("Anybody")
-                    ) ? (
-                      <RecipientsDialog
-                        text="Create Recipients Lists"
-                        handleSetRecipients={handleSetRecipients}
-                        maxPeople={list.users.length - 1}
-                        tooltip={false}
-                        names={list.users.map((user) => user.name)}
-                      />
-                    ) : (
-                      <RecipientsDialog
-                        text="Recreate Recipients Lists"
-                        handleSetRecipients={handleSetRecipients}
-                        maxPeople={list.users.length - 1}
-                        tooltip={true}
-                        names={list.users.map((user) => user.name)}
-                      />
-                    )}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      height: "2.5rem",
-                    }}
-                  ></TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+                    </Typography>
+                  </Box>
+                </Box>
+              </ListItem>
+            ))}
+          </List>
+        )}
+        {list.users.some((user) => user.recipients.includes("Anybody")) ? (
+          <RecipientsDialog
+            text="Create Recipients Lists"
+            handleSetRecipients={handleSetRecipients}
+            maxPeople={list.users.length - 1}
+            tooltip={false}
+            names={list.users.map((user) => user.name)}
+          />
+        ) : (
+          <RecipientsDialog
+            text="Recreate Recipients Lists"
+            handleSetRecipients={handleSetRecipients}
+            maxPeople={list.users.length - 1}
+            tooltip={true}
+            names={list.users.map((user) => user.name)}
+          />
         )}
       </Container>
     </>

@@ -6,7 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 import { apiPost } from "../services/api_service";
 import useAuth from "../hooks/useAuth";
-import Err from "./Err";
+import Err from "../pages/error/Err";
 import footer from "../pages/home/HomeFooter";
 import { initialListData } from "../data/listData";
 import { testCurrentUser } from "../data/userData";
@@ -82,7 +82,7 @@ const Layout = ({ children }: iLayout) => {
           <Button
             variant={"contained"}
             sx={{
-              backgroundColor: "#ffffffdd",
+              backgroundColor: "#ffffff",
               height: "3.5rem",
               width: "3.5rem",
               zIndex: "10",
@@ -97,14 +97,16 @@ const Layout = ({ children }: iLayout) => {
           onClick={() => handleLogout()}
           variant={"contained"}
           sx={{
-            backgroundColor: "#ffffffdd",
-            color: 'primary.dark',
+            backgroundColor: "#ffffff",
+            color: "primary.dark",
             zIndex: "10",
             padding: "0",
             margin: "0.25rem",
+            height: "3.5rem",
+            width: "3.5rem",
           }}
         >
-          Logout
+          Log Out
         </Button>
       </Stack>
       {children}

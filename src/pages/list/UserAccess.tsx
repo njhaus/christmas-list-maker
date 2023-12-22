@@ -33,7 +33,7 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
         >
           {isCreating
             ? "Type your name and an access code, then click SAVE."
-            : "Log in to view other's lists and change your own!"}
+            : "Log in to view other's lists and change your own"}
         </Typography>
         <form method="post" action="user/">
           <Stack>
