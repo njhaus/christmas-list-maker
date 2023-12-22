@@ -8,7 +8,7 @@ import {
   FormControl,
   InputLabel,
   Input,
-  FormHelperText,
+  Box,
   Typography,
   Button,
   Stack,
@@ -66,7 +66,14 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
   };
 
   return (
-    <div>
+    <Box
+      sx={{
+        padding: "1rem",
+        backgroundColor: "white",
+        borderRadius: "10px",
+        boxShadow: "0px 0px 15px #930001",
+      }}
+    >
       <Typography
         variant="h4"
         sx={{
@@ -158,7 +165,7 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
           </Button>
         </Stack>
       </form>
-    </div>
+    </Box>
   );
 };
 

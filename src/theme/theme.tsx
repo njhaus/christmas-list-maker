@@ -13,9 +13,48 @@ const theme = createTheme({
       light: "#ffffe1",
     },
     info: {
-      main: "#ad2624",
-      dark: "#6e020d",
-      light: "#F1D2D0",
+      main: "#d20002",
+      dark: "#930001",
+      light: "#E5004C",
+    },
+  },
+  typography: {
+    h1: {
+      fontFamily: ["Kaushan Script, Apple Chancery, cursive"].join(","),
+    },
+    h2: {
+      fontFamily: ["Kaushan Script, Apple Chancery, cursive"].join(","),
+    },
+    h3: {
+      fontFamily: ["Kaushan Script, Apple Chancery, cursive"].join(","),
+    },
+    h4: {
+      fontFamily: ["Kaushan Script, Apple Chancery, cursive"].join(","),
+    },
+    h5: {
+      fontFamily: ["Kaushan Script, Apple Chancery, cursive"].join(","),
+    },
+    h6: {
+      fontFamily: ["Kaushan Script, Apple Chancery, cursive"].join(","),
+    },
+    subtitle1: {},
+    body1: {
+      fontFamily: ["Montserrat, Arial, sans-serif"].join(","),
+      fontSize: "1.2rem",
+      fontWeight: "400",
+    },
+    body2: {
+      fontFamily: ["Montserrat, Arial, sans-serif"].join(","),
+      fontSize: "1.5rem",
+      fontWeight: "600",
+    },
+    button: {
+      fontFamily: ["Montserrat, Arial, sans-serif"].join(","),
+    },
+    caption: {
+      fontFamily: ["Montserrat, Arial, sans-serif"].join(","),
+      fontSize: "0.6rem",
+      fontWeight: "400",
     },
   },
 });

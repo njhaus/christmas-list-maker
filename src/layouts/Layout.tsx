@@ -7,51 +7,54 @@ import { useNavigate, Link } from "react-router-dom";
 import { apiPost } from "../services/api_service";
 import useAuth from "../hooks/useAuth";
 import Err from "./Err";
+import footer from "../pages/home/HomeFooter";
 import { initialListData } from "../data/listData";
 import { testCurrentUser } from "../data/userData";
+import GiftBorder from "../components/GiftBorder";
+import LightString from "../components/LightString";
+import LetterC from "../components/LetterC";
 
 interface iLayout {
-  children: JSX.Element
+  children: JSX.Element;
 }
 
-const Layout = ({children}: iLayout) => {
-
-    const navigate = useNavigate();
-  const [err, setErr] = useState('')
+const Layout = ({ children }: iLayout) => {
+  const navigate = useNavigate();
+  const [err, setErr] = useState("");
   const { currentUser, setCurrentUser } = useAuth();
   const { list, setList } = useAuth();
 
-    const handleLogout = () => {
-        const slug = 'logout';
-        const body = {};
-        apiPost(slug, body).then((res) => {
-          console.log(res);
-          if (res?.message === "success") {
-            console.log("Success...should be redirecting");
-            setList(initialListData);
-            setCurrentUser(testCurrentUser);
-            navigate("/");
-          } else if (res?.error) {
-            console.log(res);
-            setErr(res.error);
-          } else {
-            setErr("There was an error processing your request");
-          }
-          setList(initialListData);
-          setCurrentUser(testCurrentUser);
-        });
-    }
+  const handleLogout = () => {
+    const slug = "logout";
+    const body = {};
+    apiPost(slug, body).then((res) => {
+      console.log(res);
+      if (res?.message === "success") {
+        console.log("Success...should be redirecting");
+        setList(initialListData);
+        setCurrentUser(testCurrentUser);
+        navigate("/");
+      } else if (res?.error) {
+        console.log(res);
+        setErr(res.error);
+      } else {
+        setErr("There was an error processing your request");
+      }
+      setList(initialListData);
+      setCurrentUser(testCurrentUser);
+    });
+  };
 
-    if (err) {
-      return (
-        <>
-          <Err err={err} setErr={setErr}></Err>
-          <Link to={"/"}>
-            <Button>Return Home</Button>
-          </Link>
-        </>
-      );
-    }
+  if (err) {
+    return (
+      <>
+        <Err err={err} setErr={setErr}></Err>
+        <Link to={"/"}>
+          <Button>Return Home</Button>
+        </Link>
+      </>
+    );
+  }
 
   return (
     <Box
@@ -64,20 +67,50 @@ const Layout = ({children}: iLayout) => {
         alignItems: "center",
         textAlign: "center",
         backgroundColor: "white",
+        position: "relative",
       }}
     >
-      <Stack direction="row"
+      <LightString />
+      <Stack
+        direction="row"
         sx={{
-          justifyContent: 'space-between',
-          width: '100%',
-      }}
+          justifyContent: "space-between",
+          width: "100%",
+        }}
       >
-        <Typography>Christmas List Maker</Typography>
-        <Button onClick={() => handleLogout()}>Logout</Button>
+        <Link to={"/"}>
+          <Button
+            variant={"contained"}
+            sx={{
+              backgroundColor: "#ffffffdd",
+              height: "3.5rem",
+              width: "3.5rem",
+              zIndex: "10",
+              padding: "0",
+              margin: "0.25rem",
+            }}
+          >
+            <LetterC height={"3rem"}></LetterC>
+          </Button>
+        </Link>
+        <Button
+          onClick={() => handleLogout()}
+          variant={"contained"}
+          sx={{
+            backgroundColor: "#ffffffdd",
+            color: 'primary.dark',
+            zIndex: "10",
+            padding: "0",
+            margin: "0.25rem",
+          }}
+        >
+          Logout
+        </Button>
       </Stack>
       {children}
+      <GiftBorder />
     </Box>
   );
-}
+};
 
-export default Layout
+export default Layout;

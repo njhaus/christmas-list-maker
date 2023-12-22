@@ -107,10 +107,12 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
         <Container
           sx={{
             backgroundColor: "white",
-            paddingBottom: "2.5rem",
+            paddingBottom: "2rem",
             borderRadius: "0 0 20% 20%",
             marginTop: "-1px",
-            paddingTop: "1rem",
+            paddingTop: "1.5rem",
+            boxShadow: "0px 5px 15px #930001",
+            position: "relative",
           }}
         >
           <Typography

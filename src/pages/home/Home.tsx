@@ -1,21 +1,24 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { Container, Typography, Stack, Button, Tooltip } from '@mui/material';
-import HomeForm from './HomeForm';
+import { Container, Typography, Stack, Button, Tooltip } from "@mui/material";
+import HomeForm from "./HomeForm";
+import HomeFooter from "./HomeFooter";
+import LightString from "../../components/LightString";
+import GiftBorder from "../../components/GiftBorder";
+import LetterC from "../../components/LetterC";
 
 export interface iHomeForm {
-    handleCancel: () => void;
+  handleCancel: () => void;
 }
 
 const Home = () => {
+  const [isCreating, setIsCreating] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
 
-    const [isCreating, setIsCreating] = useState(false)
-    const [isOpening, setIsOpening] = useState(false);
-
-    const handleCancel = () => {
-        setIsCreating(false);
-        setIsOpening(false);
-    }
+  const handleCancel = () => {
+    setIsCreating(false);
+    setIsOpening(false);
+  };
 
   return (
     <Container
@@ -27,33 +30,38 @@ const Home = () => {
         flexDirection: "column",
         alignItems: "center",
         textAlign: "center",
-        backgroundColor: "white",
+        backgroundColor: "info.main",
         padding: "0",
+        overflowX: "hidden",
+        position: "relative",
       }}
     >
+      <LightString />
       <Container
         sx={{
-          backgroundColor: "primary.dark",
-          paddingBottom: "3rem",
+          backgroundColor: "white",
+          paddingBottom: "2.5rem",
           borderRadius: "0 0 20% 20%",
           marginTop: "-1px",
-          paddingTop: "3rem",
-          width: '100%'
+          paddingTop: "4rem",
+          width: "100%",
+          boxShadow: "0px 5px 15px #930001",
         }}
       >
         <Typography
           variant="h2"
           sx={{
-            color: "secondary.main",
+            color: "info.main",
           }}
         >
-          Christmas List Maker
+          <LetterC height={'6.5rem'} margin={['-1rem', '-0.75rem']} />hristmas List Maker
         </Typography>
       </Container>
       <Container
         sx={{
           padding: "2rem",
-          display: 'flex',
+          paddingBottom: "10rem",
+          display: "flex",
           justifyContent: "center",
         }}
       >
@@ -67,10 +75,10 @@ const Home = () => {
           }}
         >
           <Typography
+            variant="h5"
             sx={{
-              fontSize: "1.5rem",
-              color: "info.dark",
-              fontWeight: '600'
+              color: "secondary.light",
+              marginBottom: "1rem",
             }}
           >
             Share Christmas Lists with your crew!
@@ -78,7 +86,7 @@ const Home = () => {
           <Typography
             sx={{
               fontSize: "1.2rem",
-              color: "info.dark",
+              color: "white",
             }}
           >
             Make lists, choose recipients, view each other's lists, and even
@@ -127,8 +135,12 @@ const Home = () => {
                     sx={{
                       marginTop: "1rem",
                       fontSize: "1.2rem",
-                      borderColor: "info.dark",
-                      color: "info.dark",
+                      borderColor: "white",
+                      color: "white",
+                      "&:hover": {
+                        borderColor: "secondary.light",
+                        color: "secondary.light",
+                      },
                     }}
                   >
                     Open a List
@@ -139,8 +151,10 @@ const Home = () => {
           </Stack>
         </Stack>
       </Container>
+      <GiftBorder />
+      <HomeFooter></HomeFooter>
     </Container>
   );
-}
+};
 
-export default Home
+export default Home;

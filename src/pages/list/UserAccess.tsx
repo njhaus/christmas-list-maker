@@ -17,19 +17,22 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
         sx={{
           backgroundColor: "white",
           paddingBottom: "3rem",
+          paddingTop: "1rem",
           borderRadius: "0 0 20% 20%",
           marginTop: "-1px",
+          boxShadow: "0px 5px 15px #930001",
+          position: 'relative',
         }}
       >
         <Typography
-          variant="h5"
+          variant="body2"
           sx={{
             color: "primary.main",
-            fontWeight: '600'
+            fontWeight: "300",
           }}
         >
           {isCreating
-            ? 'Type your name and an access code, then click SAVE.'
+            ? "Type your name and an access code, then click SAVE."
             : "Log in to view other's lists and change your own!"}
         </Typography>
         <form method="post" action="user/">
@@ -40,10 +43,19 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
               sx={{
                 justifyContent: "center",
                 marginTop: "0.5rem",
+                paddingX: "0.5rem",
               }}
             >
               <FormControl>
-                <InputLabel htmlFor="name">Name</InputLabel>
+                <InputLabel
+                  htmlFor="name"
+                  sx={{
+                    fontSize: "1.2rem",
+                    color: "info.dark",
+                  }}
+                >
+                  Name
+                </InputLabel>
                 <Input
                   id="name"
                   aria-describedby="Your name"
@@ -51,11 +63,20 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                   onChange={(e) => setName(e.target.value)}
                   sx={{
                     fontSize: "1.2rem",
+                    color: "info.dark",
                   }}
                 />
               </FormControl>
               <FormControl>
-                <InputLabel htmlFor="code">Access Code</InputLabel>
+                <InputLabel
+                  htmlFor="code"
+                  sx={{
+                    fontSize: "1.2rem",
+                    color: "info.dark",
+                  }}
+                >
+                  Access Code
+                </InputLabel>
                 <Input
                   type="password"
                   id="code"
@@ -64,6 +85,7 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                   onChange={(e) => setCode(e.target.value)}
                   sx={{
                     fontSize: "1.2rem",
+                    color: "info.dark",
                   }}
                 />
               </FormControl>
