@@ -45,7 +45,6 @@ const List = () => {
     const getList = async () => {
       console.log('Running API call to get list')
       const body = listId;
-      console.log(body)
       const slug = "list/find";
       apiPost(slug, body).then((res) => {
         if (res?.message === "success") {
@@ -60,13 +59,13 @@ const List = () => {
       });
     };
     // Checks if list has been uploaded -- 1234 is placeholder, which means it has not.
-    if (list._id === "1234") {
+    if (list._id === "1234" || isLoading === true) {
       getList();
 
       return () => {
         setList(initialListData);
         setErr('')
-        // setIsLoading(true);
+        setIsLoading(true);
       };
     } else if (!listId) {
       setErr("Please enter your list name and access code to view this page.");
@@ -179,6 +178,8 @@ const List = () => {
                   marginTop: "2rem",
                   width: "10rem",
                   fontSize: "1.2rem",
+                  borderColor: 'secondary.main',
+                  color: 'secondary.main'
                 }}
               >
                 Edit list

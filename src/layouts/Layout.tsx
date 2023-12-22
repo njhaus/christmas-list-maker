@@ -69,7 +69,7 @@ const Layout = ({children}: iLayout) => {
       <Stack direction="row"
         sx={{
           justifyContent: 'space-between',
-          width: '100%'
+          width: '100%',
       }}
       >
         <Typography>Christmas List Maker</Typography>

@@ -18,3 +18,7 @@ table {
     border: none !important;
     outline: none !important;
 }
+
+.css-1oqqzyl-MuiContainer-root {
+    padding: 0 !important;
+}

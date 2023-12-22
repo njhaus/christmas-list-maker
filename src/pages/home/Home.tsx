@@ -38,6 +38,7 @@ const Home = () => {
           borderRadius: "0 0 20% 20%",
           marginTop: "-1px",
           paddingTop: "3rem",
+          width: '100%'
         }}
       >
         <Typography
@@ -51,7 +52,9 @@ const Home = () => {
       </Container>
       <Container
         sx={{
-          padding: "2rem"
+          padding: "2rem",
+          display: 'flex',
+          justifyContent: "center",
         }}
       >
         <Stack
@@ -61,21 +64,26 @@ const Home = () => {
             maxWidth: "100%",
             height: "60%",
             alignItems: "center",
-            justifyContent: "start",
           }}
         >
+          <Typography
+            sx={{
+              fontSize: "1.5rem",
+              color: "info.dark",
+              fontWeight: '600'
+            }}
+          >
+            Share Christmas Lists with your crew!
+          </Typography>
           <Typography
             sx={{
               fontSize: "1.2rem",
               color: "info.dark",
             }}
           >
-            With Christmas List Maker you and your crew can make Christmas lists
-            and choose recipients for each person on the list. You can then add
-            gifts to your list and view gifts others have added to theirs. You
-            can even communicate to each other which gifts have been bought
-            without the recipient being able to see! Create a list to get
-            started!
+            Make lists, choose recipients, view each other's lists, and even
+            mark which gifts have been bought without the recipient being able
+            to see. Create a list to get started!
           </Typography>
           <Stack
             sx={{

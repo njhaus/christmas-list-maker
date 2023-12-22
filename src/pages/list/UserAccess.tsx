@@ -22,14 +22,15 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
         }}
       >
         <Typography
-          variant="h6"
+          variant="h5"
           sx={{
             color: "primary.main",
+            fontWeight: '600'
           }}
         >
           {isCreating
-            ? 'Type your name and an access code, then click "Save!"'
-            : "Type in your name and access code to view other's lists and change your own!"}
+            ? 'Type your name and an access code, then click SAVE.'
+            : "Log in to view other's lists and change your own!"}
         </Typography>
         <form method="post" action="user/">
           <Stack>
@@ -109,7 +110,6 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                 variant="outlined"
                 sx={{
                   marginTop: "0.5rem",
-                  width: "20rem",
                   fontSize: "1.2rem",
                 }}
               >

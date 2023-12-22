@@ -173,6 +173,17 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
             alignItems: "center",
           }}
         >
+          {list.users.length > 0 && 
+            <Typography
+              sx={{
+                maxWidth: '80%',
+                color: 'secondary.dark',
+                fontSize: '1.2rem'
+              }}
+            >
+              Warning! Making changes to this list will reset all users and erase any recipients lists you have created.
+            </Typography>
+          }
           <Button
             disabled={err ? true : false}
             onClick={() => {
@@ -195,6 +206,8 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
               marginTop: "2rem",
               width: "10rem",
               fontSize: "1.2rem",
+              borderColor: "secondary.main",
+              color: "secondary.main",
             }}
           >
             Cancel

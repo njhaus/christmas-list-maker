@@ -129,6 +129,7 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
               }}
             />
           </FormControl>
+          {err && <Err err={err} setErr={setErr}></Err>}
           <Button
             type="submit"
             variant="contained"
@@ -155,7 +156,6 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
           >
             Cancel
           </Button>
-          {err && <Err err={err} setErr={setErr}></Err>}
         </Stack>
       </form>
     </div>

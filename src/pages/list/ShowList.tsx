@@ -2,7 +2,7 @@ import {  useState, useEffect, Fragment } from "react";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { Container, Typography, Button } from "@mui/material";
+import { Container, Typography, Button, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 import Table from "@mui/material/Table";
@@ -166,29 +166,80 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
             >
               <TableHead>
                 <TableRow>
-                  <TableCell
-                    align="left"
-                    sx={{
-                      fontSize: "1.7rem",
-                      color: "white",
-                      fontWeight: "200",
-                    }}
-                  >
-                    Name
+                  <TableCell align="left">
+                    <Stack>
+                      <Typography
+                        sx={{
+                          fontSize: "1.7rem",
+                          color: "white",
+                          fontWeight: "200",
+                        }}
+                      >
+                        Name
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: "0.75rem",
+                          color: "white",
+                          fontWeight: "200",
+                        }}
+                      >
+                        {currentUser.id === "0" && list.users.length
+                          ? "Log in to view people's lists."
+                          : "Click a name to view that person's list"}
+                      </Typography>
+                    </Stack>
                   </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      fontSize: "1.7rem",
-                      color: "white",
-                      fontWeight: "200",
-                    }}
-                  >
-                    Buys For
+                  <TableCell align="center">
+                    <Typography
+                      sx={{
+                        fontSize: "1.7rem",
+                        color: "white",
+                        fontWeight: "200",
+                        paddingBottom: "0.75rem",
+                      }}
+                    >
+                      Buys For
+                    </Typography>
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
+                {list.users.map((user) => (
+                  <TableRow
+                    key={user.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="left">
+                      <Button
+                        disabled={currentUser.id === "0"}
+                        onClick={() => handleVisitUserPage(user.name)}
+                        sx={{
+                          color: "white",
+                          fontSize: "1.2rem",
+                          "&.Mui-disabled": {
+                            color: "white",
+                          },
+                        }}
+                      >
+                        {/* {user.emoji} */}
+                        {user.name}
+                      </Button>
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "secondary.light",
+                        fontSize: "1.2rem",
+                        fontVariantCaps: "all-small-caps",
+                      }}
+                    >
+                      {typeof user.recipients === "string"
+                        ? user.recipients
+                        : user.recipients.join(", ")}
+                    </TableCell>
+                  </TableRow>
+                ))}
                 <TableRow
                   sx={{
                     position: "relative",
@@ -227,41 +278,6 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
                     }}
                   ></TableCell>
                 </TableRow>
-                {list.users.map((user) => (
-                  <TableRow
-                    key={user.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell align="left">
-                      <Button
-                        disabled={currentUser.id === "0"}
-                        onClick={() => handleVisitUserPage(user.name)}
-                        sx={{
-                          color: "white",
-                          fontSize: "1.2rem",
-                          "&.Mui-disabled": {
-                            color: "white",
-                          },
-                        }}
-                      >
-                        {/* {user.emoji} */}
-                        {user.name}
-                      </Button>
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{
-                        color: "secondary.light",
-                        fontSize: "1.2rem",
-                        fontVariantCaps: "all-small-caps",
-                      }}
-                    >
-                      {typeof user.recipients === "string"
-                        ? user.recipients
-                        : user.recipients.join(", ")}
-                    </TableCell>
-                  </TableRow>
-                ))}
               </TableBody>
             </Table>
           </TableContainer>

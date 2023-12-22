@@ -16,7 +16,7 @@ export interface iGift {
   id: string;
   description: string;
   link: string;
-  bought?: boolean,
+  bought?: boolean | number,
   buyer_name?: string,
 }
 

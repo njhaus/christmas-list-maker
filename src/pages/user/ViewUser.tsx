@@ -1,4 +1,4 @@
-import { Container, Stack, Typography, List, ListItem, Checkbox, FormControlLabel, Button, ListItemText, FormControl, Input, InputLabel, ListItemButton } from "@mui/material";
+import { Container, Stack, Typography, List, ListItem, Checkbox, Box, FormControlLabel, Button, ListItemText, FormControl, Input, InputLabel, ListItemButton, Link } from "@mui/material";
 import { useState } from "react"
 
 import { Link as RouterLink } from "react-router-dom";
@@ -118,72 +118,239 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
   }
 
   return (
-    <Container>
-      {err && <Err err={err}></Err>}
-      <Stack>
-        <Typography>{user}'s Christmas List</Typography>
+    <Container
+      sx={{
+        backgroundColor: "white",
+        minHeight: "100vh",
+        padding: "0",
+      }}
+    >
+      {err && <Err err={err} setErr={setErr}></Err>}
+      <Stack
+        sx={{
+          backgroundColor: "info.main",
+          paddingBottom: "2.5rem",
+          borderRadius: "0 0 20% 20%",
+          marginTop: "-1px",
+          paddingTop: "2rem",
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            color: "white",
+          }}
+        >
+          {user}'s Christmas List
+        </Typography>
       </Stack>
-      <Stack>
+      <Stack
+        sx={{
+          marginTop: "2rem",
+        }}
+      >
         <List>
-          {gifts.map((gift) => (
-            <ListItem key={gift.id}>
-              <ListItemText>{gift.description}</ListItemText>
-              <FormControl>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      disabled={(gift.bought && gift.buyer_name !== currentUser) && true}
-                      checked={!gift.bought ? false : true}
-                      onChange={() => handleBuyGift(gift.id)}
-                    />
-                  }
-                  label="Bought"
-                />
-              </FormControl>
-              {gift.bought && (
-                <ListItemText>Bought by: {gift.buyer_name}</ListItemText>
-              )}
-            </ListItem>
-          ))}
+          {gifts.length < 1 ? (
+            <Typography
+              variant="h5"
+              sx={{
+                color: "info.main",
+              }}
+            >
+              {user} has not asked for any gifts yet.
+            </Typography>
+          ) : (
+            <Container>
+              <Typography
+                variant="h5"
+                sx={{
+                  color: "info.main",
+                }}
+              >
+                {user}'s' Gifts
+              </Typography>
+              {gifts.map((gift) => (
+                <ListItem
+                  key={gift.id}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    color: "primary.dark",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: "1.3rem",
+                      flexGrow: "1",
+                    }}
+                  >
+                    &#10052;{gift.description}
+                  </Typography>
+                  {gift.link && (
+                    <Link href={gift.link} target="_blank">
+                      <Button>Link</Button>
+                    </Link>
+                  )}
+                  <Stack
+                    direction={"row"}
+                    sx={{
+                      alignItems: "center",
+                    }}
+                  >
+                    <FormControl>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            disabled={
+                              gift.bought && gift.buyer_name !== currentUser
+                                ? true
+                                : false
+                            }
+                            checked={!gift.bought ? false : true}
+                            onChange={() => handleBuyGift(gift.id)}
+                          />
+                        }
+                        label={gift.bought !== 0 && gift.bought ? "" : "bought"}
+                        sx={{
+                          color: "primary.main",
+                        }}
+                      />
+                    </FormControl>
+                    {gift.bought !== 0 && gift.bought && (
+                      <Typography
+                        sx={{
+                          color: "primary.main",
+                        }}
+                      >
+                        Bought by: {gift.buyer_name}
+                      </Typography>
+                    )}
+                  </Stack>
+                </ListItem>
+              ))}
+            </Container>
+          )}
         </List>
         <Stack>
-          <Typography>
+          <Typography
+            variant="h5"
+            sx={{
+              color: "info.main",
+            }}
+          >
+            Notes
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: "1.2rem",
+              color: "info.main",
+            }}
+          >
             Write a note or add a gift you bought for {user}.
           </Typography>
-          <Typography>
+          <Typography
+            sx={{
+              fontSize: "1.2rem",
+              color: "info.main",
+            }}
+          >
             ({user} can't see your note, but other gift-givers can.)
           </Typography>
           <List>
             {notes.map((note) => (
-              <ListItem key={note.id}>
-                <ListItemText>{note.description}</ListItemText>
-                <ListItemText>
-                  By: {note.written_by}
-                </ListItemText>
-                {note.written_by === currentUser && (
-                  <ListItemButton
-                    onClick={() => handleDeleteNote(note.id, note.written_by)}
+              <ListItem
+                key={note.id}
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
+                  color: "primary.dark",
+                  fontSize: "1.2rem",
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: "primary.main",
+                    fontSize: "1.2rem",
+                    flexGrow: "1",
+                  }}
+                >
+                  {note.description}
+                </Typography>
+                <Stack direction={"row"}>
+                  <Typography
+                    sx={{
+                      color: "primary.main",
+                      fontSize: "1.2rem",
+                      fontWeight: "600",
+                    }}
                   >
-                    Delete
-                  </ListItemButton>
-                )}
+                    By: {note.written_by}
+                  </Typography>
+                  {note.written_by === currentUser && (
+                    <Button
+                      onClick={() => handleDeleteNote(note.id, note.written_by)}
+                      variant="outlined"
+                      sx={{
+                        marginLeft: "0.5rem",
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                </Stack>
               </ListItem>
             ))}
           </List>
-          <Stack>
+          <Stack
+            sx={{
+              alignItems: "center",
+            }}
+          >
             <FormControl>
-              <InputLabel htmlFor="note">Add Note:</InputLabel>
+              <InputLabel
+                htmlFor="note"
+                sx={{
+                  color: "primary.dark",
+                }}
+              >
+                Add Note:
+              </InputLabel>
               <Input
                 id="note"
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
+                sx={{
+                  color: "primary.dark",
+                  width: "20rem",
+                }}
               ></Input>
-              <Button onClick={() => handleNewNote()}>Save Note</Button>
+              <Button
+                onClick={() => handleNewNote()}
+                variant="contained"
+                sx={{
+                  width: "10rem",
+                  margin: "1rem auto",
+                }}
+              >
+                Save Note
+              </Button>
             </FormControl>
           </Stack>
         </Stack>
         <RouterLink to={`/list/${listId}`}>
-          <Button>Back</Button>
+          <Button
+            variant="outlined"
+            sx={{
+              width: "10rem",
+              margin: "0rem auto",
+            }}
+          >
+            Back
+          </Button>
         </RouterLink>
       </Stack>
     </Container>

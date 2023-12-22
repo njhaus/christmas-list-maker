@@ -13,8 +13,8 @@ const theme = createTheme({
       light: "#ffffe1",
     },
     info: {
-      main: "#bd3634",
-      dark: "#7e121d",
+      main: "#ad2624",
+      dark: "#6e020d",
       light: "#F1D2D0",
     },
   },

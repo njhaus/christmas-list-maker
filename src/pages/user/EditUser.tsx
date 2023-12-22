@@ -118,83 +118,220 @@ const EditUser = ({data, listId}: iEditUserComponent) => {
   }
 
   return (
-    <Container>
-      {err && <Err err={err}></Err>}
-      <Stack>
-        <Typography>{user}'s Christmas List</Typography>
+    <Container
+      sx={{
+        backgroundColor: "white",
+        minHeight: "100vh",
+        padding: "0",
+      }}
+    >
+      {err && <Err err={err} setErr={setErr}></Err>}
+      <Stack
+        sx={{
+          backgroundColor: "info.main",
+          paddingBottom: "2.5rem",
+          borderRadius: "0 0 20% 20%",
+          marginTop: "-1px",
+          paddingTop: "2rem",
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            color: "white",
+          }}
+        >
+          {user}'s Christmas List
+        </Typography>
       </Stack>
-      <List>
-        {gifts.length < 1 ? (
-          <Typography>You have no gifts on your list yet.</Typography>
-        ) : (
-          gifts.map((gift) => (
-            <ListItem key={gift.id}>
-              {isEditing !== gift.id && (
-                <>
-                  <ListItemText>{gift.description}</ListItemText>
-                  {gift.link && (
-                    <Link href={gift.link} target="_blank">
-                      <Button>Link</Button>
-                    </Link>
+      <Container
+        sx={{
+          marginTop: "2rem",
+        }}
+      >
+        <List>
+          {gifts.length < 1 ? (
+            <Typography
+              variant="h5"
+              sx={{
+                color: "info.main",
+              }}
+            >
+              You have no gifts on your list yet.
+            </Typography>
+          ) : (
+            <Container>
+              <Typography
+                variant="h5"
+                sx={{
+                  color: "info.main",
+                }}
+              >
+                My Gifts
+              </Typography>
+              {gifts.map((gift) => (
+                <ListItem
+                  key={gift.id}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    color: "primary.dark",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  {isEditing !== gift.id && (
+                    <>
+                      <Typography
+                        sx={{
+                          fontSize: "1.3rem",
+                          flexGrow: "1",
+                        }}
+                      >
+                        &#10052;{gift.description}
+                      </Typography>
+                      {gift.link && (
+                        <Link href={gift.link} target="_blank">
+                          <Button>Link</Button>
+                        </Link>
+                      )}
+                      <Button
+                        onClick={() => {
+                          setEditGift(gift.description);
+                          setEditLink(gift.link);
+                          setIsEditing(gift.id);
+                        }}
+                        variant="outlined"
+                        sx={{
+                          width: "3rem",
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </>
                   )}
-                  <ListItemButton
-                    onClick={() => {
-                      setEditGift(gift.description);
-                      setEditLink(gift.link);
-                      setIsEditing(gift.id);
+                  {isEditing === gift.id && (
+                    <>
+                      <Input
+                        id="edit-gift"
+                        value={editGift}
+                        onChange={(e) => setEditGift(e.target.value)}
+                      ></Input>
+                      <Input
+                        id="edit-link"
+                        value={editLink}
+                        onChange={(e) => setEditLink(e.target.value)}
+                      ></Input>
+                      <Button
+                        onClick={() => handleEdit(gift.id)}
+                        variant="outlined"
+                        sx={{
+                          width: "3rem",
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </>
+                  )}
+                  <Button
+                    onClick={() => handleDelete(gift.id)}
+                    variant="outlined"
+                    sx={{
+                      width: "5rem",
+                      borderColor: "secondary.dark",
+                      color: "secondary.dark",
+                      marginLeft: '0.3rem'
                     }}
                   >
-                    Edit
-                  </ListItemButton>
-                </>
-              )}
-              {isEditing === gift.id && (
-                <>
-                  <Input
-                    id="edit-gift"
-                    value={editGift}
-                    onChange={(e) => setEditGift(e.target.value)}
-                  ></Input>
-                  <Input
-                    id="edit-link"
-                    value={editLink}
-                    onChange={(e) => setEditLink(e.target.value)}
-                  ></Input>
-                  <ListItemButton onClick={() => handleEdit(gift.id)}>
-                    Save
-                  </ListItemButton>
-                </>
-              )}
-              <ListItemButton onClick={() => handleDelete(gift.id)}>
-                Delete
-              </ListItemButton>
-            </ListItem>
-          ))
-        )}
-      </List>
-      <Stack>
-        <Typography>Add a gift</Typography>
-        <FormControl>
-          <InputLabel htmlFor="gift">Add Gift:</InputLabel>
-          <Input
-            id="gift"
-            value={newGift}
-            onChange={(e) => setNewGift(e.target.value)}
-          ></Input>
-        </FormControl>
-        <FormControl>
-          <InputLabel htmlFor="link">Link to gift:</InputLabel>
-          <Input
-            id="link"
-            value={newLink}
-            onChange={(e) => setNewLink(e.target.value)}
-          ></Input>
-          <Button onClick={() => handleSaveNew()}>Save Gift</Button>
-        </FormControl>
-      </Stack>
-      <RouterLink to={`/list/${listId}`}>
-        <Button>Back</Button>
-      </RouterLink>
+                    Delete
+                  </Button>
+                </ListItem>
+              ))}
+            </Container>
+          )}
+        </List>
+        <Stack
+          sx={{
+            marginTop: "2rem",
+            padding: "2rem",
+          }}
+        >
+          <Typography
+            variant="h5"
+            sx={{
+              color: "info.main",
+            }}
+          >
+            Add a gift
+          </Typography>
+          <FormControl
+            sx={{
+              marginTop: "1rem",
+            }}
+          >
+            <InputLabel
+              htmlFor="gift"
+              sx={{
+                fontSize: "1.2rem",
+              }}
+            >
+              Add gift
+            </InputLabel>
+            <Input
+              id="gift"
+              value={newGift}
+              onChange={(e) => setNewGift(e.target.value)}
+              sx={{
+                fontSize: "1.2rem",
+                color: "primary.dark",
+              }}
+            ></Input>
+          </FormControl>
+          <FormControl
+            sx={{
+              marginTop: "1rem",
+            }}
+          >
+            <InputLabel
+              htmlFor="link"
+              sx={{
+                fontSize: "1.2rem",
+              }}
+            >
+              Link to gift
+            </InputLabel>
+            <Input
+              id="link"
+              value={newLink}
+              onChange={(e) => setNewLink(e.target.value)}
+              sx={{
+                fontSize: "1.2rem",
+                color: "primary.dark",
+              }}
+            ></Input>
+          </FormControl>
+          <Button
+            onClick={() => handleSaveNew()}
+            variant="contained"
+            sx={{
+              width: "10rem",
+              margin: "1rem auto",
+            }}
+          >
+            Save Gift
+          </Button>
+          <RouterLink to={`/list/${listId}`}>
+            <Button
+              variant="outlined"
+              sx={{
+                width: "10rem",
+                margin: "0 auto",
+              }}
+            >
+              Back
+            </Button>
+          </RouterLink>
+        </Stack>
+      </Container>
     </Container>
   );
 };
