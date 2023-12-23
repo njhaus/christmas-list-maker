@@ -40,7 +40,7 @@ const Home = () => {
       <Container
         sx={{
           backgroundColor: "white",
-          paddingBottom: "2.5rem",
+          paddingBottom: "2rem",
           borderRadius: "0 0 20% 20%",
           marginTop: "-1px",
           paddingTop: "4rem",

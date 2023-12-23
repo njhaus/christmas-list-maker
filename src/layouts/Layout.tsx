@@ -88,6 +88,9 @@ const Layout = ({ children }: iLayout) => {
               zIndex: "10",
               padding: "0",
               margin: "0.25rem",
+              "&:hover": {
+                backgroundColor: "info.light",
+              },
             }}
           >
             <LetterC height={"3rem"}></LetterC>
@@ -104,6 +107,9 @@ const Layout = ({ children }: iLayout) => {
             margin: "0.25rem",
             height: "3.5rem",
             width: "3.5rem",
+            "&:hover": {
+              backgroundColor: "info.light",
+            },
           }}
         >
           Log Out

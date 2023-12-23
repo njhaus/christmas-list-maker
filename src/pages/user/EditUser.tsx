@@ -6,19 +6,18 @@ import {
   Typography,
   List,
   ListItem,
-  ListItemText,
-  FormControl,
-  InputLabel,
   Input,
   Button,
-  ListItemButton,
   Link,
+  Box
 } from "@mui/material";
+
 import { Link as RouterLink } from "react-router-dom";
 
 import Err from "../error/Err";
-import { iGift, iEditUser } from "../../data/userData";
+import { iEditUser } from "../../data/userData";
 import { apiPost } from "../../services/api_service";
+import AddGift from "./AddGift";
 
 interface iEditUserComponent {
   data: iEditUser;
@@ -29,15 +28,19 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
   // Set by API call
   const [user, setUser] = useState(data.name);
   const [gifts, setGifts] = useState(data.gifts);
+  const [isAdding, setIsAdding] = useState(false)
 
   const [err, setErr] = useState("");
 
-  const [newGift, setNewGift] = useState("");
-  const [newLink, setNewLink] = useState("");
   // Is editing takes the id of the gift being edited. The values of the edited gift/link are sotred in the edit states
   const [isEditing, setIsEditing] = useState("");
   const [editGift, setEditGift] = useState("");
   const [editLink, setEditLink] = useState("");
+
+  // Open add a gift
+  const handleIsAdding = () => {
+    setIsAdding(!isAdding)
+  }
 
   // Edit a gift
   const handleEdit = (id: string) => {
@@ -67,31 +70,6 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
     setEditLink("");
   };
 
-  // Make a new gift
-  const handleSaveNew = () => {
-    setErr("");
-    const slug = "user/gift/new";
-    const body = {
-      newGift: newGift,
-      newLink: newLink,
-      listId: listId,
-    };
-    apiPost(slug, body).then((res) => {
-      console.log(res);
-      if (res?.message === "success" && res?.newGift) {
-        console.log(res);
-        setGifts([...gifts, res.newGift]);
-      } else if (res?.error) {
-        console.log(res);
-        setErr(res.error);
-      } else {
-        setErr("There was an error processing your request");
-      }
-    });
-    setNewGift("");
-    setNewLink("");
-  };
-
   // Delete a gift
   const handleDelete = (id: string) => {
     setErr("");
@@ -115,11 +93,11 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
   };
 
   return (
-    <Container
+    <Box
       sx={{
         backgroundColor: "info.main",
         minHeight: "calc(100vh - 4.5rem)",
-        padding: "0",
+        paddingBottom: "8rem",
       }}
     >
       {err && <Err err={err} setErr={setErr}></Err>}
@@ -130,10 +108,11 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
           borderRadius: "0 0 20% 20%",
           marginTop: "-1px",
           paddingTop: "2rem",
+          boxShadow: "0px 5px 15px #930001",
         }}
       >
         <Typography
-          variant="h4"
+          variant="h3"
           sx={{
             color: "info.main",
           }}
@@ -146,34 +125,48 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
           marginTop: "2rem",
         }}
       >
-        <List>
-          {gifts.length < 1 ? (
+        {gifts.length < 1 ? (
+          <Typography
+            variant="h5"
+            sx={{
+              color: "white",
+            }}
+          >
+            You have no gifts on your list yet.
+          </Typography>
+        ) : (
+          <Container
+            sx={{
+              textAlign: "center",
+            }}
+          >
             <Typography
               variant="h5"
               sx={{
                 color: "white",
               }}
             >
-              You have no gifts on your list yet.
+              My Gifts
             </Typography>
-          ) : (
-            <Container>
-              <Typography
-                variant="h5"
-                sx={{
-                  color: "white",
-                }}
-              >
-                My Gifts
-              </Typography>
+            <List
+              sx={{
+                  margin: '1rem auto',
+              }}
+            >
               {gifts.map((gift) => (
                 <ListItem
                   key={gift.id}
                   sx={{
+                    margin: "1rem auto",
+                    width: "100%",
+                    maxWidth: "400px",
                     display: "flex",
                     flexDirection: "row",
-                    color: "primary.dark",
-                    fontSize: "1.2rem",
+                    justifyContent: "start",
+                    gap: "1.5rem",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                    padding: "0.5 1rem",
                   }}
                 >
                   {isEditing !== gift.id && (
@@ -243,101 +236,51 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
                   </Button>
                 </ListItem>
               ))}
-            </Container>
-          )}
-        </List>
-        <Stack
-          sx={{
-            margin: "2rem auto",
-            padding: "1rem",
-            backgroundColor: "white",
-            width: "80%",
-            maxWidth: "600px",
-            borderRadius: "10px",
-            boxShadow: "0px 0px 15px #930001",
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{
-              color: "primary.dark",
-              textAlign: "center",
-            }}
-          >
-            Add a gift
-          </Typography>
-          <FormControl
-            sx={{
-              marginTop: "1rem",
-            }}
-          >
-            <InputLabel
-              htmlFor="gift"
-              sx={{
-                fontSize: "1.2rem",
-                color: "primary.dark",
-              }}
-            >
-              Add gift
-            </InputLabel>
-            <Input
-              id="gift"
-              value={newGift}
-              onChange={(e) => setNewGift(e.target.value)}
-              sx={{
-                fontSize: "1.2rem",
-                color: "info.main",
-              }}
-            ></Input>
-          </FormControl>
-          <FormControl
-            sx={{
-              marginTop: "1rem",
-            }}
-          >
-            <InputLabel
-              htmlFor="link"
-              sx={{
-                fontSize: "1.2rem",
-                color: "primary.dark",
-              }}
-            >
-              Link to gift
-            </InputLabel>
-            <Input
-              id="link"
-              value={newLink}
-              onChange={(e) => setNewLink(e.target.value)}
-              sx={{
-                fontSize: "1.2rem",
-                color: "info.main",
-              }}
-            ></Input>
-          </FormControl>
+            </List>
+          </Container>
+        )}
+        {isAdding ? (
+          <AddGift
+            gifts={gifts}
+            setGifts={setGifts}
+            listId={listId}
+            handleIsAdding={handleIsAdding}
+          />
+        ) : (
           <Button
-            onClick={() => handleSaveNew()}
+            onClick={() => handleIsAdding()}
             variant="contained"
             sx={{
-              width: "10rem",
-              margin: "1rem auto",
+              backgroundColor: "secondary.main",
+              color: "primary.dark",
+              marginTop: "2rem",
+              width: "7.5rem",
+              "&:hover": {
+                backgroundColor: "secondary.dark",
+              },
+              "&:active": {
+                backgroundColor: "info.main",
+              },
             }}
           >
-            Save Gift
+            Add a Gift
           </Button>
-          <RouterLink to={`/list/${listId}`}>
-            <Button
-              variant="outlined"
-              sx={{
-                width: "10rem",
-                margin: "0 auto",
-              }}
-            >
-              Back
-            </Button>
-          </RouterLink>
-        </Stack>
+        )}
       </Container>
-    </Container>
+      <RouterLink to={`/list/${listId}`}>
+        <Button
+          variant="outlined"
+          sx={{
+            width: "7.5rem",
+            margin: "1rem auto",
+            color: "white",
+            borderColor: "white",
+          }}
+        >
+          Back
+        </Button>
+      </RouterLink>
+    </Box>
   );
 };
 

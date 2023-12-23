@@ -15,7 +15,7 @@ const theme = createTheme({
     info: {
       main: "#d20002",
       dark: "#930001",
-      light: "#E5004C",
+      light: "#ffe0e0",
     },
   },
   typography: {
