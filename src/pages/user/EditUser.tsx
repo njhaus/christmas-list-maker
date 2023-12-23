@@ -9,7 +9,9 @@ import {
   Input,
   Button,
   Link,
-  Box
+  Box,
+  FormControl,
+  InputLabel
 } from "@mui/material";
 
 import { Link as RouterLink } from "react-router-dom";
@@ -18,6 +20,7 @@ import Err from "../error/Err";
 import { iEditUser } from "../../data/userData";
 import { apiPost } from "../../services/api_service";
 import AddGift from "./AddGift";
+import LetterC from "../../components/LetterC";
 
 interface iEditUserComponent {
   data: iEditUser;
@@ -150,7 +153,7 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
             </Typography>
             <List
               sx={{
-                  margin: '1rem auto',
+                margin: "1rem auto",
               }}
             >
               {gifts.map((gift) => (
@@ -171,69 +174,116 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
                 >
                   {isEditing !== gift.id && (
                     <>
-                      <Typography
-                        sx={{
-                          fontSize: "1.3rem",
-                          flexGrow: "1",
-                        }}
-                      >
-                        &#10052;{gift.description}
-                      </Typography>
-                      {gift.link && (
-                        <Link href={gift.link} target="_blank">
-                          <Button>Link</Button>
-                        </Link>
-                      )}
-                      <Button
-                        onClick={() => {
-                          setEditGift(gift.description);
-                          setEditLink(gift.link);
-                          setIsEditing(gift.id);
-                        }}
-                        variant="outlined"
-                        sx={{
-                          width: "3rem",
-                        }}
-                      >
-                        Edit
-                      </Button>
+                      <Box>
+                        <LetterC height={"2.5rem"} />
+                      </Box>
+                      <Box>
+                        <Typography
+                          sx={{
+                            color: "primary.dark",
+                            fontWeight: "600",
+                          }}
+                        >
+                          {gift.description}
+                        </Typography>
+                        <Box
+                          sx={{
+                            color: "info.dark",
+                            fontSize: "1.2rem",
+                            fontVariantCaps: "all-small-caps",
+                            textAlign: "center",
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: "1rem",
+                            marginLeft: "0.5rem",
+                          }}
+                        >
+                          {gift.link && (
+                            <Link href={gift.link} target="_blank">
+                              <Button>Link</Button>
+                            </Link>
+                          )}
+                          <Button
+                            onClick={() => {
+                              setEditGift(gift.description);
+                              setEditLink(gift.link);
+                              setIsEditing(gift.id);
+                            }}
+                            variant="text"
+                            sx={{
+                              width: "3rem",
+                              color: "info.dark",
+                            }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            onClick={() => handleDelete(gift.id)}
+                            variant="text"
+                            sx={{
+                              width: "5rem",
+                              // borderColor: "secondary.dark",
+                              color: "secondary.dark",
+                              marginLeft: "0.3rem",
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </Box>
+                      </Box>
                     </>
                   )}
                   {isEditing === gift.id && (
                     <>
-                      <Input
-                        id="edit-gift"
-                        value={editGift}
-                        onChange={(e) => setEditGift(e.target.value)}
-                      ></Input>
-                      <Input
-                        id="edit-link"
-                        value={editLink}
-                        onChange={(e) => setEditLink(e.target.value)}
-                      ></Input>
-                      <Button
-                        onClick={() => handleEdit(gift.id)}
-                        variant="outlined"
-                        sx={{
-                          width: "3rem",
-                        }}
-                      >
-                        Save
-                      </Button>
+                      <Box>
+                        <LetterC height={"2.5rem"} />
+                      </Box>
+                      <Box>
+                        <FormControl>
+                          <Input
+                            id="edit-gift"
+                            value={editGift}
+                            onChange={(e) => setEditGift(e.target.value)}
+                            sx={{
+                              color: "info.dark",
+                            }}
+                          ></Input>
+                        </FormControl>
+                        <Box
+                          sx={{
+                            color: "info.dark",
+                            fontSize: "1.2rem",
+                            fontVariantCaps: "all-small-caps",
+                            textAlign: "center",
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: "1rem",
+                            marginLeft: "0.5rem",
+                          }}
+                        >
+                          <FormControl>
+                            <Input
+                              id="edit-link"
+                              value={editLink}
+                              onChange={(e) => setEditLink(e.target.value)}
+                              sx={{
+                                color: "info.dark",
+                              }}
+                            ></Input>
+                          </FormControl>
+                          <Button
+                            onClick={() => handleEdit(gift.id)}
+                            variant="outlined"
+                            sx={{
+                              width: "3rem",
+                            }}
+                          >
+                            Save
+                          </Button>
+                        </Box>
+                      </Box>
                     </>
                   )}
-                  <Button
-                    onClick={() => handleDelete(gift.id)}
-                    variant="outlined"
-                    sx={{
-                      width: "5rem",
-                      borderColor: "secondary.dark",
-                      color: "secondary.dark",
-                      marginLeft: "0.3rem",
-                    }}
-                  >
-                    Delete
-                  </Button>
                 </ListItem>
               ))}
             </List>
@@ -251,15 +301,15 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
             onClick={() => handleIsAdding()}
             variant="contained"
             sx={{
-              backgroundColor: "secondary.main",
-              color: "primary.dark",
+              backgroundColor: "primary.main",
+              color: "white",
               marginTop: "2rem",
               width: "7.5rem",
               "&:hover": {
-                backgroundColor: "secondary.dark",
+                backgroundColor: "primary.dark",
               },
               "&:active": {
-                backgroundColor: "info.main",
+                backgroundColor: "info.dark",
               },
             }}
           >

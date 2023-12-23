@@ -32,3 +32,9 @@ div[class*=MuiContainer-root] {
 padding-left: 0 !important;
 padding-right: 0 !important;
 }
+
+.main-background {
+    box-shadow: inset 5px 0px 135px #930001, 
+    inset -5px 0px 135px #930001,
+    inset 0px -75px 135px #930001;
+}

@@ -22,6 +22,7 @@ const Home = () => {
 
   return (
     <Container
+      className="main-background"
       sx={{
         margin: "0",
         width: "100vw",
@@ -54,7 +55,8 @@ const Home = () => {
             color: "info.main",
           }}
         >
-          <LetterC height={'6.5rem'} margin={['-1rem', '-0.75rem']} />hristmas List Maker
+          <LetterC height={"6.5rem"} margin={["-1rem", "-0.75rem"]} />
+          hristmas List Maker
         </Typography>
       </Container>
       <Container
