@@ -97,34 +97,30 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
 
   return (
     <>
-      {currentUser.id === "0" && list.users.length > 1 ? (
-        <UserAccess handleCurrentUser={handleCurrentUser} />
-      ) : (
-        <Container
+      <Container
+        sx={{
+          backgroundColor: "white",
+          paddingBottom: "2rem",
+          borderRadius: "0 0 20% 20%",
+          marginTop: "-1px",
+          paddingTop: "1.5rem",
+          boxShadow: "0px 5px 15px #930001",
+          position: "relative",
+          width: "100%",
+          textAlign: "center",
+        }}
+      >
+        <Typography
+          variant="h2"
           sx={{
-            backgroundColor: "white",
-            paddingBottom: "2rem",
-            borderRadius: "0 0 20% 20%",
-            marginTop: "-1px",
-            paddingTop: "1.5rem",
-            boxShadow: "0px 5px 15px #930001",
-            position: "relative",
-            width: "100%",
-            textAlign: "center",
+            color: "info.main",
           }}
         >
-          <Typography
-            variant="body2"
-            sx={{
-              color: "primary.main",
-              fontSize: "1.75rem",
-            }}
-          >
-            {list.users.length > 1 && `Hello, ${currentUser?.name}!`}
-            {/* {list.users.find((user) => user.name === currentUser.name)?.name} */}
-          </Typography>
-        </Container>
-      )}
+          {list.title}
+          {/* {list.users.find((user) => user.name === currentUser.name)?.name} */}
+        </Typography>
+      </Container>
+
       <Container
         sx={{
           marginTop: "2rem",
@@ -133,15 +129,19 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
         }}
       >
         {err && <Err err={err} setErr={setErr}></Err>}
-        <Typography
-          variant="h3"
-          sx={{
-            marginTop: "2rem",
-            color: "secondary.light",
-          }}
-        >
-          {list.title}
-        </Typography>
+        {currentUser.id === "0" && list.users.length > 1 ? (
+          <UserAccess handleCurrentUser={handleCurrentUser} />
+        ) : (
+          <Typography
+            variant="h4"
+            sx={{
+              marginTop: "2rem",
+              color: "secondary.light",
+            }}
+          >
+            {list.users.length > 1 && `Hello, ${currentUser?.name}!`}
+          </Typography>
+        )}
         <Typography
           sx={{
             marginTop: "0.75rem",

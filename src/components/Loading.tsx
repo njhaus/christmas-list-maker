@@ -28,19 +28,20 @@ const Loading = () => {
             color: "info.main",
           }}
         >
-          <LetterC height={"6.5rem"} margin={["-1rem", "-0.75rem"]} />
-          hristmas List Maker
+          Loading...
+          {/* <LetterC height={"6.5rem"} margin={["-1rem", "-0.75rem"]} />
+          hristmas List Maker */}
         </Typography>
       </Container>
-      <Typography
+      {/* <Typography
         variant="h3"
         sx={{
-            color: "white",
-            marginTop: "5rem"
+          color: "white",
+          marginTop: "5rem",
         }}
       >
         Loading...
-      </Typography>
+      </Typography> */}
     </Box>
   );
 }

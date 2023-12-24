@@ -183,8 +183,8 @@ const List = () => {
                   marginTop: "2rem",
                   width: "10rem",
                   fontSize: "1.2rem",
-                  borderColor: 'secondary.main',
-                  color: 'secondary.main'
+                  borderColor: "secondary.main",
+                  color: "secondary.main",
                 }}
               >
                 Edit list

@@ -22,6 +22,8 @@ import { Link as RouterLink } from "react-router-dom";
 import { testNotes, testUser, testGifts, iViewUser } from "../../data/userData";
 import { apiPost } from "../../services/api_service";
 import Err from "../error/Err";
+import Loading from "../../components/Loading";
+import LetterC from "../../components/LetterC";
 
 interface iViewUserComponent {
   data: iViewUser;
@@ -129,34 +131,33 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
 
   if (loading) {
     return (
-      <Container>
-        <Typography>...Loading</Typography>
-      </Container>
+      <Loading/>
     );
   }
 
   return (
-    <Container
+    <Box
       sx={{
-        backgroundColor: "white",
-        minHeight: "100vh",
-        padding: "0",
+        backgroundColor: "info.main",
+        minHeight: "calc(100vh - 4.5rem)",
+        paddingBottom: "8rem",
       }}
     >
       {err && <Err err={err} setErr={setErr}></Err>}
       <Stack
         sx={{
-          backgroundColor: "info.main",
+          backgroundColor: "white",
           paddingBottom: "2.5rem",
           borderRadius: "0 0 20% 20%",
           marginTop: "-1px",
           paddingTop: "2rem",
+          boxShadow: "0px 5px 15px #930001",
         }}
       >
         <Typography
-          variant="h4"
+          variant="h3"
           sx={{
-            color: "white",
+            color: "info.main",
           }}
         >
           {user}'s Christmas List
@@ -167,162 +168,229 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
           marginTop: "2rem",
         }}
       >
-        <List>
-          {gifts.length < 1 ? (
+        {gifts.length < 1 ? (
+          <Typography
+            variant="h5"
+            sx={{
+              color: "white",
+            }}
+          >
+            {user} has not asked for any gifts yet.
+          </Typography>
+        ) : (
+          <Container>
             <Typography
-              variant="h5"
+              variant="h4"
               sx={{
-                color: "info.main",
+                color: "white",
               }}
             >
-              {user} has not asked for any gifts yet.
+              {user}'s' Gifts
             </Typography>
-          ) : (
-            <Container>
-              <Typography
-                variant="h5"
-                sx={{
-                  color: "info.main",
-                }}
-              >
-                {user}'s' Gifts
-              </Typography>
+            <List>
               {gifts.map((gift) => (
                 <ListItem
                   key={gift.id}
                   sx={{
+                    margin: "1rem auto",
+                    width: "100%",
+                    maxWidth: "400px",
                     display: "flex",
                     flexDirection: "row",
-                    justifyContent: "space-between",
-                    color: "primary.dark",
-                    fontSize: "1.2rem",
+                    justifyContent: "start",
+                    gap: "1.5rem",
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                    padding: "0.5 1rem",
                   }}
                 >
-                  <Typography
-                    sx={{
-                      fontSize: "1.3rem",
-                      flexGrow: "1",
-                    }}
-                  >
-                    &#10052;{gift.description}
-                  </Typography>
-                  {gift.link && (
-                    <Link href={gift.link} target="_blank">
-                      <Button>Link</Button>
-                    </Link>
-                  )}
-                  <Stack
-                    direction={"row"}
-                    sx={{
-                      alignItems: "center",
-                    }}
-                  >
-                    <FormControl>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            disabled={
-                              gift.bought && gift.buyer_name !== currentUser
-                                ? true
-                                : false
-                            }
-                            checked={!gift.bought ? false : true}
-                            onChange={() => handleBuyGift(gift.id)}
-                          />
-                        }
-                        label={gift.bought !== 0 && gift.bought ? "" : "bought"}
+                  <Box>
+                    <LetterC height={"2.5rem"} />
+                  </Box>
+                  <Box>
+                    <Typography
+                      sx={{
+                        fontSize: "1.3rem",
+                      }}
+                    >
+                      {gift.description}
+                      {gift.link && (
+                        <Link href={gift.link} target="_blank">
+                          <Button>Link</Button>
+                        </Link>
+                      )}
+                    </Typography>
+                    <Box
+                      sx={{
+                        color: "info.dark",
+                        fontSize: "1.2rem",
+                        fontVariantCaps: "all-small-caps",
+                        textAlign: "center",
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "1rem",
+                        marginLeft: "0.5rem",
+                      }}
+                    >
+                      <Stack
+                        direction={"row"}
                         sx={{
-                          color: "primary.main",
-                        }}
-                      />
-                    </FormControl>
-                    {gift.bought !== 0 && gift.bought && (
-                      <Typography
-                        sx={{
-                          color: "primary.main",
+                          alignItems: "center",
                         }}
                       >
-                        Bought by: {gift.buyer_name}
-                      </Typography>
-                    )}
-                  </Stack>
+                        <FormControl>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                disabled={
+                                  gift.bought && gift.buyer_name !== currentUser
+                                    ? true
+                                    : false
+                                }
+                                checked={!gift.bought ? false : true}
+                                onChange={() => handleBuyGift(gift.id)}
+                                sx={{
+                                  padding: "0",
+                                  marginRight: "0.5rem",
+                                }}
+                              />
+                            }
+                            label={
+                              gift.bought !== 0 && gift.bought ? "" : "bought"
+                            }
+                            sx={{
+                              color: "primary.main",
+                            }}
+                          />
+                        </FormControl>
+                        {gift.bought !== 0 && gift.bought && (
+                          <Typography
+                            sx={{
+                              color: "primary.main",
+                            }}
+                          >
+                            Bought by: {gift.buyer_name}
+                          </Typography>
+                        )}
+                      </Stack>
+                    </Box>
+                  </Box>
                 </ListItem>
               ))}
-            </Container>
-          )}
-        </List>
-        <Stack>
+            </List>
+          </Container>
+        )}
+        <Box
+          sx={{
+            marginTop: "1.5rem",
+          }}
+        >
           <Typography
-            variant="h5"
+            variant="h4"
             sx={{
-              color: "info.main",
+              color: "white",
+              marginBottom: "0.5rem",
             }}
           >
             Notes
           </Typography>
           <Typography
             sx={{
-              fontSize: "1.2rem",
-              color: "info.main",
+              fontSize: "1rem",
+              color: "white",
             }}
           >
             Write a note or add a gift you bought for {user}.
           </Typography>
           <Typography
             sx={{
-              fontSize: "1.2rem",
-              color: "info.main",
+              fontSize: "1rem",
+              color: "white",
+              fontVariantCaps: "all-small-caps",
             }}
           >
             ({user} can't see your note, but other gift-givers can.)
           </Typography>
-          <List>
-            {notes.map((note) => (
-              <ListItem
-                key={note.id}
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "baseline",
-                  color: "primary.dark",
-                  fontSize: "1.2rem",
-                }}
-              >
-                <Typography
+        </Box>
+        <Stack
+          sx={{
+            padding: "1rem",
+            backgroundColor: "white",
+            borderRadius: "10px",
+            margin: "1rem auto",
+            maxWidth: "400px",
+            width: "100%",
+          }}
+        >
+          {notes.length < 1 ? (
+            <Typography
+              sx={{
+                color: "primary.dark",
+              }}
+            >
+              No notes yet!
+            </Typography>
+          ) : (
+            <List>
+              {notes.map((note) => (
+                <ListItem
+                  key={note.id}
                   sx={{
-                    color: "primary.main",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                    color: "primary.dark",
                     fontSize: "1.2rem",
-                    flexGrow: "1",
+                    gap: "0rem",
+                    // borderBottom: "1px solid #00320b",
                   }}
                 >
-                  {note.description}
-                </Typography>
-                <Stack direction={"row"}>
                   <Typography
                     sx={{
                       color: "primary.main",
                       fontSize: "1.2rem",
-                      fontWeight: "600",
                     }}
                   >
-                    By: {note.written_by}
+                    "{note.description}"
                   </Typography>
-                  {note.written_by === currentUser && (
-                    <Button
-                      onClick={() => handleDeleteNote(note.id, note.written_by)}
-                      variant="outlined"
+                  <Stack
+                    direction={"row"}
+                    sx={{
+                      alignItems: "baseline",
+                      borderBottom: "1px solid #ccc",
+                      width: "100%",
+                    }}
+                  >
+                    <Typography
                       sx={{
-                        marginLeft: "0.5rem",
+                        color: "primary.main",
+                        fontSize: "1.2rem",
+                        fontVariantCaps: "all-small-caps",
                       }}
                     >
-                      Delete
-                    </Button>
-                  )}
-                </Stack>
-              </ListItem>
-            ))}
-          </List>
+                      By: {note.written_by}
+                    </Typography>
+                    {note.written_by === currentUser && (
+                      <Button
+                        onClick={() =>
+                          handleDeleteNote(note.id, note.written_by)
+                        }
+                        variant="text"
+                        sx={{
+                          marginLeft: "0.75rem",
+                          color: "secondary.dark",
+                          padding: "0",
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                  </Stack>
+                </ListItem>
+              ))}
+            </List>
+          )}
           <Stack
             sx={{
               alignItems: "center",
@@ -332,7 +400,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
               <InputLabel
                 htmlFor="note"
                 sx={{
-                  color: "primary.dark",
+                  color: "info.dark",
                 }}
               >
                 Add Note:
@@ -342,7 +410,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
                 sx={{
-                  color: "primary.dark",
+                  color: "info.dark",
                   width: "20rem",
                 }}
               ></Input>
@@ -351,7 +419,8 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
                 variant="contained"
                 sx={{
                   width: "10rem",
-                  margin: "1rem auto",
+                  marginTop: "1rem",
+                  marginX: "auto",
                 }}
               >
                 Save Note
@@ -363,15 +432,17 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
           <Button
             variant="outlined"
             sx={{
-              width: "10rem",
-              margin: "0rem auto",
+              width: "7.5rem",
+              margin: "1rem auto",
+              color: "white",
+              borderColor: "white",
             }}
           >
             Back
           </Button>
         </RouterLink>
       </Stack>
-    </Container>
+    </Box>
   );
 };
 

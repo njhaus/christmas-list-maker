@@ -16,24 +16,20 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
       <Container
         sx={{
           backgroundColor: "white",
-          paddingBottom: "3rem",
-          paddingTop: "1rem",
-          borderRadius: "0 0 20% 20%",
-          marginTop: "-1px",
-          boxShadow: "0px 5px 15px #930001",
+          padding: "1rem",
+          borderRadius: "10px",
+          maxWidth: '400px',
           position: 'relative',
         }}
       >
         <Typography
-          variant="body2"
+          variant="h5"
           sx={{
             color: "primary.main",
-            fontWeight: "300",
           }}
         >
-          {isCreating
-            ? "Type your name and an access code, then click SAVE."
-            : "Log in to view other's lists and change your own"}
+          Log in or create an access code.
+
         </Typography>
         <form method="post" action="user/">
           <Stack>
@@ -59,6 +55,7 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                 <Input
                   id="name"
                   aria-describedby="Your name"
+                  autoComplete="off"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   sx={{

@@ -138,13 +138,9 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
             You have no gifts on your list yet.
           </Typography>
         ) : (
-          <Container
-            sx={{
-              textAlign: "center",
-            }}
-          >
+          <Container >
             <Typography
-              variant="h5"
+              variant="h4"
               sx={{
                 color: "white",
               }}
@@ -303,7 +299,7 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
             sx={{
               backgroundColor: "primary.main",
               color: "white",
-              marginTop: "2rem",
+              marginTop: "1rem",
               width: "7.5rem",
               "&:hover": {
                 backgroundColor: "primary.dark",

@@ -7,7 +7,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { apiPost } from "../services/api_service";
 import useAuth from "../hooks/useAuth";
 import Err from "../pages/error/Err";
-import footer from "../pages/home/HomeFooter";
 import { initialListData } from "../data/listData";
 import { testCurrentUser } from "../data/userData";
 import GiftBorder from "../components/GiftBorder";
