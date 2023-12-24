@@ -149,15 +149,21 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
             // fontWeight: "200",
           }}
         >
-          {currentUser.id === "0" && list.users.length
-            ? "Log in to view people's lists."
-            : "Click a name to view that person's list"}
+          
+          {list.users.length > 0 &&
+            currentUser.id === "0"
+            && "Log in to view people's lists."
+          }
+          {list.users.length > 0 &&
+            currentUser.id !== "0"
+                && "Click a name to view that person's list"
+            }
         </Typography>
         {list.users.length < 1 ? (
           <Typography
             sx={{
               fontSize: "1.2rem",
-              color: "primary.dark",
+              color: "white",
             }}
           >
             Nobody is on your list yet! Click "Edit List" to add people.
@@ -249,23 +255,26 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
             ))}
           </List>
         )}
-        {list.users.some((user) => user.recipients.includes("Anybody")) ? (
-          <RecipientsDialog
-            text="Create Recipients Lists"
-            handleSetRecipients={handleSetRecipients}
-            maxPeople={list.users.length - 1}
-            tooltip={false}
-            names={list.users.map((user) => user.name)}
-          />
-        ) : (
-          <RecipientsDialog
-            text="Recreate Recipients Lists"
-            handleSetRecipients={handleSetRecipients}
-            maxPeople={list.users.length - 1}
-            tooltip={true}
-            names={list.users.map((user) => user.name)}
-          />
-        )}
+        {list.users.some((user) => user.recipients.includes("Anybody")) &&
+          list.users.length > 0 && (
+            <RecipientsDialog
+              text="Create Recipients Lists"
+              handleSetRecipients={handleSetRecipients}
+              maxPeople={list.users.length - 1}
+              tooltip={false}
+              names={list.users.map((user) => user.name)}
+            />
+          )}
+        {!list.users.some((user) => user.recipients.includes("Anybody")) &&
+          list.users.length > 0 && (
+            <RecipientsDialog
+              text="Recreate Recipients Lists"
+              handleSetRecipients={handleSetRecipients}
+              maxPeople={list.users.length - 1}
+              tooltip={true}
+              names={list.users.map((user) => user.name)}
+            />
+          )}
       </Container>
     </>
   );

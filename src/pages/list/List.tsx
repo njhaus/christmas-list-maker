@@ -83,9 +83,11 @@ const List = () => {
   
   
   const handleSubmitList = (users: iListUser[]) => {
-    const filteredUsers = users.filter(
-      (user) => !users.some((chkuser) => user.name === chkuser.name)
-    ); 
+    console.log('sdvdsvdsvdsvdsv');
+    const filteredUsers = users.filter((obj, index, array) => {
+      return array.findIndex((item) => item.name === obj.name) === index;
+    });
+    console.log(filteredUsers);
     if (filteredUsers.length > 0) {
       const prevList = list;
       setList({ ...list, users: filteredUsers });
@@ -151,6 +153,7 @@ const List = () => {
         backgroundColor: "info.main",
         width: "100%",
         paddingBottom: "8rem",
+        minHeight: 'calc(100vh - 6.5rem)'
       }}
     >
       {isCreating && (

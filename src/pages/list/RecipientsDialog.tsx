@@ -40,9 +40,9 @@ export interface iSimpleDialogProps {
 
 function SimpleDialog({ open, selectedValue, onClose, handleSetRecipients, maxPeople, names }: iSimpleDialogProps) {
     
-    const numsArray: number[] = new Array(maxPeople)
+    const numsArray: number[] = maxPeople > 0 ? new Array(maxPeople)
       .fill(0)
-      .map((num, i) => i + 1);
+      .map((num, i) => i + 1) : [0];
 
     const [num, setNum] = useState<number>(1)
 
