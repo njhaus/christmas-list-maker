@@ -38,13 +38,11 @@ const List = () => {
   // const [list, setList] = useState(initialListData);
   const [err, setErr] = useState('');
   const { list, setList } = useAuth();
-  console.log(list);
   const listId = useParams();
 
 
   // Get list upon page load
   useEffect(() => {
-    console.log(list);
     const getList = async () => {
       console.log('Running API call to get list')
       const body = listId;
@@ -83,11 +81,9 @@ const List = () => {
   
   
   const handleSubmitList = (users: iListUser[]) => {
-    console.log('sdvdsvdsvdsvdsv');
     const filteredUsers = users.filter((obj, index, array) => {
       return array.findIndex((item) => item.name === obj.name) === index;
     });
-    console.log(filteredUsers);
     if (filteredUsers.length > 0) {
       const prevList = list;
       setList({ ...list, users: filteredUsers });
@@ -152,7 +148,7 @@ const List = () => {
       sx={{
         backgroundColor: "info.main",
         width: "100%",
-        paddingBottom: "8rem",
+        paddingBottom: "9rem",
         minHeight: 'calc(100vh - 6.5rem)'
       }}
     >

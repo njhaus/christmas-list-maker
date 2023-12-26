@@ -195,9 +195,9 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
                           }}
                         >
                           {gift.link && (
-                            <Link href={gift.link} target="_blank">
+                            <a href={`https://${gift.link}`} target="_blank" rel="noopener">
                               <Button>Link</Button>
-                            </Link>
+                            </a>
                           )}
                           <Button
                             onClick={() => {

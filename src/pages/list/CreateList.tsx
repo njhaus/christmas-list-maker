@@ -159,6 +159,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
                     marginTop: "2rem",
                     width: "12rem",
                     fontSize: "1.2rem",
+                    color: "secondary.light",
                   }}
                 />
               </FormControl>
@@ -175,6 +176,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
                       marginTop: "2rem",
                       width: "12rem",
                       fontSize: "1.2rem",
+                      color: "secondary.light",
                     }}
                   />
                 </FormControl>
