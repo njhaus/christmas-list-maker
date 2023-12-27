@@ -1,7 +1,8 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Container, Typography, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 
-const Loading = () => {
+const RouteErr = () => {
   return (
     <Box
       sx={{
@@ -27,11 +28,18 @@ const Loading = () => {
             color: "info.main",
           }}
         >
-          Loading...
+          404 Page not found
         </Typography>
       </Box>
+      <Container>
+              <Link to={'/'}>
+                  <Button
+                  variant='contained'
+                  >Return Home</Button>
+        </Link>
+      </Container>
     </Box>
   );
 }
 
-export default Loading
+export default RouteErr

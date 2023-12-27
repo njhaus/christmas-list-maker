@@ -6,6 +6,7 @@ import List from './pages/list/List';
 import UserRouter from './pages/user/UserRouter';
 import AuthProvider from './context/AuthProvider';
 import ListOutlet from './layouts/ListOutlet';
+import RouteErr from "./pages/error/RouteErr";
 
 import { ThemeProvider } from "@mui/material/styles";
 import theme from './theme/theme';
@@ -23,6 +24,7 @@ function App() {
               <Route path="/list/:listId" element={<List />} />
               <Route path="/user/:listId/:username" element={<UserRouter />} />
             </Route>
+            <Route path="*" element={<RouteErr/>}></Route>
           </Routes>
         </AuthProvider>
       </ThemeProvider>

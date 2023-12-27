@@ -12,6 +12,7 @@ import {
   testEditUser,
   testViewUser,
 } from "../../data/userData";
+import Loading from "../../components/Loading";
 
 const UserRouter = () => {
   // Get the currentUser and user's name for this list id from state.
@@ -74,7 +75,7 @@ const UserRouter = () => {
   }, []);
 
   if (isLoading) {
-    return <Container>Loading...</Container>;
+    return <Loading></Loading>;
   }
 
   return (
