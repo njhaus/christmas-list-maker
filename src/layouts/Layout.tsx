@@ -20,8 +20,8 @@ interface iLayout {
 const Layout = ({ children }: iLayout) => {
   const navigate = useNavigate();
   const [err, setErr] = useState("");
-  const { currentUser, setCurrentUser } = useAuth();
-  const { list, setList } = useAuth();
+  const { setCurrentUser } = useAuth();
+  const { setList } = useAuth();
 
   const handleLogout = () => {
     const slug = "logout";

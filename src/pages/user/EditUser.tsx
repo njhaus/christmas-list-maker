@@ -27,7 +27,7 @@ interface iEditUserComponent {
 
 const EditUser = ({ data, listId }: iEditUserComponent) => {
   // Set by API call
-  const [user, setUser] = useState(data.name);
+  const user = data.name;
   const [gifts, setGifts] = useState(data.gifts);
   const [isAdding, setIsAdding] = useState(false)
 

@@ -20,7 +20,6 @@ import { Link as RouterLink } from "react-router-dom";
 import { iViewUser } from "../../data/userData";
 import { apiPost } from "../../services/api_service";
 import Err from "../error/Err";
-import Loading from "../../components/Loading";
 import LetterC from "../../components/LetterC";
 
 interface iViewUserComponent {
@@ -30,9 +29,8 @@ interface iViewUserComponent {
 }
 
 const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
-  const [loading, isLoading] = useState(false);
 
-  const [user, setUser] = useState(data.name);
+  const user = data.name;
   const [gifts, setGifts] = useState(data.gifts);
   const [notes, setNotes] = useState(data.notes);
 
@@ -104,7 +102,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
     setNewNote("");
   };
 
-  const handleDeleteNote = (id: string, writer: string) => {
+  const handleDeleteNote = (id: string) => {
     setErr("");
     const slug = "user/note/delete";
     const body = {
@@ -126,12 +124,6 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
       }
     });
   };
-
-  if (loading) {
-    return (
-      <Loading/>
-    );
-  }
 
   return (
     <Box
@@ -372,7 +364,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
                     {note.written_by === currentUser && (
                       <Button
                         onClick={() =>
-                          handleDeleteNote(note.id, note.written_by)
+                          handleDeleteNote(note.id)
                         }
                         variant="text"
                         sx={{

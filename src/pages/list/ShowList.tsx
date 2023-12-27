@@ -18,6 +18,7 @@ import Err from "../error/Err";
 import useAuth from "../../hooks/useAuth";
 import RecipientsDialog from "./RecipientsDialog";
 import LetterC from "../../components/LetterC";
+import Loading from "../../components/Loading";
 
 interface iShowList {
   list: iListData;
@@ -93,6 +94,10 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
     }
     setIsLoading(false);
   }, []);
+
+  if (isLoading) {
+    return <Loading></Loading>
+  }
 
   return (
     <>

@@ -7,8 +7,6 @@ import UserRouter from './pages/user/UserRouter';
 import AuthProvider from './context/AuthProvider';
 import ListOutlet from './layouts/ListOutlet';
 
-
-import * as React from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from './theme/theme';
 

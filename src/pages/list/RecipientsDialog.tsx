@@ -41,7 +41,7 @@ function SimpleDialog({ open, selectedValue, onClose, handleSetRecipients, maxPe
     
     const numsArray: number[] = maxPeople > 0 ? new Array(maxPeople)
       .fill(0)
-      .map((num, i) => i + 1) : [0];
+      .map((num, i) => i + 1 + num) : [0];
 
     const [num, setNum] = useState<number>(1)
 
