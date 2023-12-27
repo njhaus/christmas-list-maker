@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:3009/";
+const baseUrl = "https://christmas-list-maker-api-production.up.railway.app/";
 
 export const apiPost = async (slug: string, body: any) => {
     try {
