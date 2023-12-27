@@ -215,7 +215,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
                     >
                       {gift.description}
                       {gift.link && (
-                        <Link href={`https://${gift.link}`} target="_blank" rel="noopener">
+                        <Link href={gift.link} target="_blank" rel="noopener">
                           <Button>Link</Button>
                         </Link>
                       )}

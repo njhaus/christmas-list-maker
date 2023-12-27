@@ -22,10 +22,15 @@ const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
   // Make a new gift
   const handleSaveNew = () => {
     setErr("");
+    // Add https:// to link if it is not there -- link will not work otherwise
+    const link = newLink.match("https://")
+      ? newLink
+      : `https://${newLink}`;
+
     const slug = "user/gift/new";
     const body = {
       newGift: newGift,
-      newLink: newLink,
+      newLink: link,
       listId: listId,
     };
     apiPost(slug, body).then((res) => {
@@ -41,8 +46,8 @@ const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
       }
     });
     setNewGift("");
-      setNewLink("");
-      handleIsAdding();
+    setNewLink("");
+    handleIsAdding();
   };
     
     

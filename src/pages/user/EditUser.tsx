@@ -49,11 +49,13 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
   const handleEdit = (id: string) => {
     setErr("");
     const thisGift = gifts.find((gift) => gift.id === id);
+    // Add https:// to link if it is not there -- link will not work otherwise
+    const link = editLink ? editLink.match('https://') ? editLink : `https://${editLink}` : thisGift?.link;
     const slug = "user/gift/edit";
     const body = {
       giftId: id,
       description: editGift ? editGift : thisGift?.description,
-      link: editLink ? editLink : thisGift?.link,
+      link: link,
       listId: listId,
     };
     apiPost(slug, body).then((res) => {
@@ -195,7 +197,7 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
                           }}
                         >
                           {gift.link && (
-                            <a href={`https://${gift.link}`} target="_blank" rel="noopener">
+                            <a href={gift.link} target="_blank" rel="noopener">
                               <Button>Link</Button>
                             </a>
                           )}
