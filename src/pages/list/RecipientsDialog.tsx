@@ -130,12 +130,15 @@ function SimpleDialog({ open, selectedValue, onClose, handleSetRecipients, maxPe
           Create
         </Button>
         <Button
-          variant='outlined'
+          variant="outlined"
+          onClick={() => onClose('close')}
           sx={{
-            borderColor: 'info.main',
-            color: 'info.main'
+            borderColor: "info.main",
+            color: "info.main",
           }}
-        >Cancel</Button>
+        >
+          Cancel
+        </Button>
       </Box>
     </Dialog>
   );

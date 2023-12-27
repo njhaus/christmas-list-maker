@@ -11,7 +11,7 @@ const Loading = () => {
         backgroundColor: "info.main",
       }}
     >
-      <Container
+      <Box
         sx={{
           backgroundColor: "white",
           paddingBottom: "1.5rem",
@@ -32,7 +32,7 @@ const Loading = () => {
           {/* <LetterC height={"6.5rem"} margin={["-1rem", "-0.75rem"]} />
           hristmas List Maker */}
         </Typography>
-      </Container>
+      </Box>
       {/* <Typography
         variant="h3"
         sx={{

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Container, Typography, Stack, Button, Tooltip } from "@mui/material";
+import { Container, Typography, Stack, Button, Tooltip, Box } from "@mui/material";
 import HomeForm from "./HomeForm";
 import HomeFooter from "./HomeFooter";
 import LightString from "../../components/LightString";
@@ -21,7 +21,7 @@ const Home = () => {
   };
 
   return (
-    <Container
+    <Box
       className="main-background"
       sx={{
         margin: "0",
@@ -38,7 +38,7 @@ const Home = () => {
       }}
     >
       <LightString />
-      <Container
+      <Box
         sx={{
           backgroundColor: "white",
           paddingBottom: "2rem",
@@ -58,7 +58,7 @@ const Home = () => {
           <LetterC height={"6.5rem"} margin={["-1rem", "-0.75rem"]} />
           hristmas List Maker
         </Typography>
-      </Container>
+      </Box>
       <Container
         sx={{
           padding: "2rem",
@@ -155,7 +155,7 @@ const Home = () => {
       </Container>
       <GiftBorder />
       <HomeFooter></HomeFooter>
-    </Container>
+    </Box>
   );
 };
 

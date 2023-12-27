@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { Container } from "@mui/material";
+import { Container, Box } from "@mui/material";
 
 import { useLocation, useParams } from "react-router-dom";
 
@@ -80,8 +80,13 @@ const UserRouter = () => {
   }
 
   return (
-    <Container>
-      {err && <Err err={err}></Err>}
+    <Box
+      sx={{
+        position: "relative",
+        width: "100%",
+      }}
+    >
+      {err && <Err err={err} setErr={setErr}></Err>}
       {viewUser.gifts[0]?.id !== "0" && (
         <ViewUser
           data={viewUser}
@@ -92,7 +97,7 @@ const UserRouter = () => {
       {editUser.gifts[0]?.id !== "0" && (
         <EditUser data={editUser} listId={listId ? listId : ""} />
       )}
-    </Container>
+    </Box>
   );
 };
 

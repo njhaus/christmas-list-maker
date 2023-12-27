@@ -50,14 +50,13 @@ const List = () => {
       apiPost(slug, body).then((res) => {
         if (res?.message === "success") {
           setList(res.data);
-          setIsLoading(false);
         } else if (res?.error) {
           console.log(res.error)
-          setErr('res.error')
+          setErr(res.error)
         } else {
           setErr("There was an error processing your request");
         }
-        // setIsLoading(false);
+        setIsLoading(false);
       });
     };
     // Checks if list has been uploaded -- 1234 is placeholder, which means it has not.
@@ -130,19 +129,49 @@ const List = () => {
   }
 
 
+  if (err) {
+    return (
+      <Box
+        sx={{
+          backgroundColor: "info.main",
+          width: "100%",
+          paddingBottom: "9rem",
+          minHeight: "calc(100vh - 6.5rem)",
+        }}
+      >
+        <Box
+          sx={{
+            backgroundColor: "white",
+            paddingBottom: "2rem",
+            borderRadius: "0 0 20% 20%",
+            marginTop: "-1px",
+            paddingTop: "1.5rem",
+            boxShadow: "0px 5px 15px #930001",
+            position: "relative",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          <Typography
+          sx={{color: 'info.main'}}
+          >{err}</Typography>
+          <Link to={"/"}>
+            <Button
+            variant='contained'
+            >Return Home</Button>
+          </Link>
+        </Box>
+      </Box>
+    );
+  }
+  
+
   if (isLoading) {
       return (
           <Loading/>
     )
   }
 
-  if (err) {
-    return <Container>
-      {err}
-      <Link to={'/'}><Button>Return Home</Button></Link>
-    </Container>;
-  }
-  
   return (
     <Box
       sx={{

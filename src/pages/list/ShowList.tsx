@@ -97,7 +97,7 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
 
   return (
     <>
-      <Container
+      <Box
         sx={{
           backgroundColor: "white",
           paddingBottom: "2rem",
@@ -119,7 +119,7 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
           {list.title}
           {/* {list.users.find((user) => user.name === currentUser.name)?.name} */}
         </Typography>
-      </Container>
+      </Box>
 
       <Container
         sx={{

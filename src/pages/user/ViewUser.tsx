@@ -170,7 +170,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
       >
         {gifts.length < 1 ? (
           <Typography
-            variant="h5"
+            variant="h4"
             sx={{
               color: "white",
             }}
@@ -185,7 +185,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
                 color: "white",
               }}
             >
-              {user}'s' Gifts
+              {user}'s Gifts
             </Typography>
             <List>
               {gifts.map((gift) => (

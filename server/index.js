@@ -1119,18 +1119,18 @@ app.post("/logout", async (req, res) => {
 });
 
 // TEST ROUTE
-// app.get("/", (req, res) => {
-//   console.log(req.cookies);
-//   db.all("SELECT * FROM lists", (err, rows) => {
-//     if (err) {
-//       console.error(err.message);
-//       res.status(500).send("Internal Server Error");
-//       return;
-//     }
-//     console.log(rows);
-//     res.json(rows);
-//   });
-// });
+app.get("/", (req, res) => {
+  console.log(req.cookies);
+  db.all("SELECT * FROM lists", (err, rows) => {
+    if (err) {
+      console.error(err.message);
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+    console.log(rows);
+    res.json(rows);
+  });
+});
 
 process.on("SIGINT", () => {
   db.close((err) => {
