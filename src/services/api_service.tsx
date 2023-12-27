@@ -7,7 +7,7 @@ export const apiPost = async (slug: string, body: any) => {
         const response = await fetch(`${baseUrl}${slug}`, {
           headers: {
             "Content-Type": "application/json",
-             "Access-Control-Allow-Origin": baseUrl
+            //  "Access-Control-Allow-Origin": baseUrl
           },
           method: "POST",
           mode: "cors",
