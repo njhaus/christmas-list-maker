@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment } from 'react';
 
-import { Container, Typography, Button, Box } from '@mui/material'
+import { Typography, Button, Box } from '@mui/material'
 import { styled } from "@mui/material/styles";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 
@@ -9,7 +9,7 @@ import ShowList from './ShowList';
 
 import { initialListData } from '../../data/listData';
 
-import { useLocation, Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { apiPost } from '../../services/api_service';
 import { iListUser } from '../../data/listData';
 import useAuth from '../../hooks/useAuth';

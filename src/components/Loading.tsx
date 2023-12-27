@@ -1,6 +1,5 @@
-import { Box, Typography, Container } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 
-import LetterC from './LetterC';
 
 const Loading = () => {
   return (

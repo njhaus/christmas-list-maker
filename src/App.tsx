@@ -1,6 +1,5 @@
-import { useState } from 'react'
 
-import { Routes, Route , useParams} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Home from './pages/home/Home';
 import List from './pages/list/List';
@@ -10,8 +9,7 @@ import ListOutlet from './layouts/ListOutlet';
 
 
 import * as React from "react";
-import { red } from "@mui/material/colors";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import theme from './theme/theme';
 
 

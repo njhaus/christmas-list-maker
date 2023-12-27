@@ -1,5 +1,3 @@
-import React from 'react'
-
 const LightString = () => {
   return (
     <div className="lights-container">

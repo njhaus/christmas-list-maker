@@ -8,18 +8,16 @@ import {
   Box,
   FormControlLabel,
   Button,
-  ListItemText,
   FormControl,
   Input,
   InputLabel,
-  ListItemButton,
   Link,
 } from "@mui/material";
 import { useState } from "react";
 
 import { Link as RouterLink } from "react-router-dom";
 
-import { testNotes, testUser, testGifts, iViewUser } from "../../data/userData";
+import { iViewUser } from "../../data/userData";
 import { apiPost } from "../../services/api_service";
 import Err from "../error/Err";
 import Loading from "../../components/Loading";

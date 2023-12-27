@@ -1,5 +1,3 @@
-import React from 'react'
-
 const GiftBorder = () => {
   return (
     <div className="gifts-container">

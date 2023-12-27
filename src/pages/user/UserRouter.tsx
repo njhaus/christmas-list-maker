@@ -2,15 +2,13 @@ import { useState, useEffect } from "react";
 
 import { Container, Box } from "@mui/material";
 
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import ViewUser from "./ViewUser";
 import EditUser from "./EditUser";
 import Err from "../error/Err";
-import useAuth from "../../hooks/useAuth";
 import { apiPost } from "../../services/api_service";
 import {
-  testCurrentUser,
   testEditUser,
   testViewUser,
 } from "../../data/userData";

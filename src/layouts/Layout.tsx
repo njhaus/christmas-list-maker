@@ -1,6 +1,6 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 
-import { Button, Stack, Typography, Box } from "@mui/material";
+import { Button, Stack, Box } from "@mui/material";
 
 import { useNavigate, Link } from "react-router-dom";
 

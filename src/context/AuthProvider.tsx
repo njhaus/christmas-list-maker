@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useState } from "react"
-import { iListData, iListUser, initialListData } from "../data/listData"
-import { iCurrentUser, testCurrentUser, testUser } from "../data/userData";
+import { iListData, initialListData } from "../data/listData"
+import { iCurrentUser, testCurrentUser } from "../data/userData";
 
 interface iAuthProvider {
     list: iListData;
