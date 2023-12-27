@@ -18,8 +18,9 @@ const Err = ({err, setErr}: iErr) => {
         position: 'absolute',
         top: '50vh',
         left: '50%',
-        transform: 'translate(-50%, -50vh)',
+        transform: 'translate(-50%, -25vh)',
         zIndex: '20',
+        boxShadow: '0px 2px 10px black'
       }}
     >
       <Typography

@@ -1,4 +1,5 @@
 const baseUrl = "https://christmas-list-maker-api-production.up.railway.app/";
+// const devBaseUrl = 'http://localhost:3009/';
 
 export const apiPost = async (slug: string, body: any) => {
     try {
@@ -6,6 +7,7 @@ export const apiPost = async (slug: string, body: any) => {
         const response = await fetch(`${baseUrl}${slug}`, {
           headers: {
             "Content-Type": "application/json",
+             " Access-Control-Allow-Origin": baseUrl
           },
           method: "POST",
           mode: "cors",
