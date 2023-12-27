@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { Container, Box } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { useParams } from "react-router-dom";
 
