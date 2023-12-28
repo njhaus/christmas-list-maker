@@ -23,9 +23,10 @@ const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
   const handleSaveNew = () => {
     setErr("");
     // Add https:// to link if it is not there -- link will not work otherwise
-    const link = newLink.match("https://")
+    const link = newLink ? newLink.match("https://")
       ? newLink
-      : `https://${newLink}`;
+      : `https://${newLink}`
+      : '';
 
     const slug = "user/gift/new";
     const body = {
