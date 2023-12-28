@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { Button, Container, FormControl, Input, Stack, InputLabel, Typography } from "@mui/material";
+import TextInput from "../../components/TextInput";
 
 interface iUserAccess {
   handleCurrentUser: (user: string, code: string, hasCode: boolean) => void;
@@ -18,8 +19,8 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
           backgroundColor: "white",
           padding: "1rem",
           borderRadius: "10px",
-          maxWidth: '400px',
-          position: 'relative',
+          maxWidth: "400px",
+          position: "relative",
         }}
       >
         <Typography
@@ -29,7 +30,6 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
           }}
         >
           Log in or create an access code.
-
         </Typography>
         <form method="post" action="user/">
           <Stack>
@@ -43,48 +43,32 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
               }}
             >
               <FormControl>
-                <InputLabel
-                  htmlFor="name"
-                  sx={{
-                    fontSize: "1.2rem",
-                    color: "info.dark",
-                  }}
-                >
-                  Name
-                </InputLabel>
-                <Input
+                <TextInput
+                  labelText="Name"
                   id="name"
-                  aria-describedby="Your name"
-                  autoComplete="off"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  sx={{
-                    fontSize: "1.2rem",
-                    color: "info.dark",
-                  }}
-                />
+                  onChange={setName}
+                  aria="list name"
+                  type="text"
+                  labelColor={3}
+                  inputColor={3}
+                  minLength={1}
+                  maxLength={20}
+                  checkLength={isCreating}
+                ></TextInput>
               </FormControl>
               <FormControl>
-                <InputLabel
-                  htmlFor="code"
-                  sx={{
-                    fontSize: "1.2rem",
-                    color: "info.dark",
-                  }}
-                >
-                  Access Code
-                </InputLabel>
-                <Input
-                  type="password"
+                <TextInput
+                  labelText="Access Code"
                   id="code"
-                  aria-describedby="Your code"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  sx={{
-                    fontSize: "1.2rem",
-                    color: "info.dark",
-                  }}
-                />
+                  onChange={setCode}
+                  aria="list code"
+                  type="password"
+                  labelColor={3}
+                  inputColor={3}
+                  minLength={4}
+                  maxLength={20}
+                  checkLength={isCreating}
+                ></TextInput>
               </FormControl>
             </Stack>
             <Stack
@@ -94,6 +78,7 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
             >
               {isCreating ? (
                 <Button
+                  disabled={!name || !code}
                   onClick={() => {
                     handleCurrentUser(name, code, false);
                     setIsCreating(false);
@@ -111,6 +96,7 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                 </Button>
               ) : (
                 <Button
+                  disabled={!name || !code}
                   onClick={() => {
                     handleCurrentUser(name, code, true);
                   }}

@@ -37,7 +37,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
   }, [users])
 
   const handleUsers = (username: string) => {
-    if (!username.match(/[<>&"';*]/g)) {
+    if (!username.match(/[<>&"';*]/g) && username.length <=20 ) {
       const addUser = {
         name: username,
         emoji: String.fromCodePoint(0x1f600),
@@ -48,13 +48,13 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
       setNewUser('')
     }
     else {
-      setErr('Invalid characters not allowed in names')
+      setErr('Invalid characters not allowed in names. Max length of 20 characters.')
     }
   }
 
   const updateUser = (newUsername: string, idx: number) => {
     setNewUser('');
-    if (!newUsername.match(/[<>&"';*]/g)) {
+    if (!newUsername.match(/[<>&"';*]/g) && newUsername.length <= 20) {
       const updatedUsers = users.map((user, index) => {
         if (index === idx) {
           return { ...user, name: newUsername };
@@ -161,7 +161,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
                   aria-describedby="new-user"
                   value={newUser}
                   onChange={(e) => {
-                    if (!e.target.value.match(/[<>&"';*]/g)) {
+                    if (!e.target.value.match(/[<>&"';*]/g) && e.target.value.length <= 20) {
                       setNewUser(e.target.value);
                     }
                   }
