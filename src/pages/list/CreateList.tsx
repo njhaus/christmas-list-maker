@@ -14,6 +14,7 @@ import {
 
 import { iListData, iListUser } from "../../data/listData";
 import LetterC from "../../components/LetterC";
+import { formConstraint } from "../../utils/form_contraints";
 
 
 interface iCreateList {
@@ -37,7 +38,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
   }, [users])
 
   const handleUsers = (username: string) => {
-    if (!username.match(/[<>&"';*]/g) && username.length <=20 ) {
+    if (formConstraint(username) ) {
       const addUser = {
         name: username,
         emoji: String.fromCodePoint(0x1f600),
@@ -54,7 +55,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
 
   const updateUser = (newUsername: string, idx: number) => {
     setNewUser('');
-    if (!newUsername.match(/[<>&"';*]/g) && newUsername.length <= 20) {
+    if (formConstraint(newUsername)) {
       const updatedUsers = users.map((user, index) => {
         if (index === idx) {
           return { ...user, name: newUsername };
@@ -161,7 +162,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
                   aria-describedby="new-user"
                   value={newUser}
                   onChange={(e) => {
-                    if (!e.target.value.match(/[<>&"';*]/g) && e.target.value.length <= 20) {
+                    if (formConstraint(e.target.value)) {
                       setNewUser(e.target.value);
                     }
                   }

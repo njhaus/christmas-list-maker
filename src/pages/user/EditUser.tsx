@@ -19,6 +19,7 @@ import { iEditUser } from "../../data/userData";
 import { apiPost } from "../../services/api_service";
 import AddGift from "./AddGift";
 import LetterC from "../../components/LetterC";
+import { formConstraint } from "../../utils/form_contraints";
 
 interface iEditUserComponent {
   data: iEditUser;
@@ -239,7 +240,11 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
                           <Input
                             id="edit-gift"
                             value={editGift}
-                            onChange={(e) => setEditGift(e.target.value)}
+                            onChange={(e) => {
+                              if (formConstraint(e.target.value, 40)) {
+                                setEditGift(e.target.value); 
+                              }
+                            }}
                             sx={{
                               color: "info.dark",
                             }}
@@ -261,7 +266,11 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
                             <Input
                               id="edit-link"
                               value={editLink}
-                              onChange={(e) => setEditLink(e.target.value)}
+                              onChange={(e) => {
+                                if (formConstraint(e.target.value, 200)) {
+                                  setEditLink(e.target.value)
+                                }
+                              }}
                               sx={{
                                 color: "info.dark",
                               }}

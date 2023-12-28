@@ -21,6 +21,7 @@ import { iViewUser } from "../../data/userData";
 import { apiPost } from "../../services/api_service";
 import Err from "../error/Err";
 import LetterC from "../../components/LetterC";
+import { formConstraint } from "../../utils/form_contraints";
 
 interface iViewUserComponent {
   data: iViewUser;
@@ -401,7 +402,11 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
               <Input
                 id="note"
                 value={newNote}
-                onChange={(e) => setNewNote(e.target.value)}
+                onChange={(e) => {
+                  if (formConstraint(e.target.value, 100)) {
+                    setNewNote(e.target.value)
+                  }
+                }}
                 sx={{
                   color: "info.dark",
                   width: "20rem",

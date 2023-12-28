@@ -4,6 +4,7 @@ import { Stack, Typography, FormControl, Input, InputLabel, Button } from "@mui/
 import Err from "../error/Err";
 import { apiPost } from "../../services/api_service";
 import { iGift } from "../../data/userData";
+import { formConstraint } from "../../utils/form_contraints";
 
 interface iAddGift {
   gifts: iGift[];
@@ -91,7 +92,11 @@ const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
         <Input
           id="gift"
           value={newGift}
-          onChange={(e) => setNewGift(e.target.value)}
+          onChange={(e) => {
+            if (formConstraint(e.target.value, 40)) {
+              setNewGift(e.target.value)
+            }
+          }}
           sx={{
             fontSize: "1.2rem",
             color: "info.main",
@@ -115,7 +120,11 @@ const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
         <Input
           id="link"
           value={newLink}
-          onChange={(e) => setNewLink(e.target.value)}
+          onChange={(e) => {
+            if (formConstraint(e.target.value, 200)) {
+              setNewLink(e.target.value)
+            }
+          }}
           sx={{
             fontSize: "1.2rem",
             color: "info.main",
