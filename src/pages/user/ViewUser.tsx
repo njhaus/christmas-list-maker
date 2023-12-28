@@ -22,6 +22,7 @@ import { apiPost } from "../../services/api_service";
 import Err from "../error/Err";
 import LetterC from "../../components/LetterC";
 import { formConstraint } from "../../utils/form_contraints";
+import { apiValidation } from "../../utils/api_validation";
 
 interface iViewUserComponent {
   data: iViewUser;
@@ -51,7 +52,6 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
           a.description > b.description ? 1 : -1
         )
       );
-
       const slug = "user/gift/buy";
       const body = {
         giftId: id,
@@ -88,6 +88,12 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
       listId: listId,
       username: user,
     };
+    if (!apiValidation(body)) {
+      setErr(
+        "We've encountered some invalid values. Please review your input and make sure it meets the required criteria. Once you've made the necessary changes, please try submitting again."
+      );
+      return;
+    }
     apiPost(slug, body).then((res) => {
       console.log(res);
       if (res?.message === "success" && res?.newNote) {
@@ -112,6 +118,12 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
       noteId: id,
       currentUser: currentUser,
     };
+    if (!apiValidation(body)) {
+      setErr(
+        "We've encountered some invalid values. Please review your input and make sure it meets the required criteria. Once you've made the necessary changes, please try submitting again."
+      );
+      return;
+    }
     apiPost(slug, body).then((res) => {
       console.log(res);
       if (res?.message === "success" && res?.deletedNote) {

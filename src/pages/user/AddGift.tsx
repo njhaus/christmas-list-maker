@@ -5,6 +5,7 @@ import Err from "../error/Err";
 import { apiPost } from "../../services/api_service";
 import { iGift } from "../../data/userData";
 import { formConstraint } from "../../utils/form_contraints";
+import { apiValidation } from "../../utils/api_validation";
 
 interface iAddGift {
   gifts: iGift[];
@@ -35,6 +36,12 @@ const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
       newLink: link,
       listId: listId,
     };
+    if (!apiValidation(body)) {
+      setErr(
+        "We've encountered some invalid values. Please review your input and make sure it meets the required criteria. Once you've made the necessary changes, please try submitting again."
+      );
+      return;
+    }
     apiPost(slug, body).then((res) => {
       console.log(res);
       if (res?.message === "success" && res?.newGift) {

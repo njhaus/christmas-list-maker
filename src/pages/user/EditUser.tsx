@@ -20,6 +20,7 @@ import { apiPost } from "../../services/api_service";
 import AddGift from "./AddGift";
 import LetterC from "../../components/LetterC";
 import { formConstraint } from "../../utils/form_contraints";
+import { apiValidation } from "../../utils/api_validation";
 
 interface iEditUserComponent {
   data: iEditUser;
@@ -82,6 +83,12 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
       giftId: id,
       listId: listId,
     };
+    if (!apiValidation(body)) {
+      setErr(
+        "We've encountered some invalid values. Please review your input and make sure it meets the required criteria. Once you've made the necessary changes, please try submitting again."
+      );
+      return;
+    }
     apiPost(slug, body).then((res) => {
       console.log(res);
       if (res?.message === "success") {

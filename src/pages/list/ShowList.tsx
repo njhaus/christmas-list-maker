@@ -19,6 +19,7 @@ import useAuth from "../../hooks/useAuth";
 import RecipientsDialog from "./RecipientsDialog";
 import LetterC from "../../components/LetterC";
 import Loading from "../../components/Loading";
+import { apiValidation } from "../../utils/api_validation";
 
 interface iShowList {
   list: iListData;
@@ -43,6 +44,12 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
       name: user.toLowerCase(),
       code: code,
     };
+    if (!apiValidation(body)) {
+      setErr(
+        "We've encountered some invalid values. Please review your input and make sure it meets the required criteria. Once you've made the necessary changes, please try submitting again."
+      );
+      return;
+    }
     apiPost(slug, body).then((res) => {
       console.log(res);
       if (res?.message === "success") {
@@ -120,8 +127,7 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
             color: "info.main",
           }}
         >
-          {list.title.slice(0,1).toUpperCase()}{list.title.slice(1)}
-          {/* {list.users.find((user) => user.name === currentUser.name)?.name} */}
+          {list.title.split(' ').map((word)=> word.slice(0,1).toUpperCase() + word.slice(1)).join(' ')}
         </Typography>
       </Box>
 

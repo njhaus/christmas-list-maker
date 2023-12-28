@@ -13,6 +13,7 @@ import {
   testViewUser,
 } from "../../data/userData";
 import Loading from "../../components/Loading";
+import { apiValidation } from "../../utils/api_validation";
 
 const UserRouter = () => {
   // Get the currentUser and user's name for this list id from state.
@@ -41,6 +42,12 @@ const UserRouter = () => {
         username: username,
       };
       const slug = "user/data";
+      if (!apiValidation(body)) {
+        setErr(
+          "We've encountered some invalid values. Please review your input and make sure it meets the required criteria. Once you've made the necessary changes, please try submitting again."
+        );
+        return;
+      }
       apiPost(slug, body).then((res) => {
         if (res?.message === "success" && res?.data) {
           if (res.data?.editUser && res.data?.currentUser) {

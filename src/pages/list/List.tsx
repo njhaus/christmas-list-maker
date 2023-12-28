@@ -15,6 +15,7 @@ import { iListUser } from '../../data/listData';
 import useAuth from '../../hooks/useAuth';
 import { makeList } from "../../utils/create_list";
 import Loading from '../../components/Loading';
+import { apiValidation } from '../../utils/api_validation';
 
 
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -47,6 +48,12 @@ const List = () => {
       console.log('Running API call to get list')
       const body = listId;
       const slug = "list/find";
+      if (!apiValidation(body)) {
+        setErr(
+          "We've encountered some invalid values. Please review your input and make sure it meets the required criteria. Once you've made the necessary changes, please try submitting again."
+        );
+        return;
+      }
       apiPost(slug, body).then((res) => {
         if (res?.message === "success") {
           setList(res.data);
@@ -88,7 +95,6 @@ const List = () => {
       setList({ ...list, users: filteredUsers });
       const slug = "list/create";
       const body = { ...list, users: users };
-      console.log(body);
       apiPost(slug, body).then((res) => {
         console.log(res);
         if (res?.message === "success") {
@@ -113,7 +119,6 @@ const List = () => {
     const recipientList = makeList(names, num);
     const slug = "list/recipients";
     const body = { ...list, users: recipientList };
-    console.log(body);
     apiPost(slug, body).then((res) => {
       console.log(res);
       if (res?.message === "success") {

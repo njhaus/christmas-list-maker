@@ -38,7 +38,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
   }, [users])
 
   const handleUsers = (username: string) => {
-    if (formConstraint(username) ) {
+    if (formConstraint(username, 20) ) {
       const addUser = {
         name: username,
         emoji: String.fromCodePoint(0x1f600),
@@ -55,7 +55,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
 
   const updateUser = (newUsername: string, idx: number) => {
     setNewUser('');
-    if (formConstraint(newUsername)) {
+    if (formConstraint(newUsername, 20)) {
       const updatedUsers = users.map((user, index) => {
         if (index === idx) {
           return { ...user, name: newUsername };
@@ -162,7 +162,7 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
                   aria-describedby="new-user"
                   value={newUser}
                   onChange={(e) => {
-                    if (formConstraint(e.target.value)) {
+                    if (formConstraint(e.target.value, 20)) {
                       setNewUser(e.target.value);
                     }
                   }

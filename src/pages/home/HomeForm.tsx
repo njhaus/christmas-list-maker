@@ -13,6 +13,7 @@ import {
 import { apiPost } from "../../services/api_service";
 import Err from "../error/Err";
 import TextInput from "../../components/TextInput";
+import { apiValidation } from "../../utils/api_validation";
 
 export interface iHomeForm {
   handleCancel: () => void;
@@ -35,9 +36,13 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
     if (listTitle && listCode) {
       console.log(listTitle + listCode);
       const body = {
-        title: listTitle,
+        title: listTitle.toLowerCase(),
         code: listCode,
       };
+      if (!apiValidation(body)) {
+        setErr("We've encountered some invalid values. Please review your input and make sure it meets the required criteria. Once you've made the necessary changes, please try submitting again.")
+        return;
+      }
       apiPost(slug, body).then((res) => {
         console.log(res);
         if (res?.message === "success") {
@@ -90,7 +95,7 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
               labelColor={3}
               inputColor={3}
               minLength={4}
-              maxLength={20}
+              maxLength={30}
               checkLength={title === "Create"}
             ></TextInput>
           </FormControl>
