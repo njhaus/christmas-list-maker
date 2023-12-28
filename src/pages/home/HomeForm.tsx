@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 import {
   FormControl,
-  InputLabel,
-  Input,
   Box,
   Typography,
   Button,
@@ -14,6 +12,7 @@ import {
 
 import { apiPost } from "../../services/api_service";
 import Err from "../error/Err";
+import TextInput from "../../components/TextInput";
 
 export interface iHomeForm {
   handleCancel: () => void;
@@ -73,7 +72,7 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
           color: "primary.main",
         }}
       >
-        {title} a List
+        {title} a Group
       </Typography>
       <form method={method} action={action} onSubmit={(e) => handleForm(e)}>
         <Stack sx={{ alignItems: "center", justifyContent: "start" }}>
@@ -82,57 +81,41 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
               marginTop: "1rem",
             }}
           >
-            <InputLabel
-              htmlFor="title"
-              sx={{
-                color: "info.dark",
-              }}
-            >
-              List Name
-            </InputLabel>
-            <Input
+            <TextInput
+              labelText="Group Title"
               id="title"
-              aria-describedby="my-helper-text"
-              value={listTitle}
-              onChange={(e) => setListTitle(e.target.value)}
-              sx={{
-                width: "12rem",
-                fontSize: "1.2rem",
-                color: "info.dark",
-              }}
-            />
+              onChange={setListTitle}
+              aria="list title"
+              type="text"
+              labelColor={3}
+              inputColor={3}
+              minLength={4}
+              maxLength={20}
+              checkLength={true}
+            ></TextInput>
           </FormControl>
           <FormControl
             sx={{
               marginTop: "1rem",
             }}
           >
-            <InputLabel
-              htmlFor="code"
-              sx={{
-                color: "info.dark",
-              }}
-            >
-              Access Code
-            </InputLabel>
-            <Input
+            <TextInput
+              labelText="Access Code"
+              id="password"
+              onChange={setListCode}
+              aria="list password"
               type="password"
-              id="code"
-              aria-describedby="my-helper-text"
-              value={listCode}
-              onChange={(e) => setListCode(e.target.value)}
-              sx={{
-                marginTop: "2rem",
-                width: "12rem",
-                fontSize: "1.2rem",
-                color: "info.dark",
-              }}
-            />
+              labelColor={3}
+              inputColor={3}
+              minLength={4}
+              maxLength={20}
+            ></TextInput>
           </FormControl>
           {err && <Err err={err} setErr={setErr}></Err>}
           <Button
             type="submit"
             variant="contained"
+            disabled={!listTitle || !listCode}
             sx={{
               marginTop: "2rem",
               width: "10rem",

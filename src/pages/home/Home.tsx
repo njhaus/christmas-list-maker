@@ -127,7 +127,7 @@ const Home = () => {
                       backgroundColor: "primary.main",
                     }}
                   >
-                    Create a List
+                    Create a Group
                   </Button>
                 </Tooltip>
                 <Tooltip title="Open an existing list" placement="right" arrow>
@@ -145,7 +145,7 @@ const Home = () => {
                       },
                     }}
                   >
-                    Open a List
+                    Open a Group
                   </Button>
                 </Tooltip>
               </>
