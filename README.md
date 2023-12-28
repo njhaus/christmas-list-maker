@@ -70,16 +70,16 @@ This project uses an Express server. The server repository can be found [HERE](h
 ---
 
 ### Known bugs:
-Refreshing the page (besides the home page) leads to a 404 error.
-404 route does not render from react-router.
-Users are able to input websites that are not formatted correctly.
-Website links show on user gifts even if no link is available.
-Names are decapitalized in server but not in client, leading to mismatches when logging in.
+* Refreshing the page (besides the home page) leads to a 404 error.
+* 404 route does not render from react-router.
+* Users are able to input websites that are not formatted correctly.
+* Website links show on user gifts even if no link is available.
+* Names are decapitalized in server but not in client, leading to mismatches when logging in.
 
 
 ### Upcoming features:
-Help menu and help tooltips throughout app
-Better support for screen readers
-Ability to assign gifts manually rather than randomly
-Ability to add members to your group without resetting the group.
+* Help menu and help tooltips throughout app
+* Better support for screen readers
+* Ability to assign gifts manually rather than randomly
+* Ability to add members to your group without resetting the group.
 
