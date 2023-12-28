@@ -150,7 +150,8 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
             color: "info.main",
           }}
         >
-          {user}'s Christmas List
+          {user.slice(0, 1).toUpperCase()}
+          {user.slice(1)}'s Christmas List
         </Typography>
       </Stack>
       <Stack
@@ -165,7 +166,8 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
               color: "white",
             }}
           >
-            {user} has not asked for any gifts yet.
+            {user.slice(0, 1).toUpperCase()}
+            {user.slice(1)} has not asked for any gifts yet.
           </Typography>
         ) : (
           <Container>
@@ -175,7 +177,8 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
                 color: "white",
               }}
             >
-              {user}'s Gifts
+              {user.slice(0, 1).toUpperCase()}
+              {user.slice(1)}'s Gifts
             </Typography>
             <List>
               {gifts.map((gift) => (
@@ -290,7 +293,9 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
               color: "white",
             }}
           >
-            Write a note or add a gift you bought for {user}.
+            Write a note or add a gift you bought for{" "}
+            {user.slice(0, 1).toUpperCase()}
+            {user.slice(1)}.
           </Typography>
           <Typography
             sx={{
@@ -363,9 +368,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
                     </Typography>
                     {note.written_by === currentUser && (
                       <Button
-                        onClick={() =>
-                          handleDeleteNote(note.id)
-                        }
+                        onClick={() => handleDeleteNote(note.id)}
                         variant="text"
                         sx={{
                           marginLeft: "0.75rem",

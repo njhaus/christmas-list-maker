@@ -120,7 +120,7 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
             color: "info.main",
           }}
         >
-          {user}'s Christmas List
+          {user.slice(0, 1).toUpperCase()}{ user.slice(1)}'s Christmas List
         </Typography>
       </Stack>
       <Container

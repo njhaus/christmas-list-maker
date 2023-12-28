@@ -40,7 +40,7 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
     const slug = hasCode ? "user/access" : "user/create";
     const body = {
       listId: list._id,
-      name: user,
+      name: user.toLowerCase(),
       code: code,
     };
     apiPost(slug, body).then((res) => {
@@ -143,7 +143,9 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
               color: "secondary.light",
             }}
           >
-            {list.users.length > 1 && `Hello, ${currentUser?.name}!`}
+            {list.users.length > 1 &&
+              `Hello, ${currentUser?.name.slice(0, 1).toUpperCase()
+              }${currentUser?.name.slice(1)}!`}
           </Typography>
         )}
         <Typography
@@ -153,15 +155,12 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
             // fontWeight: "200",
           }}
         >
-          
           {list.users.length > 0 &&
-            currentUser.id === "0"
-            && "Log in to view people's lists."
-          }
+            currentUser.id === "0" &&
+            "Log in to view people's lists."}
           {list.users.length > 0 &&
-            currentUser.id !== "0"
-                && "Click a name to view that person's list"
-            }
+            currentUser.id !== "0" &&
+            "Click a name to view that person's list"}
         </Typography>
         {list.users.length < 1 ? (
           <Typography
