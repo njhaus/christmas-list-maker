@@ -10,7 +10,7 @@
 
 This site is fully functional and free to be used for its intended purpose by the general public. However, it is in its beta version. There are some known bugs and upcoming features which will be described below.
 
-This site was not completed as part of any online course. It is a completely original application.
+This site was not completed as part of any course. It is a completely original application.
 
 ### Features:
 **Christmas List Maker** users can:
