@@ -54,7 +54,7 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
     const slug = "user/gift/edit";
     const body = {
       giftId: id,
-      description: editGift ? editGift : thisGift?.description,
+      giftDescription: editGift ? editGift : thisGift?.description,
       link: link,
       listId: listId,
     };

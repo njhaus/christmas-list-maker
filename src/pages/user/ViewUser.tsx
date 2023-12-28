@@ -84,7 +84,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
     setErr("");
     const slug = "user/note/create";
     const body = {
-      description: newNote,
+      noteDescription: newNote,
       listId: listId,
       username: user,
     };
@@ -114,7 +114,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
     const slug = "user/note/delete";
     const body = {
       listId: listId,
-      username: user,
+      name: user,
       noteId: id,
       currentUser: currentUser,
     };

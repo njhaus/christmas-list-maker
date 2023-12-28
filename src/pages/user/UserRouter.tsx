@@ -39,7 +39,7 @@ const UserRouter = () => {
       console.log("Running API call to get user");
       const body = {
         listId: listId,
-        username: username,
+        name: username,
       };
       const slug = "user/data";
       if (!apiValidation(body)) {

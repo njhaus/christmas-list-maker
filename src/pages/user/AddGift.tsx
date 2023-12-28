@@ -32,8 +32,8 @@ const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
 
     const slug = "user/gift/new";
     const body = {
-      newGift: newGift,
-      newLink: link,
+      giftDescription: newGift,
+      link: link,
       listId: listId,
     };
     if (!apiValidation(body)) {

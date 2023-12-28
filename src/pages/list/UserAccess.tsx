@@ -12,6 +12,7 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
   const [isCreating, setIsCreating] = useState(false);
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
+  const [reset, setReset] = useState(false);
 
     return (
       <Container
@@ -54,6 +55,7 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                   minLength={1}
                   maxLength={20}
                   checkLength={isCreating}
+                  reset={reset}
                 ></TextInput>
               </FormControl>
               <FormControl>
@@ -68,6 +70,7 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                   minLength={4}
                   maxLength={20}
                   checkLength={isCreating}
+                  reset={reset}
                 ></TextInput>
               </FormControl>
             </Stack>
@@ -84,6 +87,7 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                     setIsCreating(false);
                     setName("");
                     setCode("");
+                    setReset(!reset)
                   }}
                   variant="contained"
                   sx={{
@@ -99,6 +103,9 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                   disabled={!name || !code}
                   onClick={() => {
                     handleCurrentUser(name, code, true);
+                    setName("");
+                    setCode("");
+                    setReset(!reset);
                   }}
                   variant="contained"
                   sx={{

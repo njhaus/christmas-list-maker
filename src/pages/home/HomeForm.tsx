@@ -112,7 +112,7 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
               type="password"
               labelColor={3}
               inputColor={3}
-              minLength={4}
+              minLength={6}
               maxLength={20}
               checkLength={title === "Create"}
             ></TextInput>
