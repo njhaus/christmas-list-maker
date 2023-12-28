@@ -36,7 +36,7 @@ const TextInput = ({
     const [hasChecked, setHasChecked] = useState(false);
 
     const handleChange = (val: string) => {      
-        if (val.length > minLength && hasChecked!) {
+        if (val.length >= minLength && !hasChecked) {
             setHasChecked(true)
         }
         if (hasChecked) {
@@ -44,7 +44,7 @@ const TextInput = ({
             let error = "";
             if ((val.length > maxLength || val.length < minLength) && checkLength ) {
             error = `Must be between ${minLength} and ${maxLength} characters.`;
-            } else if (val.match(/[<>&"';]/g)) {
+            } else if (val.match(/[<>&"';*]/g)) {
             error = "Invalid characters.";
             } else if (val === "") {
                 setErr('Value required')

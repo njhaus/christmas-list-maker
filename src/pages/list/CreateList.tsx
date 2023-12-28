@@ -37,25 +37,32 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
   }, [users])
 
   const handleUsers = (username: string) => {
-    const addUser = {
-      name: username,
-      emoji: String.fromCodePoint(0x1f600),
-      recipients: ['Anybody'],
-      hasCode: false
-    };
-    setUsers([...users, addUser])
-    setNewUser('')
+    if (!username.match(/[<>&"';*]/g)) {
+      const addUser = {
+        name: username,
+        emoji: String.fromCodePoint(0x1f600),
+        recipients: ['Anybody'],
+        hasCode: false
+      };
+      setUsers([...users, addUser])
+      setNewUser('')
+    }
+    else {
+      setErr('Invalid characters not allowed in names')
+    }
   }
 
   const updateUser = (newUsername: string, idx: number) => {
     setNewUser('');
-    const updatedUsers = users.map((user, index) => {
-      if (index === idx) {
-        return { ...user, name: newUsername };
-      }
-      return user;
-    });
-    setUsers(updatedUsers);
+    if (!newUsername.match(/[<>&"';*]/g)) {
+      const updatedUsers = users.map((user, index) => {
+        if (index === idx) {
+          return { ...user, name: newUsername };
+        }
+        return user;
+      });
+      setUsers(updatedUsers);
+    }
   }
 
   useEffect(() => {
@@ -153,7 +160,12 @@ const CreateList = ({ list, handleCreate, handleSubmitList }: iCreateList) => {
                   id="new-user"
                   aria-describedby="new-user"
                   value={newUser}
-                  onChange={(e) => setNewUser(e.target.value)}
+                  onChange={(e) => {
+                    if (!e.target.value.match(/[<>&"';*]/g)) {
+                      setNewUser(e.target.value);
+                    }
+                  }
+                  }
                   onBlur={(e) => handleUsers(e.target.value)}
                   sx={{
                     marginTop: "2rem",

@@ -91,7 +91,7 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
               inputColor={3}
               minLength={4}
               maxLength={20}
-              checkLength={true}
+              checkLength={title === "Create"}
             ></TextInput>
           </FormControl>
           <FormControl
@@ -109,6 +109,7 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
               inputColor={3}
               minLength={4}
               maxLength={20}
+              checkLength={title === "Create"}
             ></TextInput>
           </FormControl>
           {err && <Err err={err} setErr={setErr}></Err>}
