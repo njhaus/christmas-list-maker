@@ -1,7 +1,7 @@
 # Christmas List Maker (Beta)
 ---
 
-[Click here to visit the live version of Christmas List Maker](https://christmas-list-maker-production.up.railway.app/)
+[Click here to visit the live version of Christmas List Maker (Beta)](https://christmas-list-maker-production.up.railway.app/)
 
 
 ## Overview
