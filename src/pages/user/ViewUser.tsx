@@ -163,8 +163,11 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
             color: "info.main",
           }}
         >
-          {user.slice(0, 1).toUpperCase()}
-          {user.slice(1)}'s Christmas List
+          {user
+            .split(" ")
+            .map((word) => word.slice(0, 1).toUpperCase() + word.slice(1))
+            .join(" ")}
+          's Christmas List
         </Typography>
       </Stack>
       <Stack
@@ -179,8 +182,11 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
               color: "white",
             }}
           >
-            {user.slice(0, 1).toUpperCase()}
-            {user.slice(1)} has not asked for any gifts yet.
+            {user
+              .split(" ")
+              .map((word) => word.slice(0, 1).toUpperCase() + word.slice(1))
+              .join(" ")}{" "}
+            has not asked for any gifts yet.
           </Typography>
         ) : (
           <Container>
@@ -190,8 +196,11 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
                 color: "white",
               }}
             >
-              {user.slice(0, 1).toUpperCase()}
-              {user.slice(1)}'s Gifts
+              {user
+                .split(" ")
+                .map((word) => word.slice(0, 1).toUpperCase() + word.slice(1))
+                .join(" ")}
+              's Gifts
             </Typography>
             <List>
               {gifts.map((gift) => (
@@ -306,9 +315,12 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
               color: "white",
             }}
           >
-            Write a note or add a gift you bought for{" "}
-            {user.slice(0, 1).toUpperCase()}
-            {user.slice(1)}.
+            Write a note or add a gift you bought for {' '}
+            {user
+              .split(" ")
+              .map((word) => word.slice(0, 1).toUpperCase() + word.slice(1))
+              .join(" ")}
+            .
           </Typography>
           <Typography
             sx={{
@@ -416,7 +428,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
                 value={newNote}
                 onChange={(e) => {
                   if (formConstraint(e.target.value, 100)) {
-                    setNewNote(e.target.value)
+                    setNewNote(e.target.value);
                   }
                 }}
                 sx={{

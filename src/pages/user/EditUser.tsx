@@ -128,7 +128,11 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
             color: "info.main",
           }}
         >
-          {user.slice(0, 1).toUpperCase()}{ user.slice(1)}'s Christmas List
+          {user
+            .split(" ")
+            .map((word) => word.slice(0, 1).toUpperCase() + word.slice(1))
+            .join(" ")}
+          's Christmas List
         </Typography>
       </Stack>
       <Container
@@ -146,7 +150,7 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
             You have no gifts on your list yet.
           </Typography>
         ) : (
-          <Container >
+          <Container>
             <Typography
               variant="h4"
               sx={{
@@ -249,7 +253,7 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
                             value={editGift}
                             onChange={(e) => {
                               if (formConstraint(e.target.value, 40)) {
-                                setEditGift(e.target.value); 
+                                setEditGift(e.target.value);
                               }
                             }}
                             sx={{
@@ -275,7 +279,7 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
                               value={editLink}
                               onChange={(e) => {
                                 if (formConstraint(e.target.value, 200)) {
-                                  setEditLink(e.target.value)
+                                  setEditLink(e.target.value);
                                 }
                               }}
                               sx={{

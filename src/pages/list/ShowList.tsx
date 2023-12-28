@@ -38,6 +38,11 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
 
   const handleCurrentUser = (user: string, code: string, hasCode: boolean) => {
     setErr("");
+    // Check that name exists
+    if (!list.users.find(listuser => listuser.name === user.toLowerCase())) {
+      setErr('Name not found on this list. Make sure the name you type matches your name on this list! (Not case sensitive.)')
+      return 
+    }
     const slug = hasCode ? "user/access" : "user/create";
     const body = {
       listId: list._id,
@@ -127,7 +132,10 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
             color: "info.main",
           }}
         >
-          {list.title.split(' ').map((word)=> word.slice(0,1).toUpperCase() + word.slice(1)).join(' ')}
+          {list.title
+            .split(" ")
+            .map((word) => word.slice(0, 1).toUpperCase() + word.slice(1))
+            .join(" ")}
         </Typography>
       </Box>
 
@@ -150,8 +158,10 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
             }}
           >
             {list.users.length > 1 &&
-              `Hello, ${currentUser?.name.slice(0, 1).toUpperCase()
-              }${currentUser?.name.slice(1)}!`}
+              `Hello, ${currentUser?.name
+                .split(" ")
+                .map((word) => word.slice(0, 1).toUpperCase() + word.slice(1))
+                .join(" ")}!`}
           </Typography>
         )}
         <Typography
