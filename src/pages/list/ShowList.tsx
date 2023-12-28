@@ -120,7 +120,7 @@ const ShowList = ({ list, handleSetRecipients }: iShowList) => {
             color: "info.main",
           }}
         >
-          {list.title}
+          {list.title.slice(0,1).toUpperCase()}{list.title.slice(1)}
           {/* {list.users.find((user) => user.name === currentUser.name)?.name} */}
         </Typography>
       </Box>
