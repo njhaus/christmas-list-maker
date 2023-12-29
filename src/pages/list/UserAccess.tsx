@@ -52,7 +52,7 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                   type="text"
                   labelColor={3}
                   inputColor={3}
-                  minLength={1}
+                  minLength={2}
                   maxLength={20}
                   checkLength={isCreating}
                   reset={reset}
@@ -67,9 +67,9 @@ const UserAccess = ({handleCurrentUser }: iUserAccess) => {
                   type="password"
                   labelColor={3}
                   inputColor={3}
-                  minLength={4}
+                  minLength={6}
                   maxLength={20}
-                  checkLength={isCreating}
+                  checkLength={true}
                   reset={reset}
                 ></TextInput>
               </FormControl>

@@ -103,6 +103,11 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
     });
   };
 
+  // Handle error from addgift component
+  const handleErr = (error: string) => {
+    setErr(error)
+  }
+
   return (
     <Box
       sx={{
@@ -311,6 +316,7 @@ const EditUser = ({ data, listId }: iEditUserComponent) => {
             setGifts={setGifts}
             listId={listId}
             handleIsAdding={handleIsAdding}
+            handleErr={handleErr}
           />
         ) : (
           <Button

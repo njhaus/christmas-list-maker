@@ -1,7 +1,6 @@
 
 import { useState } from "react";
 import { Stack, Typography, FormControl, Input, InputLabel, Button } from "@mui/material";
-import Err from "../error/Err";
 import { apiPost } from "../../services/api_service";
 import { iGift } from "../../data/userData";
 import { formConstraint } from "../../utils/form_contraints";
@@ -11,19 +10,18 @@ interface iAddGift {
   gifts: iGift[];
   setGifts: React.Dispatch<React.SetStateAction<iGift[]>>;
     listId: string;
-    handleIsAdding: () => void
+  handleIsAdding: () => void;
+  handleErr: (error: string) => void
 }
     
-const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
+const AddGift = ({gifts, setGifts, listId, handleIsAdding, handleErr}: iAddGift) => {
 
   const [newGift, setNewGift] = useState("");
     const [newLink, setNewLink] = useState("");
-    
-    const [err, setErr] = useState('');
 
   // Make a new gift
   const handleSaveNew = () => {
-    setErr("");
+    handleErr("");
     // Add https:// to link if it is not there -- link will not work otherwise
     const link = newLink ? newLink.match("https://")
       ? newLink
@@ -37,7 +35,7 @@ const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
       listId: listId,
     };
     if (!apiValidation(body)) {
-      setErr(
+      handleErr(
         "We've encountered some invalid values. Please review your input and make sure it meets the required criteria. Once you've made the necessary changes, please try submitting again."
       );
       return;
@@ -49,9 +47,9 @@ const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
         setGifts([...gifts, res.newGift]);
       } else if (res?.error) {
         console.log(res);
-        setErr(res.error);
+        handleErr(res.error);
       } else {
-        setErr("There was an error processing your request");
+        handleErr("There was an error processing your request");
       }
     });
     setNewGift("");
@@ -72,7 +70,6 @@ const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
         boxShadow: "0px 0px 15px #930001",
       }}
     >
-      {err && <Err err={err} setErr={setErr}></Err>}
       <Typography
         variant="h4"
         sx={{
@@ -139,6 +136,7 @@ const AddGift = ({gifts, setGifts, listId, handleIsAdding}: iAddGift) => {
         ></Input>
       </FormControl>
       <Button
+        disabled={!newGift}
         onClick={() => handleSaveNew()}
         variant="contained"
         sx={{

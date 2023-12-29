@@ -95,6 +95,7 @@ const List = () => {
       setList({ ...list, users: filteredUsers });
       const slug = "list/create";
       const body = { ...list, users: users };
+      console.log(body)
       apiPost(slug, body).then((res) => {
         console.log(res);
         if (res?.message === "success") {
@@ -119,6 +120,7 @@ const List = () => {
     const recipientList = makeList(names, num);
     const slug = "list/recipients";
     const body = { ...list, users: recipientList };
+    console.log(body)
     apiPost(slug, body).then((res) => {
       console.log(res);
       if (res?.message === "success") {

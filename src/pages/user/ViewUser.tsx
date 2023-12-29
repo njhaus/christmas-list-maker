@@ -86,7 +86,7 @@ const ViewUser = ({ data, listId, currentUser }: iViewUserComponent) => {
     const body = {
       noteDescription: newNote,
       listId: listId,
-      username: user,
+      name: user,
     };
     if (!apiValidation(body)) {
       setErr(
