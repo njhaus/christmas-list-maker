@@ -34,7 +34,6 @@ const HomeForm = ({ handleCancel, title, method, action }: iHomeForm) => {
     const slug = title === "Create" ? "home/new" : "home/open";
     setErr("");
     if (listTitle && listCode) {
-      console.log(listTitle + listCode);
       const body = {
         title: listTitle.toLowerCase(),
         code: listCode,
